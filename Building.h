@@ -1,3 +1,7 @@
+#include "Entity.h"
+#include "Resource.h"
+#include <vector>
+
 class Building: virtual Entity{
 private:
     void destroy() override {}
