@@ -1,9 +1,5 @@
-//
-// Created by admin on 09.03.2023.
-//
-
-#ifndef PAWNMANAGER_RESOURCE_H
-#define PAWNMANAGER_RESOURCE_H
+#include "Building.h"
+#include "Player.h"
 enum class ResourceType {DummyOre, DummyIngot, DummyWeapon};
 class Resource{
 public:
@@ -12,4 +8,3 @@ public:
     bool beingHolded;
     Building position;
 };
-#endif //PAWNMANAGER_RESOURCE_H

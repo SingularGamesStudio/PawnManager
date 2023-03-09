@@ -1,9 +1,4 @@
-//
-// Created by admin on 09.03.2023.
-//
-
-#ifndef PAWNMANAGER_FIGHTERPAWN_H
-#define PAWNMANAGER_FIGHTERPAWN_H
+#include "Building.h"
 enum class FighterPawnType{DummyMonk,DummySwordsman};
 class FighterPawn(){
 public:
@@ -29,4 +24,3 @@ FighterPawn* FighterPawn::createFighterPawn(FighterPawnType type){
             throw("Type of Fighter pawn not Found");
     }
 }
-#endif //PAWNMANAGER_FIGHTERPAWN_H

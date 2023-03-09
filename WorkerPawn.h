@@ -1,9 +1,4 @@
-//
-// Created by admin on 09.03.2023.
-//
-
-#ifndef PAWNMANAGER_WORKERPAWN_H
-#define PAWNMANAGER_WORKERPAWN_H
+#include "Building.h"
 #include <set>
 enum class expertisesID{DummySmeltery, DummyMetalworking, DummtTrainership};
 class WorkerPawn: public Entity{
@@ -22,4 +17,3 @@ private:
     void takePresentResource(Resource* toTake);
 
 };
-#endif //PAWNMANAGER_WORKERPAWN_H
