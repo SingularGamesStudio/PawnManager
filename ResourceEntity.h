@@ -1,16 +1,6 @@
-//
-// Created by ME on 09.03.2023.
-//
-
-#ifndef PAWNMANAGER_RESOURCEENTITY_H
-#define PAWNMANAGER_RESOURCEENTITY_H
-
-
-
-class ResourceEntity {
-
+class ResourceEntity:Entity {
+private:
+    void destroy() override {}
+public:
+    Resource type;
 };
-
-
-
-#endif //PAWNMANAGER_RESOURCEENTITY_H

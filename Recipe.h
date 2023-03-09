@@ -6,11 +6,9 @@
 #define PAWNMANAGER_RECIPE_H
 
 
-
 class Recipe {
 
 };
-
 
 
 #endif //PAWNMANAGER_RECIPE_H

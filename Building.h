@@ -1,16 +1,8 @@
-//
-// Created by ME on 09.03.2023.
-//
-
-#ifndef PAWNMANAGER_BUILDING_H
-#define PAWNMANAGER_BUILDING_H
-
-
-
-class Building {
-
+class Building: virtual Entity{
+private:
+    void destroy() override {}
+public:
+    Building* parent = nullptr;
+    std::vector<Building*> children;
+    std::vector<Resource> resources;
 };
-
-
-
-#endif //PAWNMANAGER_BUILDING_H
