@@ -1,9 +1,11 @@
 #include "Pawn.h"
 #include "Building.h"
 #include "Task.h"
+#include "Entity.h"
 #include <set>
 #include <unordered_map>
 #include <queue>
+#include <vector>
 #include <vector>
 enum class expertisesID{DummySmeltery, DummyMetalworking, DummtTrainership};
 class WorkerPawn: public Pawn{
@@ -16,11 +18,11 @@ public:
     void assignTask(Task toAssign){
         switch(toAssign.id){
             case TaskID::PawnGet:
-                moveTo(toAssign.destination)
+                moveTo(toAssign.destination);
                 holding = toAssign.resource;
                 (*holding).beingHolded = true;
             case TaskID::PawnMove:
-                moveTo(toAssign.destination)
+                moveTo(toAssign.destination);
             case TaskID::Man:
                 moveTo(toAssign.destination);
                 manning = true;
