@@ -1,6 +1,9 @@
 #include "Building.h"
-enum class FighterPawnType{DummyMonk,DummySwordsman};
-class FighterPawn(){
+#include "Pawn.h"
+enum class FighterPawnType{
+    DummyMonk,
+    DummySwordsman};
+class FighterPawn : public Pawn{
 public:
     virtual FighterPawn* createFighterPawn(FighterPawnType type);
     double atk;
