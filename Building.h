@@ -1,5 +1,6 @@
 #include "Entity.h"
 #include "Resource.h"
+#include "Pawn.h"
 #include <vector>
 
 class Building: virtual Entity{
@@ -8,10 +9,16 @@ private:
 public:
     Building* parent = nullptr;
     std::vector<Building*> children;
-    std::vector<Resource> resources;
+    std::vector<Resource*> resources;
     std::vector<Pawn*> pawns;
 
-    void addResource(Resource resource) {
+
+    //TODO
+    void addResource(Resource* resource) {
         resources.push_back(resource);
+    }
+
+    void addPawn(Pawn* pawn) {
+        pawns.push_back(pawn);
     }
 };
