@@ -7,6 +7,7 @@ class FighterPawn : public Pawn{
 public:
     virtual FighterPawn* createFighterPawn(FighterPawnType type);
     double atk;
+    double speed;
     void virtual attack(Entity* attacked);
 }
 class DummyMonk : public FighterPawn{
@@ -25,5 +26,22 @@ static FighterPawn* FighterPawn::createFighterPawn(FighterPawnType type){
             return (new DummySwordsman());
         default:
             throw("Type of Fighter pawn not Found");
+    }
+    void getResource(ResourceEntity* toGet) {
+        if (inside != nullptr)
+            ImNotHere(inside);
+        moveToResource(toGet);
+        takePresentResource(toGet);
+        //пойти в хаб
+    }
+    void moveToResource(Resource* toGet) {
+
+    }
+    void takePresentResource(ResourceEntity* toTake) {
+        holding = toTake->resource;
+        //убрать ресурс≈нтитю с карты
+    }
+    void moveToPosition(std::pair<double, double> pos) {
+
     }
 }

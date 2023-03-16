@@ -9,6 +9,7 @@ public:
     Building* destination;
     Task CurrentTask;
     bool travelling;
+    static const int ticksPerSecond = 100'000'000;
     virtual void moveTo(std::pair<double, double> destination);
     void create(Building* placeOfCreation) {
         used = false;
@@ -25,16 +26,17 @@ public:
         else if (holding != nullptr) {
             (*holding).drop(position);
         }
+        ///кинь игроку факт, что хотелось бы другого чувака на таску
         ~Pawn();
-
     }
-    virtual void moveToResource(Resource* toGet);
+    void IMNotHere(Building* from) {
+        from.Pawns.erase(from.Pawns.find(this));
+    }
+    void IMHere(Building* to) {
+        to.Pawns.push_back(this);
+    }
     virtual void moveToBuilding(Building* toMove);
     virtual void assignTask(const Task& toAssign);
-    void getResource(Resource* toGet) {
-        moveToResource(toGet);
-        holding = toGet;
-    }
     void beIngridient() {
         used = true;
     }

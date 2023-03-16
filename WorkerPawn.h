@@ -28,14 +28,13 @@ public:
         }
     }
     std::set<expertisesID> expertises;
-private:
-    const double timePerMove = 3;
-    const int ticksPerSecond = 100'000'000;
-    void takePresentResource(Resource* toTake);
-    void moveTo(Building* dest){
+    void moveToBuilding(Building* dest){
+        double timePerMove = sqrt(abs(position.first - dest->position.first) * abs(position.first - dest->position.first) +
+                                  abs(position.second - dest->position.second) * abs(position.second - dest->position.second));
         travelling = true;
         std::unordered_map<Building*, std::vector<Building*> > visited;
         std::queue<Building*> q;
+        destination = dest;
         q.push(positionBuilding);
         while(!q.empty()){
             Building* currentB = q.front();
