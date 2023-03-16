@@ -10,9 +10,7 @@ public:
     double atk;
     double speed;
     void virtual attack(Entity* attacked);
-    virtual FighterPawnType getType() {
-
-    }
+    virtual FighterPawnType getType();
 }
 class DummyMonk : public FighterPawn{
 public:
