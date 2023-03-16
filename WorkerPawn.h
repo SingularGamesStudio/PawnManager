@@ -11,7 +11,7 @@ class WorkerPawn: public Pawn{
 public:
     Building* positionBuilding;
     bool travelling;
-    bool manning;
+    bool used;
     Resource* holding;
     Task CurrentTask;
     void assignTask(Task toAssign){
@@ -28,6 +28,12 @@ public:
             default:
                 throw("Unexpected WorkerPawn TaskID: ", toAssign.id);
         }
+    }
+    void beIngridient() {
+        used = true;
+    }
+    void stopBeingIngridient() {
+        used = false;
     }
     std::set<expertisesID> expertises;
 private:
