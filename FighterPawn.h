@@ -11,7 +11,6 @@ class Entity;
 class ResourceEntity;
 class FighterPawn : public Pawn{
 public:
-    virtual FighterPawn* createFighterPawn(FighterPawnType type);
     double atk;
     double speed;
     void virtual attack(Entity* attacked);
