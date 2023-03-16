@@ -9,7 +9,6 @@ private:
     void stopRecipe() {
         progress = 0;
         current = Recipe.none();
-        //pawn.free()
 
     }
 public:
@@ -18,6 +17,7 @@ public:
     double progress;
 
     void assignRecipe(Recipe recipe){
-
+        stopRecipe();
+        current = recipe;
     }
 };
