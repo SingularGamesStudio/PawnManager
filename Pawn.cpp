@@ -1,6 +1,9 @@
 #include "Pawn.h"
+#include "Resource.h"
+#include "ResourceEntity.h"
+#include "Building.h"
 
-void Pawn::drop(Building* in, std::pair<double, double> pos = { 0,0 }) {
+void Pawn::drop(Building* in, std::pair<double, double> pos) {
     if (in != nullptr && holding != Resource::DummyNothing) {
         in->addResource(holding);
         holding = Resource::DummyNothing;
@@ -10,7 +13,7 @@ void Pawn::drop(Building* in, std::pair<double, double> pos = { 0,0 }) {
         ResourceEntity(holding, pos);
 }
 void Pawn::destroy() {
-    if (inside != nullptr && holding != Resorce::DummyNothing) {
+    if (inside != nullptr && holding != Resource::DummyNothing) {
         (*holding).drop(inside);
     }
     else if (holding != Resource::DummyNothing) {

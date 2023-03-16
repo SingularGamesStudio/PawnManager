@@ -4,6 +4,8 @@ enum class FighterPawnType{
     DummyMonk,
     DummySwordsman
 };
+class Entity;
+class ResourceEntity;
 class FighterPawn : public Pawn{
 public:
     virtual FighterPawn* createFighterPawn(FighterPawnType type);
@@ -16,7 +18,8 @@ public:
     void takePresentResource(ResourceEntity* toTake);
     void moveToPosition(std::pair<double, double> pos);
     void moveToBuilding(Building* dest) override;
-}
+    void getResource(ResourceEntity* toGet);
+};
 class DummyMonk : public FighterPawn {
 public:
     void attack(Entity* attacked) override;

@@ -1,11 +1,18 @@
 #include "FighterPawn.h"
-void DummyMonk::attack(Entity* attacked) override;
-FighterPawnType DummyMonk::getType() override {
+#include "Entity.h"
+#include "ResourceEntity.h"
+#include "Building.h"
+void DummyMonk::attack(Entity* attacked) {
+    
+}
+FighterPawnType DummyMonk::getType()  {
     return FighterPawnType::DummyMonk;
 }
-void DummySwordsman::attack(Entity* attacked) override;
-FighterPawnType DummySwordsman::getType() override {
-    return FighterPawnType::DummySwordsmans;
+void DummySwordsman::attack(Entity* attacked)  {
+    
+}
+FighterPawnType DummySwordsman::getType()  {
+    return FighterPawnType::DummySwordsman;
 }
 FighterPawn* FighterPawn::createFighterPawn(FighterPawnType type, Building* placeOfCreation) {
     switch (id) {
@@ -55,7 +62,7 @@ void FighterPawn::moveToPosition(std::pair<double, double> pos) {
     position = pos;
 
 }
-void FighterPawn::moveToBuilding(Building* dest) override {
+void FighterPawn::moveToBuilding(Building* dest)  {
     moveToPosition(dest->position);
     IMHere(dest);
 }

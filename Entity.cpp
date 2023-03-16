@@ -1,3 +1,4 @@
+#include "Entity.h"
 #include "Player.h"
 
 void Entity::destroy(){}

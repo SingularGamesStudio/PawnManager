@@ -1,7 +1,8 @@
 #include <utility>
 #include "Resource.h"
-class Task : public Entity;
-class Building : public Entity;
+#include "Task.h"
+#include "Entity.h"
+class Building;
 class Pawn : public Entity {
 public:
     Building* inside = nullptr;

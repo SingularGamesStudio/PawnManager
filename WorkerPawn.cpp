@@ -1,5 +1,4 @@
 #include "WorkerPawn.h"
-enum class expertisesID { DummySmeltery, DummyMetalworking, DummtTrainership };
 void WorkerPawn::create(Building* placeOfCreation) {
     currentTask = Task(TaskID::Idle, placeOfCreation);
     travelling = false;
