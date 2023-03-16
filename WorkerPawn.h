@@ -20,12 +20,14 @@ public:
         inside = placeOfCreation;
     }
 
-    void assignTask(Task toAssign){
+    void assignInnerTask(Task toAssign){
+        currentTask = toAssign;
         switch(toAssign.id){
             case TaskID::Get:
-                moveTo(toAssign.destination);
-                holding = toAssign.resource;
-                (*holding).beingHolded = true;
+                takeResourceFromBuilding(toAssign.destination, toAssign.object);
+            case TaskID::Transport:
+                takeResourceFromBuilding(toAssign.destination, toAssign.object);
+                moveResorceTo(toAssign.destination2);
             case TaskID::Move:
                 moveTo(toAssign.destination);
             case TaskID::BeIngridient:
