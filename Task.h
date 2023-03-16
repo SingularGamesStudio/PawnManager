@@ -1,5 +1,4 @@
-#include "Building.h"
-#include "Pawn.h"
+#include "Resource.h"
 enum class TaskID {
     Build,
     Craft,
@@ -10,14 +9,15 @@ enum class TaskID {
     Transport,
     BeProcessed
 };
+
+class Building;
+
 class Task{
 public:
     TaskID id;
     Building* destination;
     Resource object;
     Building* destination2;
-    Task(TaskID taskid, Building* building, Building* building2 = nullptr, Resource resource = Resource::DummyNothing): id(taskid), destination(building), destination2(building2), object(resource){
-
-    }
+    Task(TaskID taskid, Building* building, Building* building2 = nullptr, Resource resource = Resource::DummyNothing);
     ///TASK_REFORM(player -> pawn commands)
 };
