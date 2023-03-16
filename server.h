@@ -8,13 +8,13 @@ namespace dlib {
 
     class serverInterface {
     protected:
-        asio::io_context serverContext;
+        boost::asio::io_context serverContext;
         std::thread contextThread;
-        asio::ip::tcp::acceptor serverAcceptor;
+        boost::asio::ip::tcp::acceptor serverAcceptor;
         MQueue<std::pair<Packet, std::shared_ptr<Connection>>> inQueue;
         std::vector<std::shared_ptr<Connection>> connections;
     public:
-        serverInterface(uint16_t port) : serverAcceptor(serverContext, asio::ip::tcp::endpoint(asio::ip::tcp::v4(), port)) {
+        serverInterface(uint16_t port) : serverAcceptor(serverContext, boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), port)) {
         }
         virtual ~serverInterface() {
             stop();
@@ -78,7 +78,7 @@ namespace dlib {
         }
     protected:
         void waitForConnections() {
-            serverAcceptor.async_accept([this](std::error_code ec, asio::ip::tcp::socket socket){
+            serverAcceptor.async_accept([this](std::error_code ec, boost::asio::ip::tcp::socket socket){
                 if(ec) {
                     std::cerr << "SERVER got an error whilst waiting for connections:\n\t" << ec.message() << "\n";
                 }
@@ -105,12 +105,12 @@ namespace dlib {
         virtual void onDisconnection(std::shared_ptr<Connection> client) {
         }
         virtual void onPacketReceive(std::shared_ptr<Connection> client, Packet p) {
-            p.type = Packet::Types::RAW_MESSAGE;
-            std::cout << "SERVER received Packet:\n" << ;
+            p.type = Packet::Type::RAW_MESSAGE;
+            std::cout << "SERVER received Packet:\n";
             for(char c : p.data){
-                cout << c;
+                std::cout << c;
             }
-            cout << "\n";
+            std::cout << "\n";
             //sendPacketClient(client, p);
         }
 

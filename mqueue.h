@@ -11,10 +11,9 @@ namespace dlib {
     public:
         MQueue() = default;
         MQueue& operator=(const MQueue<T>& that) = delete;
-        MQueue(const mQueue<T>& that) = delete;
+        MQueue(const MQueue<T>& that) = delete;
         ~MQueue() {
-            std::scoped_lock lk(mx);
-            c.clear();
+            clear();
         }
         T& front() {
             std::scoped_lock lk(mx);
@@ -40,5 +39,10 @@ namespace dlib {
             std::scoped_lock lk(mx);
             return c.empty();
         }
-    }
+        void clear(){
+            std::scoped_lock lk(mx);
+            while(!c.empty())
+                c.pop();
+        }
+    };
 }

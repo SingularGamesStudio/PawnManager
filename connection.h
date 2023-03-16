@@ -10,8 +10,8 @@ namespace dlib {
         enum class Owner : char {CLIENT, SERVER};
     protected:
         Owner owner;
-        asio::io_context& context;
-        asio::ip::tcp::socket soc;
+        boost::asio::io_context& context;
+        boost::asio::ip::tcp::socket soc;
         MQueue<Packet> sendQueue;
         MQueue<std::pair<Packet, std::shared_ptr<Connection>>>& receiveQueue;
         uint32_t id;
@@ -19,9 +19,9 @@ namespace dlib {
         Packet tmpPacket;
     public:
 
-        Connection (Owner owner, asio::io_context& context, asio::ip::tcp::socket soc,
+        Connection(Owner owner, boost::asio::io_context& context, boost::asio::ip::tcp::socket soc,
             MQueue<std::pair<Packet, std::shared_ptr<Connection>>>& receiveQueue) : owner(owner), context(context),
-                soc(std::move(soc)), receiveQueue(receiveQueue)  {
+                soc(std::move(soc)), receiveQueue(receiveQueue), id(-1)  {
         }
         virtual ~Connection () {
             disconnect();
@@ -40,26 +40,27 @@ namespace dlib {
             }
         }
 
-        void connectToServer(const asio::ip::tcp::resolver::results_type& endpoints) {
+        void connectToServer(const boost::asio::ip::tcp::resolver::results_type& endpoints) {
             if (owner != Owner::CLIENT)
                 return;
-            asio::async_connect(soc, endpoints, [this](std::error_code ec, std::size_t len){
-                if(ec){
-                    std::cerr << "CLIENT failed to connectToServer. EROOR:\n\t" << ec.message() << "\n";
-                    return;
-                }
-                acceptHeader();
-            });
+            boost::asio::async_connect(soc, endpoints,
+                                [this](std::error_code ec, boost::asio::ip::tcp::endpoint endpoint)
+                                {
+                                    if (!ec)
+                                    {
+                                        acceptHeader();
+                                    }
+                                });
         }
         void disconnect() {
             if (isConnected()) 
-                asio::post(context, [this]() { soc.close(); });
+                boost::asio::post(context, [this]() { soc.close(); });
         }
         bool isConnected() const {
             return soc.is_open();
         }
         void send(const Packet& p) {
-            asio::post(context, [this, p](){
+            boost::asio::post(context, [this, p](){
                 bool alreadySending = !sendQueue.empty();
                 if(p.type == Packet::Type::PROCESSED_MESSAGE){
                     sendQueue.push(p);
@@ -84,8 +85,8 @@ namespace dlib {
         }
         void acceptHeader() {
             char headerBuffer[Packet::headerSize];
-            asio::async_read(soc, asio::buffer(headerBuffer, Packet::headerSize), 
-                [this](std::error_code ec, std::size_t len){
+            boost::asio::async_read(soc, boost::asio::buffer(headerBuffer, Packet::headerSize),
+                [this, &headerBuffer](std::error_code ec, std::size_t len){
                     if(ec){
                         std::cerr << "SERVER failed to read header ID: " << id << "\n";
                         tmpPacket.clear();
@@ -93,7 +94,7 @@ namespace dlib {
                         return;
                     }
                     tmpPacket.parseHeader(headerBuffer);
-                    if(tmpPacket.size() > 0)
+                    if(!tmpPacket.data.empty())
                         acceptData();
                     else
                         pushInQueue();
@@ -101,7 +102,7 @@ namespace dlib {
         }
 
         void acceptData() {
-            asio::async_read(soc, asio::buffer(tmpPacket.data.data(), tmpPacket.data.size()), 
+            boost::asio::async_read(soc, boost::asio::buffer(tmpPacket.data.data(), tmpPacket.data.size()),
                 [this](std::error_code ec, std::size_t len){
                     if (ec) {
                         std::cerr << "SERVER failed to read data ID: " << id << "\n";
@@ -114,7 +115,7 @@ namespace dlib {
         }
 
         void sendPacket() {
-            asio::async_write(soc, asio::buffer(sendQueue.front().data.data(), sendQueue.front().data.size()),
+            boost::asio::async_write(soc, boost::asio::buffer(sendQueue.front().data.data(), sendQueue.front().data.size()),
                 [this](std::error_code ec, std::size_t len){
                     if (ec) {
                         std::cerr << "SERVER failed to send packet ID: " << id << "\n";
@@ -126,6 +127,6 @@ namespace dlib {
                     }
                 });
         }
-    }
+    };
 
 }

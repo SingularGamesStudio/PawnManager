@@ -1,5 +1,3 @@
-#define ASIO_STANDALONE
-
 #ifdef _WIN32
 #define _WIN32_WINNT 0x0A00
 #endif
@@ -14,6 +12,7 @@
 #include <queue>
 #include <deque>
 #include <mutex>
-#include "asio.hpp"
-#include "asio/ts/buffer.hpp"
-#include "asio/ts/internet.hpp"
+#include <memory>
+#include "boost/asio.hpp"
+#include "boost/asio/ts/buffer.hpp"
+#include "boost/asio/ts/internet.hpp"

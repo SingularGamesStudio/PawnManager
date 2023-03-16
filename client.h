@@ -8,25 +8,24 @@ namespace dlib {
 
     class clientInterface {
     private:
-        asio::io_context connectionContext;
+        boost::asio::io_context connectionContext;
         std::thread contextThread;
-        asio::ip::tcp::socket connectionSocket;
         std::unique_ptr<Connection> connectionPtr;
-        asio::ip::tcp::endpoint server;
+        boost::asio::ip::tcp::endpoint server;
     public:
         MQueue<std::pair<Packet, std::shared_ptr<Connection>>> inQueue;
-        clientInterface() : connectionSocket(connectionContext) {}
+        clientInterface() {}
         virtual ~clientInterface() {
             disconnect();
         }
         bool connect(const std::string& address, const uint16_t port) {
             try {
-                asio::ip::tcp::resolver resolver(connectionContext);
-                asio::ip::tcp::resolver::results_type endpoints = resolver.resolve(address, std::to_string(port));
+                boost::asio::ip::tcp::resolver resolver(connectionContext);
+                boost::asio::ip::tcp::resolver::results_type endpoints = resolver.resolve(address, std::to_string(port));
                 connectionPtr = std::make_unique<Connection>(
                     Connection::Owner::CLIENT,
                     connectionContext,
-                    asio::ip::tcp::socket(connectionContext),
+                    boost::asio::ip::tcp::socket(connectionContext),
                     inQueue
                 );
                 connectionPtr->connectToServer(endpoints);
@@ -55,6 +54,6 @@ namespace dlib {
         void send(const Packet& p) {
             connectionPtr->send(p);
         }
-    }
+    };
 
 }

@@ -1,6 +1,6 @@
 #include "server.h"
 
-dlib::server_interface serv(57179);
+dlib::serverInterface serv(57179);
 
 int main(){
 	serv.start();
