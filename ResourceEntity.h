@@ -5,5 +5,11 @@ class ResourceEntity:Entity {
 private:
     void destroy() override {}
 public:
-    Resource type;
+    Resource resource;
+    ResourceEntity(Resource res, std::pair<double,double> pos) : resource(res), position(pos) {
+
+    }
+    void destroy() {
+        ~ResourceEntity();
+    }
 };

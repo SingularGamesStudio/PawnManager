@@ -5,7 +5,7 @@ class Pawn : public Entity{
 public:
     Building* inside = nullptr;
     bool used;
-    Resource* holding;
+    Resource holding;
     Building* destination;
     Task CurrentTask;
     bool travelling;

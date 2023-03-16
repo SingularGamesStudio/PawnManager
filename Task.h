@@ -1,13 +1,14 @@
 #include "Building.h"
 #include "Pawn.h"
-enum class TaskID{
+enum class TaskID {
     Build,
     Craft,
     Attack,
     Move,
     Get,
     Man,
-    Idle
+    Idle,
+    Transport
 };
 class Task{
 public:

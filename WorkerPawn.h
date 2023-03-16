@@ -72,4 +72,10 @@ public:
         }
         positionBuilding = dest;
     }
+    void takeResourceFromBuilding(Building* dest, Resource res) {
+        moveToBuilding(dest);
+        dest->resources.erase(dest->resources.find(res));
+        holding = res;
+    }
+
 };

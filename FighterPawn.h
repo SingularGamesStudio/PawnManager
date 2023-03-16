@@ -25,21 +25,24 @@ static FighterPawn* FighterPawn::createFighterPawn(FighterPawnType type){
         case DummySwordsman:
             return (new DummySwordsman());
         default:
-            throw("Type of Fighter pawn not Found");
+            throw("Type of FighterPawn not found");
     }
     void getResource(ResourceEntity* toGet) {
         if (inside != nullptr)
             ImNotHere(inside);
+        
         moveToResource(toGet);
         takePresentResource(toGet);
         //пойти в хаб
+        drop();
+
     }
-    void moveToResource(Resource* toGet) {
+    void moveToResource(ResourceEntity* toGet) {
 
     }
     void takePresentResource(ResourceEntity* toTake) {
         holding = toTake->resource;
-        //убрать ресурс≈нтитю с карты
+        toTake->destroy();
     }
     void moveToPosition(std::pair<double, double> pos) {
 

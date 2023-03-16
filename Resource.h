@@ -10,4 +10,11 @@ public:
     Player owner;
     ResourceType type;
     Building position;
+    void drop(Building* inHere, std::pair<double, double> pos = { 0,0 }) {
+        if (inHere == nullptr) {
+            ResourceEntity(this, pos);
+            return;
+        }
+        inHere->resources.push_back((*this));
+    }
 };
