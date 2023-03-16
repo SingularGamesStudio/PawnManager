@@ -1,7 +1,7 @@
 #include "Pawn.h"
-#include "Resource.h"
-#include "ResourceEntity.h"
-#include "Building.h"
+#include "../../Resource.h"
+#include "../ResourceEntity.h"
+#include "../Buildings/Building.h"
 
 
 void Pawn::drop(Building* in, std::pair<double, double> pos) {

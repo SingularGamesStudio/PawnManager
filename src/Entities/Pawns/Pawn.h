@@ -2,9 +2,9 @@
 #define PAWN_H
 ///misha does not believe in me  :(
 #include <utility>
-#include "Resource.h"
-#include "Task.h"
-#include "Entity.h"
+#include "../../Resource.h"
+#include "../../Task.h"
+#include "../Entity.h"
 class Building;
 class Pawn : public Entity {
 public:

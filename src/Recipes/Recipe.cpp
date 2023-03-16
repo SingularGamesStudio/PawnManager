@@ -2,11 +2,11 @@
 #include <cassert>
 #include <set>
 #include "Recipe.h"
-#include "Pawn.h"
-#include "Resource.h"
-#include "FighterPawn.h"
-#include "WorkerPawn.h"
-#include "Building.h"
+#include "../Entities/Pawns/Pawn.h"
+#include "../Resource.h"
+#include "../Entities/Pawns/FighterPawn.h"
+#include "../Entities/Pawns/WorkerPawn.h"
+#include "../Entities/Buildings/Building.h"
 
 
 Recipe Recipe::none() {

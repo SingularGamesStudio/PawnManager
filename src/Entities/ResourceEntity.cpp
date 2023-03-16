@@ -1,5 +1,5 @@
 #include "Entity.h"
-#include "Resource.h"
+#include "../Resource.h"
 #include "ResourceEntity.h"
 #include<utility>
 

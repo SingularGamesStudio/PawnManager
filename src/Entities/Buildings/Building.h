@@ -1,8 +1,8 @@
 #ifndef BUILDING_H
 #define BUILDING_H
 ///misha does not believe in me  :(
-#include "Resource.h"
-#include "Entity.h"
+#include "../../Resource.h"
+#include "../Entity.h"
 #include <vector>
 #include<set>
 

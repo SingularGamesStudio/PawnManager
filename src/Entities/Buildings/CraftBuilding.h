@@ -2,7 +2,7 @@
 #define CRAFTBUILDING_H
 ///misha does not believe in me  :(
 #include "Building.h"
-#include "Recipe.h"
+#include "../../Recipes/Recipe.h"
 #include <vector>
 
 class CraftBuilding:Building {

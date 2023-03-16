@@ -1,5 +1,5 @@
 #include "WorkerPawn.h"
-#include "Building.h"
+#include "../Buildings/Building.h"
 #include <cmath>
 void WorkerPawn::create(Building* placeOfCreation) {
     currentTask = Task(TaskID::Idle, placeOfCreation);

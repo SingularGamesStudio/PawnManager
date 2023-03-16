@@ -1,6 +1,6 @@
-#include "Entity.h"
-#include "Resource.h"
-#include "Pawn.h"
+#include "../Entity.h"
+#include "../../Resource.h"
+#include "../Pawns/Pawn.h"
 #include "Building.h"
 #include <vector>
 #include<set>

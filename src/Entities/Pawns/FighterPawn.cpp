@@ -1,8 +1,8 @@
 #include "FighterPawn.h"
-#include "Entity.h"
-#include "ResourceEntity.h"
-#include "Building.h"
-#include "Player.h"
+#include "../Entity.h"
+#include "../ResourceEntity.h"
+#include "../Buildings/Building.h"
+#include "../../Player.h"
 void DummyMonk::attack(Entity* attacked) {
     
 }
