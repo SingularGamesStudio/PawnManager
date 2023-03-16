@@ -1,4 +1,3 @@
-#include "Building.h"
 #include "Pawn.h"
 #include <cmath>
 enum class FighterPawnType{

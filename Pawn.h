@@ -1,4 +1,5 @@
 #include <utility>
+#include "Resource.h"
 class Task : public Entity;
 class Building : public Entity;
 class Pawn : public Entity {
