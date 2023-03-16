@@ -2,21 +2,31 @@
 #include "Pawn.h"
 enum class FighterPawnType{
     DummyMonk,
-    DummySwordsman};
+    DummySwordsman
+};
 class FighterPawn : public Pawn{
 public:
     virtual FighterPawn* createFighterPawn(FighterPawnType type);
     double atk;
     double speed;
     void virtual attack(Entity* attacked);
+    virtual FighterPawnType getType() {
+
+    }
 }
 class DummyMonk : public FighterPawn{
 public:
     void attack(Entity* attacked) override;
+    FighterPawnType getType() override {
+        return FighterPawnType::DummyMonk;
+    }
 };
 class DummySwordsman : public FighterPawn{
 public:
     void attack(Entity* attacked) override;
+    FighterPawnType getType() override {
+        return FighterPawnType::DummySwordsmans;
+    }
 };
 static FighterPawn* FighterPawn::createFighterPawn(FighterPawnType type){
     switch(id){
