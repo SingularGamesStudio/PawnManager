@@ -8,7 +8,8 @@ public:
     Building* inside = nullptr;
     Resource holding;
     Building* destination;
-    Task CurrentTask;
+    Building* positionBuilding;
+    Task currentTask;
     bool travelling;
     static const int ticksPerSecond = 100'000'000;
     void drop(Building* in, std::pair<double, double> pos = { 0,0 });

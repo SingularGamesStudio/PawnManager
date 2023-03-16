@@ -2,6 +2,7 @@
 #include "Entity.h"
 #include "ResourceEntity.h"
 #include "Building.h"
+#include "Player.h"
 void DummyMonk::attack(Entity* attacked) {
     
 }
@@ -15,30 +16,31 @@ FighterPawnType DummySwordsman::getType()  {
     return FighterPawnType::DummySwordsman;
 }
 FighterPawn* FighterPawn::createFighterPawn(FighterPawnType type, Building* placeOfCreation) {
-    switch (id) {
-    case DummyMonk:
-        this = new DummyMonk();
-    case DummySwordsman:
-        this = new DummySwordsman();
+    FighterPawn* newborn;
+    switch (type) {
+        case FighterPawnType::DummyMonk:
+        newborn = new DummyMonk();
+        case FighterPawnType::DummySwordsman:
+        newborn = new DummySwordsman();
     default:
         throw("Type of FighterPawn not found");
     }
-    currentTask = Task(TaskID::Idle, placeOfCreation);
-    travelling = false;
-    holding = nullptr;
-    owner = placeOfCreation->owner;
-    destination = placeOfCreation;
-    inside = placeOfCreation;
+    newborn->currentTask = Task(TaskID::Idle, placeOfCreation);
+    newborn->travelling = false;
+    newborn->holding = Resource::DummyNothing;
+    newborn->owner = placeOfCreation->owner;
+    newborn->destination = placeOfCreation;
+    newborn->inside = placeOfCreation;
 }
 void FighterPawn::getResource(ResourceEntity* toGet) {
     if (inside != nullptr)
-        ImNotHere(inside);
+        IMNotHere(inside);
     moveToResource(toGet);
     takePresentResource(toGet);
     moveToBuilding(owner->hub);
-    inside = hub;
-    hub->addPawn(this);
-    drop();
+    inside = owner->hub;
+    owner->hub->addPawn(this);
+    drop(inside, position);
 }
 void FighterPawn::moveToResource(ResourceEntity* toGet) {
     moveToPosition(toGet->position);
@@ -54,10 +56,10 @@ void FighterPawn::moveToPosition(std::pair<double, double> pos) {
         abs(position.second - pos.second) * abs(position.second - pos.second));
     while (currentTime < timePerMove) {
         currentTime += timePerMove / ticksPerSecond;
-        position.first = currentTime / ticksPerSecond * (*positionBuilding).position.first
-            + (1 - currentTime / ticksPerSecond) * (*positionBuilding).position.first;
-        position.second = currentTime / ticksPerSecond * (*dest).position.second
-            + (1 - currentTime / ticksPerSecond) * (*dest).position.second;
+        position.first = currentTime / ticksPerSecond * pos.first
+            + (1 - currentTime / ticksPerSecond) * pos.first;
+        position.second = currentTime / ticksPerSecond * pos.second
+            + (1 - currentTime / ticksPerSecond) * pos.second;
     }
     position = pos;
 

@@ -1,8 +1,10 @@
 #include "WorkerPawn.h"
+#include "Building.h"
+#include <cmath>
 void WorkerPawn::create(Building* placeOfCreation) {
     currentTask = Task(TaskID::Idle, placeOfCreation);
     travelling = false;
-    holding = nullptr;
+    holding = Resource::DummyNothing;
     owner = placeOfCreation->owner;
     destination = placeOfCreation;
     inside = placeOfCreation;
@@ -14,11 +16,11 @@ void WorkerPawn::assignInnerTask(Task toAssign) {
         takeResourceFromBuilding(toAssign.destination, toAssign.object);
     case TaskID::Transport:
         takeResourceFromBuilding(toAssign.destination, toAssign.object);
-        moveResorceTo(toAssign.destination2);
+        moveResourceTo(toAssign.destination2);
     case TaskID::Move:
-        moveTo(toAssign.destination);
-    case TaskID::BeIngridient:
-        moveTo(toAssign.destination);
+        moveToBuilding(toAssign.destination);
+    case TaskID::BeProcessed:
+        moveToBuilding(toAssign.destination);
     default:
         throw("Unexpected WorkerPawn TaskID: ", toAssign.id);
     }
@@ -75,5 +77,5 @@ void WorkerPawn::takeResourceFromBuilding(Building * dest, Resource res) {
 }
 void WorkerPawn::moveResourceTo(Building * dest) {
     moveToBuilding(dest);
-    drop();
+    drop(inside,position);
 }

@@ -6,7 +6,6 @@
 enum class expertisesID{DummySmeltery, DummyMetalworking, DummtTrainership};
 class WorkerPawn: public Pawn{
 public:
-    Building* positionBuilding;
     
     void create(Building* placeOfCreation);
 

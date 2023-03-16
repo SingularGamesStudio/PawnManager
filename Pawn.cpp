@@ -3,6 +3,7 @@
 #include "ResourceEntity.h"
 #include "Building.h"
 
+
 void Pawn::drop(Building* in, std::pair<double, double> pos) {
     if (in != nullptr && holding != Resource::DummyNothing) {
         in->addResource(holding);
@@ -14,27 +15,25 @@ void Pawn::drop(Building* in, std::pair<double, double> pos) {
 }
 void Pawn::destroy() {
     if (inside != nullptr && holding != Resource::DummyNothing) {
-        (*holding).drop(inside);
+        drop(inside, position);
     }
     else if (holding != Resource::DummyNothing) {
-        (*holding).drop(position);
+        drop(inside, position);
     }
     ///TODO task not done... god object taskmanager not happy :(
-    ~Pawn();
+    //~Pawn();
     }
-Pawn::void IMNotHere(Building* from) {
+void Pawn::IMNotHere(Building* from) {
     if (from != nullptr)
         from->removePawn(this);
 }
-Pawn::void IMHere(Building* to) {
+void Pawn::IMHere(Building* to) {
     if (to != nullptr)
         to->addPawn(this);
 }
-Pawn::virtual void moveToBuilding(Building* toMove) = 0;
-Pawn::virtual void assignTask(const Task& toAssign) = 0;
-Pawn::void beIngridient() {
-    assignTask(TaskID::BeProcessed);
+void Pawn::beIngridient() {
+    assignTask(Task(TaskID::BeProcessed, inside));
 }
-Pawn::void stopBeingIngridient() {
-    assignTask(TaskID::Idle);
+void Pawn::stopBeingIngridient() {
+    assignTask(Task(TaskID::Idle,inside));
 }
