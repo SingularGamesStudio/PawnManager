@@ -6,6 +6,7 @@
 #include "SFML/Window.hpp"
 #include "SFML/Graphics/VertexArray.hpp"
 #include <cmath>
+#include <numbers>
 
 void PawnRenderer::drawWorkerPawn(const std::set<expertisesID>& expertises, sf::Vector2f pos) {
     std::vector<sf::Vector2f> vertices;
