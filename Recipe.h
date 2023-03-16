@@ -11,7 +11,7 @@ private:
     Building* place;
     std::vector<WorkerPawn*> workers;
     std::vector<Pawn*> procPawns;
-    std::vector<Resource*> procResources;
+    std::vector<Resource> procResources;
 public:
     static Recipe none() {
         return Recipe();
@@ -20,10 +20,11 @@ public:
     bool checkRequirements(Building* place, bool start = false){
         std::set<WorkerPawn*> workersInside;
         std::set<FighterPawn*> fightersInside;
-        std::set<Resource*> resourcesInside = place->resources;
+        std::multiset<Resource> resourcesInside;
         std::vector<Pawn*> usedPawns;
         std::vector<WorkerPawn*> workingPawns;
-        std::vector<Resource*> usedResources;
+        std::vector<Resource> usedResources;
+        for(Resource r:place->resources){resourcesInside.insert(r);}
         for(Pawn* p:place->pawns) {
             if (WorkerPawn *worker = dynamic_cast<WorkerPawn *>(p); worker != nullptr) {
                 workersInside.insert(worker);
@@ -75,11 +76,11 @@ public:
                 return false;
         }
 
-        for(ResourceType t : inResources) {
+        for(Resource t : inResources) {
             bool ok = false;
             for(auto it = resourcesInside.begin(); it!=resourcesInside.end(); it++){
-                if((*it)->type==t){
-                    usedResources.push_back(*it);
+                if((*it)==t){
+                    usedResources.push_back(t);
                     resourcesInside.erase(it);
                     ok = true;
                     break;
@@ -91,7 +92,8 @@ public:
 
         if(start){
             place->pawns.clear();
-            place->resources = resourcesInside;
+            place->resources.clear();
+            for(Resource p :resourcesInside){place->resources.push_back(p);}
             for(WorkerPawn* p :workersInside){place->pawns.push_back(dynamic_cast<Pawn*>(p));}
             for(FighterPawn* p :fightersInside){place->pawns.push_back(dynamic_cast<Pawn*>(p));}
 
@@ -118,19 +120,18 @@ public:
 
     void cancel(){
         for(Pawn* p :procPawns){place->addPawn(p);}
-        for(Resource* p :procResources){place->addResource(p);}
+        for(Resource p :procResources){place->addResource(p);}
         cleanup();
     }
 
     void finish() {
         for(Pawn* p :procPawns){delete p;}
-        for(Resource* p :procResources){delete p;}
 
         for(FighterPawnType t : outFighters) {
             place->addPawn(FighterPawn.createFighterPawn(t));
         }
-        for(ResourceType t : outResources) {
-            place->addResource(new Resource(place->owner, t));
+        for(Resource t : outResources) {
+            place->addResource(t);
         }
         cleanup();
     }
@@ -139,10 +140,10 @@ public:
 
     std::vector<FighterPawnType> inFighters;
     std::vector<expertisesID> inWorkers;
-    std::vector<ResourceType> inResources;
+    std::vector<Resource> inResources;
 
     std::vector<FighterPawnType> outFighters;
-    std::vector<ResourceType> outResources;
+    std::vector<Resource> outResources;
 
     float duration;
 };

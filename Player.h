@@ -10,7 +10,7 @@ public:
     void removePawn(Pawn* pawn, bool busy){ //if busy, then it is working on something, otherwise, it is destroyed
         //TODO
     }
-    void addResource(Resource* resource){
+    void addResource(Resource resource, Building* where){
         //TODO
     }
 

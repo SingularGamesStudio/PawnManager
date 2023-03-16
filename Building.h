@@ -9,13 +9,12 @@ private:
 public:
     Building* parent = nullptr;
     std::vector<Building*> children;
-    std::vector<Resource*> resources;
+    std::vector<Resource> resources;
     std::vector<Pawn*> pawns;
 
-    void addResource(Resource* resource) {
+    void addResource(Resource resource) {
         resources.push_back(resource);
-        resource->position = this;
-        owner.addResource(resource);
+        owner.addResource(resource, this);
     }
 
     void addPawn(Pawn* pawn) {
