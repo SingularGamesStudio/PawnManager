@@ -4,6 +4,7 @@
 
 class Player {
 public:
+    Building* hub;
     void addPawn(Pawn* pawn){
         //TODO
     }

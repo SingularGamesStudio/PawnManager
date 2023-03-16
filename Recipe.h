@@ -100,7 +100,10 @@ public:
             procResources = usedResources;
             procPawns = usedPawns;
             workers = workingPawns;
-            //TODO:process the pawns and resources in use (change flags, stop movement, etc)
+
+            for(Pawn* p:usedPawns){p->beIngridient();}
+            for(WorkerPawn* p:workingPawns){dynamic_cast<Pawn*>(p)->beIngridient();}
+            //TODO:do something with resources?
         }
         return true;
     }
@@ -111,7 +114,10 @@ public:
     }
 
     void cleanup() {
-        for(WorkerPawn* p :workers){place->addPawn(dynamic_cast<Pawn*>(p));}
+        for(WorkerPawn* p :workers){
+            place->addPawn(dynamic_cast<Pawn*>(p));
+            dynamic_cast<Pawn*>(p)->stopBeingIngridient();
+        }
         procPawns.clear();
         procResources.clear();
         workers.clear();
@@ -119,7 +125,10 @@ public:
     }
 
     void cancel(){
-        for(Pawn* p :procPawns){place->addPawn(p);}
+        for(Pawn* p :procPawns){
+            place->addPawn(p);
+            p->stopBeingIngridient();
+        }
         for(Resource p :procResources){place->addResource(p);}
         cleanup();
     }
