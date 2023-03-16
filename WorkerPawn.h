@@ -6,7 +6,6 @@
 #include <unordered_map>
 #include <queue>
 #include <vector>
-#include <vector>
 enum class expertisesID{DummySmeltery, DummyMetalworking, DummtTrainership};
 class WorkerPawn: public Pawn{
 public:
@@ -33,7 +32,7 @@ public:
     std::set<expertisesID> expertises;
 private:
     const double timePerMove = 3;
-    const int ticksPerSecond = 100'000'000
+    const int ticksPerSecond = 100'000'000;
     void takePresentResource(Resource* toTake);
     void moveTo(Building* dest){
         travelling = true;

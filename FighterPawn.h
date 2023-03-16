@@ -17,7 +17,7 @@ class DummySwordsman : public FighterPawn{
 public:
     void attack(Entity* attacked) override;
 };
-FighterPawn* FighterPawn::createFighterPawn(FighterPawnType type){
+static FighterPawn* FighterPawn::createFighterPawn(FighterPawnType type){
     switch(id){
         case DummyMonk:
             return (new DummyMonk());
