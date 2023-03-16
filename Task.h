@@ -7,11 +7,15 @@ enum class TaskID{
     PawnMove,
     PawnGet,
     Man,
+    Idle
 };
 class Task{
 public:
     TaskID id;
-    vector<Pawn> assignedTo;
+    Pawn assignedTo;
     Building* destination;
+    Task(TaskID taskid, Pawn pawn, Building* building): id(taskid), assignedTo(pawn), destination(building){
+
+    }
     ///TASK_REFORM(player -> pawn commands)
 };

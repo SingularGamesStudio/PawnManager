@@ -29,12 +29,6 @@ public:
                 throw("Unexpected WorkerPawn TaskID: ", toAssign.id);
         }
     }
-    void beIngridient() {
-        used = true;
-    }
-    void stopBeingIngridient() {
-        used = false;
-    }
     std::set<expertisesID> expertises;
 private:
     const double timePerMove = 3;
