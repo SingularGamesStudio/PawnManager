@@ -1,3 +1,6 @@
+#ifndef PLAYER_H
+#define PLAYER_H
+///misha does not believe in me  :(
 //#include "Pawn.h"
 //#include "Task.h"
 #include "Recipe.h"
@@ -14,3 +17,4 @@ public:
 
     void startRecipe(Recipe recipe, Building* where);
 };
+#endif //PLAYER_H

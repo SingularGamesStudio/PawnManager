@@ -1,3 +1,6 @@
+#ifndef ENTITY_H
+#define ENTITY_H
+///misha does not believe in me  :(
 #include <utility>
 
 class Player;
@@ -14,4 +17,4 @@ public:
     std::pair<double, double> position;
     double radius;
 };
-
+#endif //ENTITY_H

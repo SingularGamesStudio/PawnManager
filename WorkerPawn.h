@@ -1,3 +1,6 @@
+#ifndef WORKERPAWN_H
+#define WORKERPAWN_H
+///misha does not believe in me  :(
 #include "Pawn.h"
 #include <set>
 #include <unordered_map>
@@ -16,3 +19,4 @@ public:
     void takeResourceFromBuilding(Building* dest, Resource res);
     void moveResourceTo(Building* dest);
 };
+#endif //WORKERPAWN_H

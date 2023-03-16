@@ -1,3 +1,6 @@
+#ifndef FIGHTERPAWN_H
+#define FIGHTERPAWN_H
+///misha does not believe in me  :(
 #include "Pawn.h"
 #include <cmath>
 enum class FighterPawnType{
@@ -32,3 +35,4 @@ public:
     DummySwordsman();
     FighterPawnType getType() override;
 };
+#endif //FIGHTERPAWN_H

@@ -1,3 +1,6 @@
+#ifndef CRAFTBUILDING_H
+#define CRAFTBUILDING_H
+///misha does not believe in me  :(
 #include "Building.h"
 #include "Recipe.h"
 #include <vector>
@@ -21,3 +24,4 @@ public:
         current = recipe;
     }
 };
+#endif //CRAFTBUILDING_H

@@ -1,3 +1,6 @@
+#ifndef RECIPE_H
+#define RECIPE_H
+///misha does not believe in me  :(
 #include <vector>
 #include <cassert>
 #include<set>
@@ -39,3 +42,4 @@ public:
 
     float duration;
 };
+#endif //RECIPE_H

@@ -1,3 +1,6 @@
+#ifndef PAWN_H
+#define PAWN_H
+///misha does not believe in me  :(
 #include <utility>
 #include "Resource.h"
 #include "Task.h"
@@ -22,3 +25,4 @@ public:
     void stopBeingIngridient();
 
 };
+#endif //PAWN_H
