@@ -126,7 +126,12 @@ public:
         for(Pawn* p :procPawns){delete p;}
         for(Resource* p :procResources){delete p;}
 
-        //TODO:create recipe results
+        for(FighterPawnType t : outFighters) {
+            place->addPawn(FighterPawn.createFighterPawn(t));
+        }
+        for(ResourceType t : outResources) {
+            place->addResource(new Resource(place->owner, t));
+        }
         cleanup();
     }
 

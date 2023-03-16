@@ -3,7 +3,7 @@
 #include "Pawn.h"
 #include <vector>
 
-class Building: virtual Entity{
+class Building: public virtual Entity{
 private:
     void destroy() override {}
 public:
@@ -12,13 +12,15 @@ public:
     std::vector<Resource*> resources;
     std::vector<Pawn*> pawns;
 
-
-    //TODO
     void addResource(Resource* resource) {
         resources.push_back(resource);
+        resource->position = this;
+        owner.addResource(resource);
     }
 
     void addPawn(Pawn* pawn) {
         pawns.push_back(pawn);
+        pawn->inside = this;
+        owner.addPawn(pawn);
     }
 };
