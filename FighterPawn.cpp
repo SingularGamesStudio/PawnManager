@@ -18,10 +18,10 @@ FighterPawnType DummySwordsman::getType()  {
 FighterPawn* FighterPawn::createFighterPawn(FighterPawnType type, Building* placeOfCreation) {
     FighterPawn* newborn;
     switch (type) {
-        case FighterPawnType::DummyMonk:
-        newborn = new DummyMonk();
-        case FighterPawnType::DummySwordsman:
-        newborn = new DummySwordsman();
+    case FighterPawnType::DummyMonk:
+        newborn = new DummyMonk;
+    case FighterPawnType::DummySwordsman:
+        newborn = new DummySwordsman;
     default:
         throw("Type of FighterPawn not found");
     }
