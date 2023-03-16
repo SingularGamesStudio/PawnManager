@@ -1,31 +1,24 @@
-#include "Entity.h"
 #include "Resource.h"
-#include "Pawn.h"
+#include "Entity.h"
 #include <vector>
 #include<set>
 
+class Pawn;
+
 class Building: public virtual Entity{
 private:
-    void destroy() override {}
+    void destroy() override;
 public:
     Building* parent = nullptr;
     std::vector<Building*> children;
     std::multiset<Resource> resources;
     std::set<Pawn*> pawns;
 
-    void addResource(Resource resource) {
-        resources.insert(resource);
-    }
+    void addResource(Resource resource);
 
-    void removeResource(Resource resource) {
-        resources.erase(resources.find(resource));
-    }
+    void removeResource(Resource resource);
 
-    void addPawn(Pawn* pawn) {
-        pawns.insert(pawn);
-    }
+    void addPawn(Pawn* pawn);
 
-    void removePawn(Pawn* pawn) {
-        pawns.erase(pawn);
-    }
+    void removePawn(Pawn* pawn);
 };
