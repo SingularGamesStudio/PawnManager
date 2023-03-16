@@ -10,17 +10,15 @@ enum class expertisesID{DummySmeltery, DummyMetalworking, DummtTrainership};
 class WorkerPawn: public Pawn{
 public:
     Building* positionBuilding;
-    bool travelling;
     bool used;
-    Resource* holding;
-    Task CurrentTask;
+
     void assignTask(Task toAssign){
         switch(toAssign.id){
-            case TaskID::PawnGet:
+            case TaskID::Get:
                 moveTo(toAssign.destination);
                 holding = toAssign.resource;
                 (*holding).beingHolded = true;
-            case TaskID::PawnMove:
+            case TaskID::Move:
                 moveTo(toAssign.destination);
             case TaskID::Man:
                 moveTo(toAssign.destination);

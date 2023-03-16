@@ -4,17 +4,16 @@ enum class TaskID{
     Build,
     Craft,
     Attack,
-    PawnMove,
-    PawnGet,
+    Move,
+    Get,
     Man,
     Idle
 };
 class Task{
 public:
     TaskID id;
-    Pawn assignedTo;
     Building* destination;
-    Task(TaskID taskid, Pawn pawn, Building* building): id(taskid), assignedTo(pawn), destination(building){
+    Task(TaskID taskid, Building* building): id(taskid), destination(building){
 
     }
     ///TASK_REFORM(player -> pawn commands)
