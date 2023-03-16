@@ -11,10 +11,9 @@ class Entity;
 class ResourceEntity;
 class FighterPawn : public Pawn{
 public:
-    virtual FighterPawn* createFighterPawn(FighterPawnType type);
     double atk;
     double speed;
-    void virtual attack(Entity* attacked);
+    virtual void attack(Entity* attacked);
     virtual FighterPawnType getType();
     static FighterPawn* createFighterPawn(FighterPawnType type, Building* placeOfCreation);
     void moveToResource(ResourceEntity* toGet);
@@ -22,15 +21,18 @@ public:
     void moveToPosition(std::pair<double, double> pos);
     void moveToBuilding(Building* dest) override;
     void getResource(ResourceEntity* toGet);
+    void assignTask(const Task& task);
 };
 class DummyMonk : public FighterPawn {
 public:
     void attack(Entity* attacked) override;
     FighterPawnType getType() override;
+    DummyMonk(Task task, bool BOOL, Resource resource, Player* Owner, Building* dest, Building* in);
 };
 class DummySwordsman : public FighterPawn {
 public:
     void attack(Entity* attacked) override;
     FighterPawnType getType() override;
+    DummySwordsman(Task task, bool BOOL, Resource resource, Player* Owner, Building* dest, Building* in);
 };
 #endif //FIGHTERPAWN_H

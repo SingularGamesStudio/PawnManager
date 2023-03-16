@@ -37,3 +37,7 @@ void Pawn::beIngridient() {
 void Pawn::stopBeingIngridient() {
     assignTask(Task(TaskID::Idle,inside));
 }
+void Pawn::moveToBuilding(Building* toMove) {
+    throw("How did we get here?");
+}
+void Pawn::assignTask(const Task& toAssign) {}

@@ -21,7 +21,7 @@ public:
     Building* destination;
     Resource object;
     Building* destination2;
-    Task(TaskID taskid, Building* building, Building* building2 = nullptr, Resource resource = Resource::DummyNothing);
+    Task(TaskID taskid = TaskID::Idle, Building* building = nullptr, Building* building2 = nullptr, Resource resource = Resource::DummyNothing);
     ///TASK_REFORM(player -> pawn commands)
 };
 #endif //TASK_H

@@ -19,18 +19,12 @@ FighterPawn* FighterPawn::createFighterPawn(FighterPawnType type, Building* plac
     FighterPawn* newborn;
     switch (type) {
     case FighterPawnType::DummyMonk:
-        newborn = new DummyMonk;
+        newborn = new DummyMonk(Task(TaskID::Idle, placeOfCreation), false, Resource::DummyNothing, placeOfCreation->owner, placeOfCreation, placeOfCreation);
     case FighterPawnType::DummySwordsman:
-        newborn = new DummySwordsman;
+        newborn = new DummySwordsman(Task(TaskID::Idle, placeOfCreation), false, Resource::DummyNothing, placeOfCreation->owner, placeOfCreation, placeOfCreation);
     default:
         throw("Type of FighterPawn not found");
     }
-    newborn->currentTask = Task(TaskID::Idle, placeOfCreation);
-    newborn->travelling = false;
-    newborn->holding = Resource::DummyNothing;
-    newborn->owner = placeOfCreation->owner;
-    newborn->destination = placeOfCreation;
-    newborn->inside = placeOfCreation;
 }
 void FighterPawn::getResource(ResourceEntity* toGet) {
     if (inside != nullptr)
@@ -41,6 +35,25 @@ void FighterPawn::getResource(ResourceEntity* toGet) {
     inside = owner->hub;
     owner->hub->addPawn(this);
     drop(inside, position);
+}
+void FighterPawn::assignTask(const Task& task) {
+    currentTask = task;
+}
+DummyMonk::DummyMonk(Task task, bool BOOL, Resource resource, Player* Owner, Building* dest, Building* in) {
+    currentTask = task;
+    travelling = BOOL;
+    holding = resource;
+    owner = Owner;
+    destination = dest;
+    inside = in;
+}
+DummySwordsman::DummySwordsman(Task task, bool BOOL, Resource resource, Player* Owner, Building* dest, Building* in) {
+    currentTask = task;
+    travelling = BOOL;
+    holding = resource;
+    owner = Owner;
+    destination = dest;
+    inside = in;
 }
 void FighterPawn::moveToResource(ResourceEntity* toGet) {
     moveToPosition(toGet->position);
@@ -68,3 +81,6 @@ void FighterPawn::moveToBuilding(Building* dest)  {
     moveToPosition(dest->position);
     IMHere(dest);
 }
+
+void FighterPawn::attack(Entity* attacked) {};
+FighterPawnType FighterPawn::getType() {};
