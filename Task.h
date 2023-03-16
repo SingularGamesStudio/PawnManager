@@ -6,9 +6,9 @@ enum class TaskID {
     Attack,
     Move,
     Get,
-    Man,
     Idle,
-    Transport
+    Transport,
+    BeProcessed
 };
 class Task{
 public:

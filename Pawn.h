@@ -19,6 +19,15 @@ public:
         destination = placeOfCreation;
         inside = placeOfCreation;
     }
+    void drop(Building* in, std::pair<double, double> pos = { 0,0 }) {
+        if (in != nullptr) {
+            in->addResource(holding);
+            ~Pawn();
+            return;
+        }
+        ResourceEntity(holding, pos);
+        ~Pawn();
+    }
     void destroy() {
         if (inside != nullptr && holding != nullptr) {
             (*holding).drop(inside);
@@ -38,9 +47,9 @@ public:
     virtual void moveToBuilding(Building* toMove);
     virtual void assignTask(const Task& toAssign);
     void beIngridient() {
-        used = true;
+        assignTask(TaskID::BeProcessed);
     }
     void stopBeingIngridient() {
-        used = false;
+        assignTask(TaskID::Idle);
     }
 };
