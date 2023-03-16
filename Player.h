@@ -1,15 +1,15 @@
 #include "Pawn.h"
 #include "Task.h"
+#include "Recipe.h"
 #include <vector>
 
 class Player {
 public:
     Building* hub;
     std::vector<Pawn*> pawns;
-    void addPawn(Pawn* pawn){
-        //TODO
-    }
-    void assignTask(TaskID id) {
-        //TODO
+    std::vector<>
+
+    void startRecipe(Recipe recipe, Building* where) {
+
     }
 };
