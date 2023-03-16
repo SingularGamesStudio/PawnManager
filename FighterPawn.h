@@ -12,71 +12,19 @@ public:
     double speed;
     void virtual attack(Entity* attacked);
     virtual FighterPawnType getType();
+    static FighterPawn* createFighterPawn(FighterPawnType type, Building* placeOfCreation);
+    void moveToResource(ResourceEntity* toGet);
+    void takePresentResource(ResourceEntity* toTake);
+    void moveToPosition(std::pair<double, double> pos);
+    void moveToBuilding(Building* dest) override;
 }
-class DummyMonk : public FighterPawn{
+class DummyMonk : public FighterPawn {
 public:
     void attack(Entity* attacked) override;
-    FighterPawnType getType() override {
-        return FighterPawnType::DummyMonk;
-    }
+    FighterPawnType getType() override;
 };
-class DummySwordsman : public FighterPawn{
+class DummySwordsman : public FighterPawn {
 public:
     void attack(Entity* attacked) override;
-    FighterPawnType getType() override {
-        return FighterPawnType::DummySwordsmans;
-    }
+    FighterPawnType getType() override;
 };
-static FighterPawn* FighterPawn::createFighterPawn(FighterPawnType type, Building* placeOfCreation){
-    switch(id){
-        case DummyMonk:
-            this = new DummyMonk();
-        case DummySwordsman:
-            this = new DummySwordsman();
-        default:
-            throw("Type of FighterPawn not found");
-    }
-    currentTask = Task(TaskID::Idle, placeOfCreation);
-    travelling = false;
-    holding = nullptr;
-    owner = placeOfCreation->owner;
-    destination = placeOfCreation;
-    inside = placeOfCreation;
-    }
-    void getResource(ResourceEntity* toGet) {
-        if (inside != nullptr)
-            ImNotHere(inside);
-        moveToResource(toGet);
-        takePresentResource(toGet);
-        moveToBuilding(owner->hub);
-        inside = hub;
-        hub->addPawn(this);
-        drop();
-    }
-    void moveToResource(ResourceEntity* toGet) {
-        moveToPosition(toGet->position);
-    }
-    void takePresentResource(ResourceEntity* toTake) {
-        holding = toTake->resource;
-        toTake->destroy();
-    }
-    void moveToPosition(std::pair<double, double> pos) {
-        IMNotHere(inside);
-        double currentTime = 0;
-        double timePerMove = sqrt(abs(position.first - pos.first) * abs(position.first - pos.first) +
-            abs(position.second - pos.second) * abs(position.second - pos.second));
-        while (currentTime < timePerMove) {
-            currentTime += timePerMove / ticksPerSecond;
-            position.first = currentTime / ticksPerSecond * (*positionBuilding).position.first
-                + (1 - currentTime / ticksPerSecond) * (*positionBuilding).position.first;
-            position.second = currentTime / ticksPerSecond * (*dest).position.second
-                + (1 - currentTime / ticksPerSecond) * (*dest).position.second;
-        }
-        position = pos;
-
-    }
-    void moveToBuilding(Building* dest) override {
-        moveToPosition(dest->position);
-        IMHere(dest);
-    }
-}
