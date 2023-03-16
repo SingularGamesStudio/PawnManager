@@ -20,9 +20,8 @@ public:
                 (*holding).beingHolded = true;
             case TaskID::Move:
                 moveTo(toAssign.destination);
-            case TaskID::Man:
+            case TaskID::BeIngridient:
                 moveTo(toAssign.destination);
-                manning = true;
             default:
                 throw("Unexpected WorkerPawn TaskID: ", toAssign.id);
         }
