@@ -132,7 +132,7 @@ void Recipe::finish() {
     for(Pawn* p :procPawns){delete p;}
 
     for(FighterPawnType t : outFighters) {
-        place->addPawn(FighterPawn::createFighterPawn(t, place));
+        place->addPawn(FighterPawn::createFighterPawn(t));//TODO:change constructor
     }
     for(Resource t : outResources) {
         place->addResource(t);
