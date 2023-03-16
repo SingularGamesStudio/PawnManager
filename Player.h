@@ -1,4 +1,5 @@
 #include "Pawn.h"
+#include "Task.h"
 #include <vector>
 
 class Player {
@@ -14,6 +15,9 @@ public:
     }
 
     void removeResource(Resource* resource){
+        //TODO
+    }
+    void assignTask(TaskID id) {
         //TODO
     }
 };
