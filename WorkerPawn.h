@@ -10,7 +10,6 @@ enum class expertisesID{DummySmeltery, DummyMetalworking, DummtTrainership};
 class WorkerPawn: public Pawn{
 public:
     Building* positionBuilding;
-    bool used;
 
     void assignTask(Task toAssign){
         switch(toAssign.id){
@@ -28,8 +27,6 @@ public:
     }
     std::set<expertisesID> expertises;
     void moveToBuilding(Building* dest){
-        double timePerMove = sqrt(abs(position.first - dest->position.first) * abs(position.first - dest->position.first) +
-                                  abs(position.second - dest->position.second) * abs(position.second - dest->position.second));
         travelling = true;
         std::unordered_map<Building*, std::vector<Building*> > visited;
         std::queue<Building*> q;
@@ -61,6 +58,8 @@ public:
     }
     void moveToNeighbour(Building* dest){
         double currentTime = 0;
+        double timePerMove = sqrt(abs(position.first - dest->position.first) * abs(position.first - dest->position.first) +
+            abs(position.second - dest->position.second) * abs(position.second - dest->position.second));
         while(currentTime < timePerMove)
         {
             currentTime += timePerMove / ticksPerSecond;
@@ -70,11 +69,12 @@ public:
                              + (1 - currentTime / ticksPerSecond) * (*dest).position.second;
         }
         positionBuilding = dest;
+        position = dest->position;
     }
     void takeResourceFromBuilding(Building* dest, Resource res) {
         moveToBuilding(dest);
         dest->resources.erase(dest->resources.find(res));
         holding = res;
     }
-
+    
 };

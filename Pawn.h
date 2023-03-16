@@ -10,46 +10,38 @@ public:
     Task CurrentTask;
     bool travelling;
     static const int ticksPerSecond = 100'000'000;
-    virtual void moveTo(std::pair<double, double> destination);
-    void create(Building* placeOfCreation) {
-        used = false;
-        currentTask = Task(TaskID::Idle, placeOfCreation);
-        travelling = false;
-        holding = nullptr;
-        destination = placeOfCreation;
-        inside = placeOfCreation;
-    }
     void drop(Building* in, std::pair<double, double> pos = { 0,0 }) {
         if (in != nullptr) {
             in->addResource(holding);
-            ~Pawn();
+            holding = Resource::DummyNothing;
             return;
         }
         ResourceEntity(holding, pos);
-        ~Pawn();
+
     }
     void destroy() {
-        if (inside != nullptr && holding != nullptr) {
+        if (inside != nullptr && holding != Resorce::DummyNothing) {
             (*holding).drop(inside);
         }
-        else if (holding != nullptr) {
+        else if (holding != Resource::DummyNothing) {
             (*holding).drop(position);
         }
         ///кинь игроку факт, что хотелось бы другого чувака на таску
         ~Pawn();
     }
     void IMNotHere(Building* from) {
-        from.Pawns.erase(from.Pawns.find(this));
+        from->removePawn(this);
     }
     void IMHere(Building* to) {
-        to.Pawns.push_back(this);
+        to->addPawn(this);
     }
-    virtual void moveToBuilding(Building* toMove);
-    virtual void assignTask(const Task& toAssign);
+    virtual void moveToBuilding(Building* toMove) = 0;
+    virtual void assignTask(const Task& toAssign) = 0;
     void beIngridient() {
         assignTask(TaskID::BeProcessed);
     }
     void stopBeingIngridient() {
         assignTask(TaskID::Idle);
     }
+
 };
