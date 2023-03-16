@@ -26,13 +26,11 @@ public:
 class DummyMonk : public FighterPawn {
 public:
     void attack(Entity* attacked) override;
-    DummyMonk();
     FighterPawnType getType() override;
 };
 class DummySwordsman : public FighterPawn {
 public:
     void attack(Entity* attacked) override;
-    DummySwordsman();
     FighterPawnType getType() override;
 };
 #endif //FIGHTERPAWN_H
