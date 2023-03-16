@@ -1,5 +1,6 @@
 #include <vector>
 #include <cassert>
+#include<set>
 #include "Pawn.h"
 #include "Resource.h"
 #include "FighterPawn.h"
@@ -93,7 +94,7 @@ public:
         if(start){
             place->pawns.clear();
             place->resources.clear();
-            for(Resource p :resourcesInside){place->resources.push_back(p);}
+            for(Resource p :resourcesInside){place->addResource(p);}
             for(WorkerPawn* p :workersInside){place->pawns.push_back(dynamic_cast<Pawn*>(p));}
             for(FighterPawn* p :fightersInside){place->pawns.push_back(dynamic_cast<Pawn*>(p));}
 
@@ -103,7 +104,6 @@ public:
 
             for(Pawn* p:usedPawns){p->beIngridient();}
             for(WorkerPawn* p:workingPawns){dynamic_cast<Pawn*>(p)->beIngridient();}
-            //TODO:do something with resources?
         }
         return true;
     }
@@ -137,7 +137,7 @@ public:
         for(Pawn* p :procPawns){delete p;}
 
         for(FighterPawnType t : outFighters) {
-            place->addPawn(FighterPawn.createFighterPawn(t));
+            place->addPawn(FighterPawn.createFighterPawn(t));//TODO:change constructor
         }
         for(Resource t : outResources) {
             place->addResource(t);

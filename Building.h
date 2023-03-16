@@ -2,6 +2,7 @@
 #include "Resource.h"
 #include "Pawn.h"
 #include <vector>
+#include<set>
 
 class Building: public virtual Entity{
 private:
@@ -9,17 +10,22 @@ private:
 public:
     Building* parent = nullptr;
     std::vector<Building*> children;
-    std::vector<Resource> resources;
-    std::vector<Pawn*> pawns;
+    std::multiset<Resource> resources;
+    std::set<Pawn*> pawns;
 
     void addResource(Resource resource) {
-        resources.push_back(resource);
-        owner.addResource(resource, this);
+        resources.insert(resource);
+    }
+
+    void removeResource(Resource resource) {
+        resources.erase(resources.find(resource));
     }
 
     void addPawn(Pawn* pawn) {
-        pawns.push_back(pawn);
-        pawn->inside = this;
-        owner.addPawn(pawn);
+        pawns.insert(pawn);
+    }
+
+    void removePawn(Pawn* pawn) {
+        pawns.erase(pawn);
     }
 };
