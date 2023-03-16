@@ -1,5 +1,6 @@
 #include "Building.h"
 #include "Pawn.h"
+#include <cmath>
 enum class FighterPawnType{
     DummyMonk,
     DummySwordsman
@@ -48,16 +49,19 @@ static FighterPawn* FighterPawn::createFighterPawn(FighterPawnType type, Buildin
         moveToResource(toGet);
         takePresentResource(toGet);
         moveToBuilding(owner->hub);
+        inside = hub;
+        hub->addPawn(this);
         drop();
     }
     void moveToResource(ResourceEntity* toGet) {
-
+        moveToPosition(toGet->position);
     }
     void takePresentResource(ResourceEntity* toTake) {
         holding = toTake->resource;
         toTake->destroy();
     }
     void moveToPosition(std::pair<double, double> pos) {
+        IMNotHere(inside);
         double currentTime = 0;
         double timePerMove = sqrt(abs(position.first - pos.first) * abs(position.first - pos.first) +
             abs(position.second - pos.second) * abs(position.second - pos.second));

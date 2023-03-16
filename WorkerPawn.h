@@ -10,6 +10,15 @@ enum class expertisesID{DummySmeltery, DummyMetalworking, DummtTrainership};
 class WorkerPawn: public Pawn{
 public:
     Building* positionBuilding;
+    
+    void create(Building* placeOfCreation) {
+        currentTask = Task(TaskID::Idle, placeOfCreation);
+        travelling = false;
+        holding = nullptr;
+        owner = placeOfCreation->owner;
+        destination = placeOfCreation;
+        inside = placeOfCreation;
+    }
 
     void assignTask(Task toAssign){
         switch(toAssign.id){
@@ -76,5 +85,8 @@ public:
         dest->resources.erase(dest->resources.find(res));
         holding = res;
     }
-    
+    void moveResourceTo(Building* dest) {
+        moveToBuilding(dest);
+        drop();
+    }
 };

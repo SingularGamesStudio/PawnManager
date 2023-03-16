@@ -4,20 +4,19 @@
 class Pawn : public Entity{
 public:
     Building* inside = nullptr;
-    bool used;
     Resource holding;
     Building* destination;
     Task CurrentTask;
     bool travelling;
     static const int ticksPerSecond = 100'000'000;
     void drop(Building* in, std::pair<double, double> pos = { 0,0 }) {
-        if (in != nullptr) {
+        if (in != nullptr && holding != Resource::DummyNothing) {
             in->addResource(holding);
             holding = Resource::DummyNothing;
             return;
-        }
-        ResourceEntity(holding, pos);
-
+        } 
+        if(holding != Resource::DummyNothing)
+            ResourceEntity(holding, pos);
     }
     void destroy() {
         if (inside != nullptr && holding != Resorce::DummyNothing) {
@@ -26,14 +25,16 @@ public:
         else if (holding != Resource::DummyNothing) {
             (*holding).drop(position);
         }
-        ///кинь игроку факт, что хотелось бы другого чувака на таску
+        ///task not done... god object taskmanager not happy :(
         ~Pawn();
     }
     void IMNotHere(Building* from) {
-        from->removePawn(this);
+        if(from != nullptr)
+            from->removePawn(this);
     }
     void IMHere(Building* to) {
-        to->addPawn(this);
+        if(to != nullptr)
+            to->addPawn(this);
     }
     virtual void moveToBuilding(Building* toMove) = 0;
     virtual void assignTask(const Task& toAssign) = 0;
