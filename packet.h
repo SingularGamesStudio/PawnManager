@@ -5,14 +5,14 @@ namespace dlib {
 
     class Packet {
     public:
-        enum class Type : char { INVALID, RAW_MESSAGE, PROCESSED_MESSAGE, ACCEPTED_MESSAGE };
+        enum class Type : uint8_t { INVALID, RAW_MESSAGE, PROCESSED_MESSAGE, ACCEPTED_MESSAGE };
         static const size_t headerSize = sizeof(Type) + sizeof(size_t);
         Type type;
-        std::vector<char> data;
+        std::vector<uint8_t> data;
         Packet() : type(Type::INVALID), data() {}
         ~Packet() = default;
         explicit Packet(Type type) : type(type), data() {}
-        void parseHeader(char* rawData) {
+        void parseHeader(const uint8_t* rawData) {
             size_t size = 0;
             std::memcpy(&size, rawData, sizeof(size_t));
             std::memcpy(&type, rawData + sizeof(size_t), sizeof(Type));
@@ -28,7 +28,7 @@ namespace dlib {
             static_assert(std::is_standard_layout<U>::value, "U is not trivial type");
             if (type != Type::RAW_MESSAGE)
                 throw std::logic_error("ERROR: trying to add data(U) into not RAW_MESSAGE packet");
-            auto size = data.size();
+            size_t size = data.size();
             data.resize(size + sizeof(U));
             std::memcpy(data.data() + size, &object, sizeof(U));
             return *this;
@@ -38,8 +38,8 @@ namespace dlib {
                 throw std::logic_error("ERROR: trying to add data(another packet) into not RAW_MESSAGE packet");
             if (that.type != Type::RAW_MESSAGE)
                 throw std::invalid_argument("ERROR: trying to add not RAW_MESSAGE packet");
-            auto size = data.size();
-            auto tSize = that.data.size();
+            size_t size = data.size();
+            size_t tSize = that.data.size();
             data.resize(size + tSize);
             std::memcpy(data.data() + size, that.data.data(), tSize);
             return *this;
@@ -51,8 +51,8 @@ namespace dlib {
                 throw std::invalid_argument("ERROR: trying to prepare for sending unsendable packet");
             if (type == Type::RAW_MESSAGE)
                 type = Type::PROCESSED_MESSAGE;
-            auto bytes = data.size();
-            std::vector<char> tmpHeader(headerSize);
+            size_t bytes = data.size();
+            std::vector<uint8_t> tmpHeader(headerSize);
             std::memcpy(tmpHeader.data(), &bytes, sizeof(size_t));
             std::memcpy(tmpHeader.data() + sizeof(size_t), &type, sizeof(Type));
             tmpHeader.insert(tmpHeader.end(), data.begin(), data.end());

@@ -81,19 +81,21 @@ namespace dlib {
                 receiveQueue.push({tmpPacket, this->shared_from_this()});
             else
                 receiveQueue.push({tmpPacket, nullptr});
+            tmpPacket.clear();
             acceptHeader();
         }
         void acceptHeader() {
-            char headerBuffer[Packet::headerSize];
-            boost::asio::async_read(soc, boost::asio::buffer(headerBuffer, Packet::headerSize),
-                [this, &headerBuffer](std::error_code ec, std::size_t len){
+            boost::asio::mutable_buffer headerBuffer(new char[9], 9);
+            boost::asio::async_read(soc, headerBuffer,
+                [this, headerBuffer](std::error_code ec, size_t len){     
                     if(ec){
-                        std::cerr << "SERVER failed to read header ID: " << id << "\n";
+                        std::cerr << "failed to read header ID: " << id << "\n";
                         tmpPacket.clear();
                         acceptHeader();
                         return;
                     }
-                    tmpPacket.parseHeader(headerBuffer);
+                    tmpPacket.parseHeader((uint8_t*)headerBuffer.data());
+                    delete[] (uint8_t*)headerBuffer.data();
                     if(!tmpPacket.data.empty())
                         acceptData();
                     else
@@ -105,7 +107,7 @@ namespace dlib {
             boost::asio::async_read(soc, boost::asio::buffer(tmpPacket.data.data(), tmpPacket.data.size()),
                 [this](std::error_code ec, std::size_t len){
                     if (ec) {
-                        std::cerr << "SERVER failed to read data ID: " << id << "\n";
+                        std::cerr << "failed to read data ID: " << id << "\n";
                         tmpPacket.clear();
                         acceptHeader();
                         return;
@@ -116,7 +118,7 @@ namespace dlib {
 
         void sendPacket() {
             boost::asio::async_write(soc, boost::asio::buffer(sendQueue.front().data.data(), sendQueue.front().data.size()),
-                [this](std::error_code ec, std::size_t len){
+                [this](std::error_code ec, size_t len){
                     if (ec) {
                         std::cerr << "SERVER failed to send packet ID: " << id << "\n";
                         return;

@@ -70,7 +70,7 @@ namespace dlib {
         void respond(size_t limit = -1) {
             size_t processed = 0;
             while(!inQueue.empty() && processed < limit){
-                auto&[p, client] = inQueue.front();
+                auto[p, client] = inQueue.front();
                 inQueue.pop();
                 onPacketReceive(client, p);
                 processed++;
@@ -105,13 +105,6 @@ namespace dlib {
         virtual void onDisconnection(std::shared_ptr<Connection> client) {
         }
         virtual void onPacketReceive(std::shared_ptr<Connection> client, Packet p) {
-            p.type = Packet::Type::RAW_MESSAGE;
-            std::cout << "SERVER received Packet:\n";
-            for(char c : p.data){
-                std::cout << c;
-            }
-            std::cout << "\n";
-            //sendPacketClient(client, p);
         }
 
     };

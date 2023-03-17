@@ -12,11 +12,13 @@ namespace dlib {
         std::thread contextThread;
         std::unique_ptr<Connection> connectionPtr;
         boost::asio::ip::tcp::endpoint server;
-    public:
         MQueue<std::pair<Packet, std::shared_ptr<Connection>>> inQueue;
+    public:
         clientInterface() {}
         virtual ~clientInterface() {
             disconnect();
+        }
+        virtual void onPacketReceive(const Packet& p) {
         }
         bool connect(const std::string& address, const uint16_t port) {
             try {
@@ -52,7 +54,17 @@ namespace dlib {
             return connectionPtr->isConnected();
         }
         void send(const Packet& p) {
-            connectionPtr->send(p);
+            if (isConnected())
+                connectionPtr->send(p);
+        }
+        void respond(size_t limit = -1) {
+            size_t processed = 0;
+            while(!inQueue.empty() && processed < limit){
+                auto[p, client] = inQueue.front();
+                inQueue.pop();
+                onPacketReceive(p);
+                processed++;
+            }
         }
     };
 
