@@ -19,6 +19,6 @@ public:
 
     bool startRecipe(Recipe recipe, Building* where);
 
-    bool checkRecipe(Recipe recipe);
+    bool checkRecipe(Recipe& recipe);
 };
 #endif //PLAYER_H
