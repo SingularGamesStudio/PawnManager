@@ -8,6 +8,7 @@ void WorkerPawn::create(Building* placeOfCreation) {
     owner = placeOfCreation->owner;
     destination = placeOfCreation;
     inside = placeOfCreation;
+    position = placeOfCreation->position;
 }
 void WorkerPawn::assignInnerTask(Task toAssign) {
     currentTask = toAssign;

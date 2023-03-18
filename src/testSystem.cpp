@@ -12,7 +12,7 @@ CraftBuilding* crafter;
 
 Player* initTest() {
     player = new Player();
-    player->hub = new Building({100, 50}, player, 100);
+    player->hub = new Building({80, -120}, player, 100);
     for(int i = 0; i<30; i++){
         player->hub->addResource(Resource::DummyOre);
     }
