@@ -25,6 +25,19 @@ void WorkerPawn::assignInnerTask(Task toAssign) {
         throw("Unexpected WorkerPawn TaskID: ", toAssign.id);
     }
 }
+void WorkerPawn::tick() {
+    if (currentInWay < onTheWay.size())
+        Building* dest = onTheWay[currentInWay];
+        position.first+= (dest->position.first - dest->position.firs) / ticksPerSecond;
+        position.second+= (dest->position.first - dest->position.firs) / ticksPerSecond;
+        if (fabs(position.first - dest->position.first) < 1e-6 && fabs(position.second - dest->position.second) < 1e-6){
+            position = dest->position;
+            ++currentInWay;
+        }
+    }
+    else
+    travelling = false;
+}
 void WorkerPawn::moveToBuilding(Building* dest) {
     travelling = true;
     std::unordered_map<Building*, std::vector<Building*> > visited;
@@ -51,9 +64,8 @@ void WorkerPawn::moveToBuilding(Building* dest) {
     }
     for (Building* v : visited[dest])
     {
-        moveToNeighbour(v);
+        onTheWay.push_back(v);
     }
-    travelling = false;
 }
 void WorkerPawn::moveToNeighbour(Building* dest) {
     double currentTime = 0;
