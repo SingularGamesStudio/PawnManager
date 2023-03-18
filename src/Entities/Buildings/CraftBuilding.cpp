@@ -15,9 +15,9 @@ void CraftBuilding::stopRecipe() {
 
 bool CraftBuilding::assignRecipe(Recipe* recipe){
     stopRecipe();
-    current = recipe;
-    if(!current->checkRequirements(this))
+    if(!recipe->checkRequirements(this))
         return false;
+    current = recipe;
     current->start(this);
     return true;
 }
