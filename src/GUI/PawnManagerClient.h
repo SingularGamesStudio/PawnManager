@@ -9,20 +9,24 @@
 #include "GameWindowManager.h"
 #include "PawnRenderer.h"
 #include "../Player.h"
+#include "BuildingRenderer.h"
 
 class PawnManagerClient {
 private:
     sf::RenderWindow window;
     sf::View view;
     PawnRenderer pawnRenderer;
+    BuildingRenderer buildingRenderer;
     Player* player;
 public:
+    static constexpr float renderScale = 1.0f;
     GameWindowManager winManager;
     PawnManagerClient();
     void run();
     ~PawnManagerClient();
 private:
     void updateAndRender();
+    void buildingRenderDfs(Building* b, sf::Vector2f center);
 };
 
 

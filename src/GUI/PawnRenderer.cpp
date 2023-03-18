@@ -5,6 +5,7 @@
 #include "PawnRenderer.h"
 #include "SFML/Window.hpp"
 #include "SFML/Graphics/VertexArray.hpp"
+#include "../Entities/Pawns/WorkerPawn.h"
 #include <cmath>
 #include <numbers>
 

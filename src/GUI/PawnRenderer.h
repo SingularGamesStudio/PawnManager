@@ -7,8 +7,7 @@
 #include <set>
 #include "SFML/Graphics/RenderWindow.hpp"
 
-enum class expertisesID{DummySmeltery, DummyMetalworking, DummtTrainership};
-
+enum class expertisesID;
 
 class PawnRenderer {
 private:

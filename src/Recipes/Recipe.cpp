@@ -124,6 +124,7 @@ void Recipe::cleanup() {
     procResources.clear();
     workers.clear();
     place->current = nullptr;
+    progress = 0;
 }
 
 void Recipe::cancel(){

@@ -12,7 +12,7 @@ CraftBuilding* crafter;
 
 Player* initTest() {
     player = new Player();
-    player->hub = new Building({1000, 1000}, player, 100);
+    player->hub = new Building({100, 50}, player, 100);
     for(int i = 0; i<30; i++){
         player->hub->addResource(Resource::DummyOre);
     }
@@ -22,7 +22,9 @@ Player* initTest() {
         player->pawns.push_back(pawn);
         player->hub->addPawn(pawn);
     }
-    crafter = new CraftBuilding({1000, 1200}, player, 100);
+    crafter = new CraftBuilding({100, 120}, player, 100);
+    crafter->position = {100, 120};
+    crafter->radius = Building::baseBuildingRadius;
     player->hub->children.push_back(dynamic_cast<Building*>(crafter));
     crafter->parent = player->hub;
     recipe = new Recipe();
@@ -37,11 +39,11 @@ Player* initTest() {
 void tick() {
     if(crafter->current== nullptr)
         crafter->assignRecipe(recipe);
-//    for(Pawn* p:player->pawns){
-//        p->tick();
-//        if(p->currentTask.id==TaskID::Idle){
-//            p->assignTask(Task(TaskID::Transport, player->hub, crafter, Resource::DummyOre));
-//        }
-//    }
+    for(Pawn* p:player->pawns){
+        p->tick();
+        if(p->currentTask.id==TaskID::Idle){
+            p->assignTask(Task(TaskID::Transport, player->hub, crafter, Resource::DummyOre));
+        }
+    }
     crafter->tick();
 }
