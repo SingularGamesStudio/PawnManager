@@ -28,9 +28,9 @@ int main(){
 	serv.start();
 	unsigned long long cnt = 0;
 	dlib::Packet p(dlib::Packet::Type::RAW_MESSAGE);
-	p << 'P' << 'i' << 'Z' << 'd' << 'a';
+	p << 'P' << 'i' << 'Z' << 'z' << 'a';
 	while(1) {
-		if(cnt % 1000000 == 0) {
+		if(cnt % 100000000 == 0) {
 			serv.sendPacketAll(p);
 		}
 		serv.respond();

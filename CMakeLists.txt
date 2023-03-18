@@ -1,4 +1,4 @@
-project(dlib2)
+project(dlib)
 
 set(CMAKE_CXX_STANDARD 17)
 
@@ -17,14 +17,14 @@ FetchContent_MakeAvailable(boost)
 
 add_compile_definitions(BOOST_ASIO_STANDALONE)
 
-add_executable(dlib2 test_client.cpp)
+add_executable(dlib test_server.cpp)
 
-target_include_directories(dlib2 PRIVATE ${Boost_SOURCE_DIR}/libs/asio/include)
+target_include_directories(dlib PRIVATE ${Boost_SOURCE_DIR}/libs/asio/include)
 
-install(TARGETS dlib2)
-target_link_libraries(dlib2 PRIVATE Boost::system)
+install(TARGETS dlib)
+target_link_libraries(dlib PRIVATE Boost::system)
 if(WIN32)
-    target_link_libraries(dlib2 PRIVATE wsock32 ws2_32)
+    target_link_libraries(dlib PRIVATE wsock32 ws2_32)
 else()
-    target_link_libraries(dlib2 PRIVATE pthread)
+    target_link_libraries(dlib PRIVATE pthread)
 endif()
