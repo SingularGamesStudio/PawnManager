@@ -14,7 +14,7 @@ private:
 public:
     constexpr static const double baseBuildingRadius = 30;
     Building(std::pair<double, double> pos, Player* owner, unsigned int hp, double radius = baseBuildingRadius, Building* parent= nullptr):
-        Entity(pos, owner, hp, radius) {
+        Entity(pos, owner, hp, radius), children(), resources(), pawns() {
         this->parent = parent;
     }
     Building* parent = nullptr;

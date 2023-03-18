@@ -37,11 +37,11 @@ Player* initTest() {
 void tick() {
     if(crafter->current== nullptr)
         crafter->assignRecipe(recipe);
-    for(Pawn* p:player->pawns){
-        p->tick();
-        if(p->currentTask.id==TaskID::Idle){
-            p->assignTask(Task(TaskID::Transport, player->hub, crafter, Resource::DummyOre));
-        }
-    }
+//    for(Pawn* p:player->pawns){
+//        p->tick();
+//        if(p->currentTask.id==TaskID::Idle){
+//            p->assignTask(Task(TaskID::Transport, player->hub, crafter, Resource::DummyOre));
+//        }
+//    }
     crafter->tick();
 }

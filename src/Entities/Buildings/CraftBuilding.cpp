@@ -1,5 +1,9 @@
 #include "CraftBuilding.h"
 
+CraftBuilding::CraftBuilding(std::pair<double, double> pos, Player* owner, unsigned int hp, double radius, Building* parent):
+Building(pos, owner, hp, radius, parent), current(nullptr) {
+}
+
 void CraftBuilding::destroy() {}
 
 void CraftBuilding::stopRecipe() {
@@ -19,5 +23,7 @@ bool CraftBuilding::assignRecipe(Recipe* recipe){
 }
 
 void CraftBuilding::tick() {
-    current->tick();
+    if(current != nullptr) {
+        current->tick();
+    }
 }
