@@ -8,12 +8,14 @@
 #include "SFML/Graphics/RenderWindow.hpp"
 #include "GameWindowManager.h"
 #include "PawnRenderer.h"
+#include "../Player.h"
 
 class PawnManagerClient {
 private:
     sf::RenderWindow window;
     sf::View view;
     PawnRenderer pawnRenderer;
+    Player* player;
 public:
     GameWindowManager winManager;
     PawnManagerClient();

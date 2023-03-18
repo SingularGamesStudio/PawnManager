@@ -5,6 +5,7 @@
 #include "PawnManagerClient.h"
 #include "SFML/Window.hpp"
 #include "MainMenuWindow.h"
+#include "../testSystem.h"
 
 PawnManagerClient::PawnManagerClient() : window(sf::VideoMode(800, 600), "Pawn Manager"),
                                          view(window.getDefaultView()), winManager(), pawnRenderer(window) {
@@ -12,6 +13,7 @@ PawnManagerClient::PawnManagerClient() : window(sf::VideoMode(800, 600), "Pawn M
 }
 
 void PawnManagerClient::run() {
+    player = initTest();
     while (window.isOpen()) {
         sf::Event evt{};
         while(window.pollEvent(evt)) {
@@ -39,6 +41,7 @@ PawnManagerClient::~PawnManagerClient() {
 }
 
 void PawnManagerClient::updateAndRender() {
+    tick();
     window.clear(sf::Color::White);
     winManager.updateAndRender();
     pawnRenderer.drawWorkerPawn({expertisesID::DummyMetalworking, expertisesID::DummtTrainership}, sf::Vector2f(300, 300));
