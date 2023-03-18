@@ -24,7 +24,7 @@ public:
     void moveToBuilding(Building* dest) override;
     void getResource(ResourceEntity* toGet);
     void assignTask(const Task& task);
-    void tick();
+    void tick() override;
 };
 class DummyMonk : public FighterPawn {
 public:

@@ -23,6 +23,6 @@ public:
     virtual void assignTask(const Task& toAssign);
     void beIngridient();
     void stopBeingIngridient();
-
+    virtual void tick();
 };
 #endif //PAWN_H

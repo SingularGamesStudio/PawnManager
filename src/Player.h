@@ -40,6 +40,7 @@ struct FighterPendingTask:public PendingTask {
 
 class Player {
 public:
+    Player(){}
     Building* hub;
     std::vector<Pawn*> pawns;
     std::vector<PendingTask> tasks;

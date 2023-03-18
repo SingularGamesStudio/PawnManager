@@ -12,6 +12,11 @@ class Building: public virtual Entity{
 private:
     void destroy() override;
 public:
+    constexpr static const double baseBuildingRadius = 30;
+    Building(std::pair<double, double> pos, Player* owner, unsigned int hp, double radius = baseBuildingRadius, Building* parent= nullptr):
+        Entity(pos, owner, hp, radius) {
+        this->parent = parent;
+    }
     Building* parent = nullptr;
     std::vector<Building*> children;
     std::multiset<Resource> resources;

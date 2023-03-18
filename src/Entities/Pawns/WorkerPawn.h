@@ -20,6 +20,6 @@ public:
     void moveResourceTo(Building* dest); 
     std::vector<Building*> onTheWay;
     size_t currentInWay;
-    void tick();
+    void tick() override;
 };
 #endif //WORKERPAWN_H

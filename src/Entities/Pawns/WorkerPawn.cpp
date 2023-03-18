@@ -26,10 +26,10 @@ void WorkerPawn::assignInnerTask(Task toAssign) {
     }
 }
 void WorkerPawn::tick() {
-    if (currentInWay < onTheWay.size())
+    if (currentInWay < onTheWay.size()){
         Building* dest = onTheWay[currentInWay];
-        position.first+= (dest->position.first - dest->position.firs) / ticksPerSecond;
-        position.second+= (dest->position.first - dest->position.firs) / ticksPerSecond;
+        position.first+= (dest->position.first - dest->position.first) / ticksPerSecond;
+        position.second+= (dest->position.first - dest->position.first) / ticksPerSecond;
         if (fabs(position.first - dest->position.first) < 1e-6 && fabs(position.second - dest->position.second) < 1e-6){
             position = dest->position;
             ++currentInWay;
