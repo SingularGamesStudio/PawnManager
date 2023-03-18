@@ -41,3 +41,7 @@ void Pawn::moveToBuilding(Building* toMove) {
     throw("How did we get here?");
 }
 void Pawn::assignTask(const Task& toAssign) {}
+
+void Pawn::tick() {
+
+}

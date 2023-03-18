@@ -72,8 +72,8 @@ void FighterPawn::moveToBuilding(Building* dest)  {
 }
 void FighterPawn::tick() {
     if (fabs(position.first - destinationPosition.first) < 1e-6 && fabs(position.second - destinationPosition.second) > 1e-6){
-    position.first += (dest->position.first - dest->position.firs) / ticksPerSecond;
-    position.second += (dest->position.first - dest->position.firs) / ticksPerSecond;
+    position.first += (destination->position.first - destination->position.first) / ticksPerSecond;
+    position.second += (destination->position.second - destination->position.second) / ticksPerSecond;
 
     }
     else

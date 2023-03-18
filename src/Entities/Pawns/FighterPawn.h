@@ -23,7 +23,7 @@ public:
     void moveToPosition(std::pair<double, double> pos);
     void moveToBuilding(Building* dest) override;
     void getResource(ResourceEntity* toGet);
-    void assignTask(const Task& task);
+    void assignTask(const Task& task) override;
     void tick() override;
 };
 class DummyMonk : public FighterPawn {
