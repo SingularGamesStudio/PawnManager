@@ -10,6 +10,7 @@
 #include "PawnRenderer.h"
 #include "../Player.h"
 #include "BuildingRenderer.h"
+#include "ResourceRenderer.h"
 
 class PawnManagerClient {
 private:
@@ -17,9 +18,10 @@ private:
     sf::View view;
     PawnRenderer pawnRenderer;
     BuildingRenderer buildingRenderer;
+    ResourceRenderer resourceRenderer;
     Player* player;
 public:
-    static constexpr float renderScale = 1.0f;
+    static constexpr float renderScale = 1.5f;
     GameWindowManager winManager;
     PawnManagerClient();
     void run();

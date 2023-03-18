@@ -9,10 +9,11 @@
 #include "../Entities/Pawns/Pawn.h"
 #include "../Entities/Pawns/WorkerPawn.h"
 #include "../Entities/Buildings/Building.h"
+#include <random>
 
 PawnManagerClient::PawnManagerClient() : window(sf::VideoMode(800, 600), "Pawn Manager"),
                                          view(window.getDefaultView()), winManager(), pawnRenderer(window),
-                                         buildingRenderer(window) {
+                                         buildingRenderer(window), resourceRenderer(window) {
     winManager.pushWindow(new MainMenuWindow());
 }
 
@@ -65,5 +66,20 @@ void PawnManagerClient::buildingRenderDfs(Building* b, sf::Vector2f center) {
         buildingRenderer.drawEdge(b, ob, center);
         buildingRenderDfs(ob, center);
     }
-    buildingRenderer.drawBuilding(b, sf::Vector2f(x, y) * renderScale + center);
+    sf::Vector2f p(x, y);
+    buildingRenderer.drawBuilding(b, p * renderScale + center);
+    std::default_random_engine rng;
+    std::uniform_real_distribution<float> dist(-1, 1);
+    std::uniform_real_distribution<float> dist2(0, std::numbers::pi_v<float>);
+    for(Resource res : b->resources) {
+        float x = 2;
+        float y = 2;
+        while(x * x + y * y >= 1) {
+            x = dist(rng);
+            y = dist(rng);
+        }
+        float rotation = dist2(rng);
+        sf::Vector2f pos = (sf::Vector2f(x, y) * (float)(b->radius - 7 / renderScale) + p) * renderScale + center;
+        resourceRenderer.drawResource(res, pos, rotation);
+    }
 }
