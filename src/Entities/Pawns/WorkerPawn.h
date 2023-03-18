@@ -17,6 +17,9 @@ public:
     void moveToBuilding(Building* dest);
     void moveToNeighbour(Building* dest);
     void takeResourceFromBuilding(Building* dest, Resource res);
-    void moveResourceTo(Building* dest);
+    void moveResourceTo(Building* dest); 
+    std::vector<Building*> onTheWay;
+    size_t currentInWay;
+    void tick();
 };
 #endif //WORKERPAWN_H

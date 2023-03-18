@@ -3,6 +3,7 @@
 ///misha does not believe in me  :(
 #include "Pawn.h"
 #include <cmath>
+#include <vector>
 enum class FighterPawnType{
     DummyMonk,
     DummySwordsman
@@ -13,6 +14,7 @@ class FighterPawn : public Pawn{
 public:
     double atk;
     double speed;
+    std::pair<double, double> destinationPosition;
     virtual void attack(Entity* attacked);
     virtual FighterPawnType getType();
     static FighterPawn* createFighterPawn(FighterPawnType type, Building* placeOfCreation);
@@ -22,6 +24,7 @@ public:
     void moveToBuilding(Building* dest) override;
     void getResource(ResourceEntity* toGet);
     void assignTask(const Task& task);
+    void tick();
 };
 class DummyMonk : public FighterPawn {
 public:

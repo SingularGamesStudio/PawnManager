@@ -64,23 +64,20 @@ void FighterPawn::takePresentResource(ResourceEntity* toTake) {
 }
 void FighterPawn::moveToPosition(std::pair<double, double> pos) {
     IMNotHere(inside);
-    double currentTime = 0;
-    double timePerMove = sqrt(abs(position.first - pos.first) * abs(position.first - pos.first) +
-        abs(position.second - pos.second) * abs(position.second - pos.second));
-    while (currentTime < timePerMove) {
-        currentTime += timePerMove / ticksPerSecond;
-        position.first = currentTime / ticksPerSecond * pos.first
-            + (1 - currentTime / ticksPerSecond) * pos.first;
-        position.second = currentTime / ticksPerSecond * pos.second
-            + (1 - currentTime / ticksPerSecond) * pos.second;
-    }
-    position = pos;
-
+    destinationPosition = pos;
 }
 void FighterPawn::moveToBuilding(Building* dest)  {
     moveToPosition(dest->position);
     IMHere(dest);
 }
+void FighterPawn::tick() {
+    if (fabs(position.first - destinationPosition.first) < 1e-6 && fabs(position.second - destinationPosition.second) > 1e-6){
+    position.first += (dest->position.first - dest->position.firs) / ticksPerSecond;
+    position.second += (dest->position.first - dest->position.firs) / ticksPerSecond;
 
+    }
+    else
+    travelling = false;
+}
 void FighterPawn::attack(Entity* attacked) {};
 FighterPawnType FighterPawn::getType() {};
