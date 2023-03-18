@@ -5,16 +5,20 @@
 #include "../../Recipes/Recipe.h"
 #include <vector>
 
-class CraftBuilding:Building {
+class CraftBuilding:public Building {
 private:
     void destroy() override;
 
     void stopRecipe();
 public:
-    std::vector<Recipe> recipes;
-    Recipe current;
-    double progress;
+    CraftBuilding(std::pair<double, double> pos, Player* owner, unsigned int hp, double radius = baseBuildingRadius, Building* parent= nullptr):
+    Building(pos, owner, hp, radius, parent) {
+    }
+    std::vector<Recipe*> recipes;
+    Recipe* current;
 
-    void assignRecipe(Recipe recipe);
+    bool assignRecipe(Recipe* recipe);
+
+    void tick() override;
 };
 #endif //CRAFTBUILDING_H

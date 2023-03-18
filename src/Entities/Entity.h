@@ -10,6 +10,7 @@ private:
     virtual void destroy();
 
 public:
+    Entity(){}
     Entity(std::pair<double, double> pos, Player* owner, unsigned int hp, double radius):position(pos), owner(owner), hp(hp), radius(radius){}
 
     unsigned int hp;

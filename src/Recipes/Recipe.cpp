@@ -6,14 +6,14 @@
 #include "../Resource.h"
 #include "../Entities/Pawns/FighterPawn.h"
 #include "../Entities/Pawns/WorkerPawn.h"
-#include "../Entities/Buildings/Building.h"
+#include "../Entities/Buildings/CraftBuilding.h"
 
 
 Recipe Recipe::none() {
     return Recipe();
 }
 
-bool Recipe::checkRequirements(Building* place, bool start){
+bool Recipe::checkRequirements(CraftBuilding* place, bool start){
     std::set<WorkerPawn*> workersInside;
     std::set<FighterPawn*> fightersInside;
     std::multiset<Resource> resourcesInside;
@@ -103,9 +103,16 @@ bool Recipe::checkRequirements(Building* place, bool start){
     return true;
 }
 
-void Recipe::start(Building* place){
+void Recipe::start(CraftBuilding* place){
     this->place = place;
+    progress = 0;
     checkRequirements(place, true);
+}
+
+void Recipe::tick() {
+    progress++;
+    if(progress>=duration)
+        finish();
 }
 
 void Recipe::cleanup() {
@@ -116,7 +123,7 @@ void Recipe::cleanup() {
     procPawns.clear();
     procResources.clear();
     workers.clear();
-    place = nullptr;
+    place->current = nullptr;
 }
 
 void Recipe::cancel(){

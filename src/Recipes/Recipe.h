@@ -5,7 +5,7 @@
 #include <cassert>
 #include<set>
 
-class Building;
+class CraftBuilding;
 class Pawn;
 class WorkerPawn;
 enum class Resource;
@@ -14,22 +14,25 @@ enum class FighterPawnType;
 
 class Recipe {
 private:
-    Building* place;
+    CraftBuilding* place;
     std::vector<WorkerPawn*> workers;
     std::vector<Pawn*> procPawns;
     std::vector<Resource> procResources;
+    float progress;
 public:
     static Recipe none();
 
-    bool checkRequirements(Building* place, bool start = false);
+    bool checkRequirements(CraftBuilding* place, bool start = false);
 
-    void start(Building* place);
+    void start(CraftBuilding* place);
 
     void cleanup();
 
     void cancel();
 
     void finish();
+
+    void tick();
 
     std::vector<expertisesID> reqWorkers;
 
@@ -41,5 +44,6 @@ public:
     std::vector<Resource> outResources;
 
     float duration;
+
 };
 #endif //RECIPE_H

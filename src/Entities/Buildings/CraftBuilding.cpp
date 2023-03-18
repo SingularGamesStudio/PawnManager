@@ -3,11 +3,21 @@
 void CraftBuilding::destroy() {}
 
 void CraftBuilding::stopRecipe() {
-    progress = 0;
-    current = Recipe::none();
+    if(current== nullptr)
+        return;
+    current->cancel();
+    current = nullptr;
 }
 
-void CraftBuilding::assignRecipe(Recipe recipe){
+bool CraftBuilding::assignRecipe(Recipe* recipe){
     stopRecipe();
     current = recipe;
+    if(!current->checkRequirements(this))
+        return false;
+    current->start(this);
+    return true;
+}
+
+void CraftBuilding::tick() {
+    current->tick();
 }

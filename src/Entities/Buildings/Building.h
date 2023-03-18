@@ -29,5 +29,7 @@ public:
     void addPawn(Pawn* pawn);
 
     void removePawn(Pawn* pawn);
+
+    virtual void tick(){};
 };
 #endif //BUILDING_H
