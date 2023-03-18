@@ -50,4 +50,5 @@ bool Player::checkRecipe(Recipe& recipe) {
 bool Player::startRecipe(Recipe recipe, Building* where) {
     if(!checkRecipe(recipe))
         return false;
+
 }

@@ -2,14 +2,41 @@
 #define PLAYER_H
 
 #include "Recipes/Recipe.h"
+#include "Task.h"
 #include <vector>
 
 class Building;
 class Pawn;
+class Player;
 
-class PendingTask {
+struct PendingTask {
+    Task task;
 
+    virtual bool checkPawn() = 0;
+
+    virtual bool execute()=0;
+
+    bool avaliable(Player* owner) {
+        if(!checkPawn())
+            return false;
+        if(task.id==TaskID::Transport){
+
+        } else return task.avaliable(owner);
+    }
 };
+
+struct FighterPendingTask:public PendingTask {
+    FighterPawnType pawnType;
+
+    FighterPendingTask(Task t, FighterPawnType type) : pawnType(type) {
+        task = t;
+    }
+
+    bool execute() override {
+
+    }
+};
+
 
 class Player {
 public:

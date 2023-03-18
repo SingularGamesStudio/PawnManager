@@ -2,6 +2,9 @@
 #define TASK_H
 ///misha does not believe in me  :(
 #include "Resource.h"
+
+class Player;
+
 enum class TaskID {
     Build,
     Craft,
@@ -21,6 +24,9 @@ public:
     Building* destination;
     Resource object;
     Building* destination2;
+
+    bool avaliable(Player* owner);
+
     Task(TaskID taskid = TaskID::Idle, Building* building = nullptr, Building* building2 = nullptr, Resource resource = Resource::DummyNothing);
     ///TASK_REFORM(player -> pawn commands)
 };
