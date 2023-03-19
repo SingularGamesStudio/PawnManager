@@ -80,4 +80,6 @@ void FighterPawn::tick(double deltaTime) {
     travelling = false;
 }
 void FighterPawn::attack(Entity* attacked) {};
-FighterPawnType FighterPawn::getType() {};
+FighterPawnType FighterPawn::getType() {
+    return FighterPawnType::DummNotFound;
+};

@@ -4,7 +4,7 @@
 
 #ifndef PAWNMANAGER_GAMEWINDOWMANAGER_H
 #define PAWNMANAGER_GAMEWINDOWMANAGER_H
-
+#include <cstddef>
 #include <vector>
 #include "GameWindow.h"
 

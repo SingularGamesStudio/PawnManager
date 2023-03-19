@@ -6,6 +6,7 @@
 #include <unordered_map>
 #include <queue>
 #include <vector>
+#include <cstddef>
 enum class expertisesID{DummySmeltery, DummyMetalworking, DummtTrainership};
 class WorkerPawn: public Pawn{
 public:

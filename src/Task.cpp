@@ -6,5 +6,6 @@ Task::Task(TaskID taskid, Building* building, Building* building2, Resource reso
 }
 
 bool Task::avaliable(Player* owner) {
-
+    ///TO DO
+    return false;
 }

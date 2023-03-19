@@ -6,7 +6,8 @@
 #include <vector>
 enum class FighterPawnType{
     DummyMonk,
-    DummySwordsman
+    DummySwordsman,
+    DummNotFound
 };
 class Entity;
 class ResourceEntity;
