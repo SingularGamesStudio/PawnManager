@@ -17,7 +17,7 @@ FetchContent_MakeAvailable(boost)
 
 add_compile_definitions(BOOST_ASIO_STANDALONE)
 
-add_executable(dlib test_server.cpp)
+add_executable(dlib src/net/test_server.cpp)
 
 target_include_directories(dlib PRIVATE ${Boost_SOURCE_DIR}/libs/asio/include)
 
