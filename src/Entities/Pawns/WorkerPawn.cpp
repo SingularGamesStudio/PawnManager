@@ -59,6 +59,8 @@ void WorkerPawn::tick() {
             positionBuilding->removeResource(holding);
             needed = Resource::DummyNothing;
         }
+        onTheWay.clear();
+        currentInWay = 0;
     }
 }
 void WorkerPawn::moveToBuilding(Building* dest) {
