@@ -24,7 +24,7 @@ public:
 
     void addResource(Resource resource);
 
-    void removeResource(Resource resource);
+    bool removeResource(Resource resource);
 
     void addPawn(Pawn* pawn);
 

@@ -11,8 +11,12 @@ void Building::addResource(Resource resource) {
     resources.insert(resource);
 }
 
-void Building::removeResource(Resource resource) {
-    resources.erase(resources.find(resource));
+bool Building::removeResource(Resource resource) {
+    auto x = resources.find(resource);
+    if (x == resources.end())
+        return false;
+    resources.erase(x);
+    return true;
 }
 
 void Building::addPawn(Pawn* pawn) {

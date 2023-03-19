@@ -60,10 +60,14 @@ void WorkerPawn::tick(double deltaTime) {
             drop(positionBuilding);
         }
         if (toTake) {
-            toTake = false;
-            holding = needed;
-            positionBuilding->removeResource(holding);
-            needed = Resource::DummyNothing;
+            if(positionBuilding->removeResource(needed)) {
+                toTake = false;
+                holding = needed;
+                needed = Resource::DummyNothing;
+            }
+            else{
+                currentTask = TaskID::Idle;
+            }
         }
         switch (currentTask.id) {
             case TaskID::Transport:
