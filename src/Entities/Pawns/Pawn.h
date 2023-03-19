@@ -10,7 +10,7 @@ class Pawn : public Entity {
 public:
     Building* inside = nullptr;
     Resource holding;
-    Resorce needed;
+    Resource needed;
     Building* destination;
     Building* positionBuilding;
     Task currentTask;
