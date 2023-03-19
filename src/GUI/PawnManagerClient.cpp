@@ -55,11 +55,17 @@ void PawnManagerClient::updateAndRender() {
     winManager.updateAndRender();
     sf::Vector2f center = ((sf::Vector2f )window.getSize()) * 0.5f;
     buildingRenderDfs(player->hub, center);
+    std::default_random_engine rng;
+    std::uniform_real_distribution<float> dist2(0, std::numbers::pi_v<float>);
     for (Pawn* p: player->pawns) {
         auto [x, y] = p->position;
         auto* wp = dynamic_cast<WorkerPawn*>(p);
         if(wp != nullptr) {
             pawnRenderer.drawWorkerPawn(wp->expertises,sf::Vector2f(x, y) * renderScale + center);
+            if(wp->holding!=Resource::DummyNothing){
+                float rotation = dist2(rng);
+                resourceRenderer.drawResource(wp->holding, sf::Vector2f(x, y) * renderScale + center, rotation);
+            }
         }
     }
 }

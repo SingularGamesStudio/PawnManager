@@ -13,7 +13,7 @@ void WorkerPawn::create(Building* placeOfCreation) {
 }
 void WorkerPawn::assignTask(const Task& toAssign) {
     currentTask = toAssign;
-    std::cout << "task " << (int)toAssign.id << "\n";
+    //std::cout << "task " << (int)toAssign.id << "\n";
     switch (toAssign.id) {
     case TaskID::Get:
         moveToBuilding(toAssign.destination);

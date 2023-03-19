@@ -18,7 +18,7 @@ bool CraftBuilding::assignRecipe(Recipe* recipe){
     stopRecipe();
     if(!recipe->checkRequirements(this))
         return false;
-    std::cout << "recipe started\n";
+    //std::cout << "recipe started\n";
     current = recipe;
     current->start(this);
     return true;
