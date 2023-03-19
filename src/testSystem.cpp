@@ -4,6 +4,7 @@
 #include "Entities/Pawns/WorkerPawn.h"
 #include "Recipes/Recipe.h"
 #include "testSystem.h"
+#include <random>
 
 
 Recipe* recipe;
@@ -34,13 +35,13 @@ Player* initTest() {
 
     return player;
 }
-
+std::mt19937 rnd(42);
 void tick(double deltaTime) {
     if(crafter->current== nullptr)
         crafter->assignRecipe(recipe);
     for(Pawn* p:player->pawns){
         p->tick(deltaTime);
-        if(p->currentTask.id==TaskID::Idle){
+        if(p->currentTask.id==TaskID::Idle && rnd()%5000==0){
             p->assignTask(Task(TaskID::Transport, player->hub, crafter, Resource::DummyOre));
         }
     }

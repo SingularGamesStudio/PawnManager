@@ -84,6 +84,8 @@ void WorkerPawn::moveToBuilding(Building* dest) {
     travelling = true;
     std::unordered_map<Building*, std::vector<Building*> > visited;
     std::queue<Building*> q;
+    visited[positionBuilding] = std::vector<Building*>();
+    visited[positionBuilding].push_back(positionBuilding);
     q.push(positionBuilding);
     while (!q.empty()) {
         Building* currentB = q.front();
