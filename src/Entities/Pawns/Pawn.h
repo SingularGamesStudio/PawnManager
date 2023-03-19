@@ -10,7 +10,7 @@ class Pawn : public Entity {
 public:
     Resource holding;
     Resource needed;
-    Building* destination;
+    Building* destination;//removed it from use in workerPawn, maybe define it in Fighterpawn only?
     Building* positionBuilding = nullptr;
     Task currentTask;
     bool travelling;

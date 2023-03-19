@@ -1,4 +1,5 @@
 #include "CraftBuilding.h"
+#include <iostream>
 
 CraftBuilding::CraftBuilding(std::pair<double, double> pos, Player* owner, unsigned int hp, double radius, Building* parent):
 Building(pos, owner, hp, radius, parent), current(nullptr) {
@@ -17,6 +18,7 @@ bool CraftBuilding::assignRecipe(Recipe* recipe){
     stopRecipe();
     if(!recipe->checkRequirements(this))
         return false;
+    std::cout << "recipe started\n";
     current = recipe;
     current->start(this);
     return true;
