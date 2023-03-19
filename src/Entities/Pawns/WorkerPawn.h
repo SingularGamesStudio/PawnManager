@@ -16,7 +16,7 @@ public:
     std::set<expertisesID> expertises;
     void moveToBuilding(Building* dest);
     bool toDrop;
-    Resource toTake;
+    bool toTake;
     std::vector<Building*> onTheWay;
     size_t currentInWay;
     void tick() override;

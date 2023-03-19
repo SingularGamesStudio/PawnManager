@@ -16,7 +16,8 @@ void WorkerPawn::assignTask(Task toAssign) {
     switch (toAssign.id) {
     case TaskID::Get:
         moveToBuilding(toAssign.destination);
-        toTake = toAssign.objext
+        needed = toAssign.object;
+        toTake = true;
     case TaskID::Transport:
         moveToBuilding(toAssign.destination);
         moveToBuilding(toAssign.destination2);
@@ -40,10 +41,10 @@ void WorkerPawn::tick() {
             IMHere(dest);
             position = dest->position;
             ++currentInWay;
-            if (currentInWay < onTheway.size() && onTheWay[currentInWay] == destination) {
+            /*if (currentInWay < onTheWay.size() && onTheWay[currentInWay] == destination) {
                 takeResourceFromBuilding(needed);
 
-            }
+            }*/
             if(currentInWay < onTheWay.size())
                 IMNotHere(positionBuilding);
         }
