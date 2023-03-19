@@ -12,12 +12,11 @@ public:
     
     void create(Building* placeOfCreation);
 
-    void assignInnerTask(Task toAssign);
+    void assignTask(Task toAssign);
     std::set<expertisesID> expertises;
     void moveToBuilding(Building* dest);
-    void moveToNeighbour(Building* dest);
-    void takeResourceFromBuilding(Building* dest, Resource res);
-    void moveResourceTo(Building* dest); 
+    bool toDrop;
+    Resource toTake;
     std::vector<Building*> onTheWay;
     size_t currentInWay;
     void tick() override;

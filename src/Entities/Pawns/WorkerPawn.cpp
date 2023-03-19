@@ -5,23 +5,28 @@ void WorkerPawn::create(Building* placeOfCreation) {
     currentTask = Task(TaskID::Idle, placeOfCreation);
     travelling = false;
     holding = Resource::DummyNothing;
+    needed = Resource::DummyNothing;
     owner = placeOfCreation->owner;
     destination = placeOfCreation;
     inside = placeOfCreation;
     position = placeOfCreation->position;
 }
-void WorkerPawn::assignInnerTask(Task toAssign) {
+void WorkerPawn::assignTask(Task toAssign) {
     currentTask = toAssign;
     switch (toAssign.id) {
     case TaskID::Get:
-        takeResourceFromBuilding(toAssign.destination, toAssign.object);
+        moveToBuilding(toAssign.destination);
+        toTake = toAssign.objext
     case TaskID::Transport:
-        takeResourceFromBuilding(toAssign.destination, toAssign.object);
-        moveResourceTo(toAssign.destination2);
+        moveToBuilding(toAssign.destination);
+        moveToBuilding(toAssign.destination2);
+        toDrop = true;
     case TaskID::Move:
         moveToBuilding(toAssign.destination);
     case TaskID::BeProcessed:
         moveToBuilding(toAssign.destination);
+    case TaskID::Idle:
+
     default:
         throw("Unexpected WorkerPawn TaskID: ", toAssign.id);
     }
@@ -32,18 +37,36 @@ void WorkerPawn::tick() {
         position.first+= (dest->position.first - dest->position.first) / ticksPerSecond;
         position.second+= (dest->position.first - dest->position.first) / ticksPerSecond;
         if (fabs(position.first - dest->position.first) < 1e-6 && fabs(position.second - dest->position.second) < 1e-6){
+            IMHere(dest);
             position = dest->position;
             ++currentInWay;
+            if (currentInWay < onTheway.size() && onTheWay[currentInWay] == destination) {
+                takeResourceFromBuilding(needed);
+
+            }
+            if(currentInWay < onTheWay.size())
+                IMNotHere(positionBuilding);
         }
     }
-    else
-    travelling = false;
+    else {
+        travelling = false;
+        if (toDrop) {
+            toDrop = false;
+            drop(positionBuilding);
+        }
+        if (toTake) {
+            holding = needed;
+            positionBuilding->removeResource(holding);
+            needed = Resource::DummyNothing;
+        }
+    }
 }
 void WorkerPawn::moveToBuilding(Building* dest) {
     travelling = true;
     std::unordered_map<Building*, std::vector<Building*> > visited;
     std::queue<Building*> q;
-    destination = dest;
+    if(onTheWay.empty())
+        destination = dest;
     q.push(positionBuilding);
     while (!q.empty()) {
         Building* currentB = q.front();
@@ -67,28 +90,4 @@ void WorkerPawn::moveToBuilding(Building* dest) {
     {
         onTheWay.push_back(v);
     }
-}
-void WorkerPawn::moveToNeighbour(Building* dest) {
-    double currentTime = 0;
-    double timePerMove = sqrt(abs(position.first - dest->position.first) * abs(position.first - dest->position.first) +
-        abs(position.second - dest->position.second) * abs(position.second - dest->position.second));
-    while (currentTime < timePerMove)
-    {
-        currentTime += timePerMove / ticksPerSecond;
-        position.first = currentTime / ticksPerSecond * (*positionBuilding).position.first
-            + (1 - currentTime / ticksPerSecond) * (*positionBuilding).position.first;
-        position.second = currentTime / ticksPerSecond * (*dest).position.second
-            + (1 - currentTime / ticksPerSecond) * (*dest).position.second;
-    }
-    positionBuilding = dest;
-    position = dest->position;
-}
-void WorkerPawn::takeResourceFromBuilding(Building * dest, Resource res) {
-    moveToBuilding(dest);
-    dest->resources.erase(dest->resources.find(res));
-    holding = res;
-}
-void WorkerPawn::moveResourceTo(Building * dest) {
-    moveToBuilding(dest);
-    drop(inside,position);
 }
