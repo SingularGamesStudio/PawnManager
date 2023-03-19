@@ -30,6 +30,6 @@ public:
 
     void removePawn(Pawn* pawn);
 
-    virtual void tick(){};
+    virtual void tick(double deltaTime){};
 };
 #endif //BUILDING_H

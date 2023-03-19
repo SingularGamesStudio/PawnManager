@@ -16,11 +16,10 @@ Player* initTest() {
     for(int i = 0; i<30; i++){
         player->hub->addResource(Resource::DummyOre);
     }
-    for(int i = 0; i<30; i++){
+    for(int i = 0; i<5; i++){
         WorkerPawn* pawn = new WorkerPawn();
         pawn->create(player->hub);
         player->pawns.push_back(pawn);
-        player->hub->addPawn(pawn);
     }
     crafter = new CraftBuilding({100, 120}, player, 100);
     crafter->position = {100, 120};
@@ -30,20 +29,20 @@ Player* initTest() {
     recipe = new Recipe();
     recipe->inResources.push_back(Resource::DummyOre);
     recipe->outResources.push_back(Resource::DummyIngot);
-    recipe->duration = 60;
+    recipe->duration = 5;
 
 
     return player;
 }
 
-void tick() {
+void tick(double deltaTime) {
     if(crafter->current== nullptr)
         crafter->assignRecipe(recipe);
     for(Pawn* p:player->pawns){
-        p->tick();
+        p->tick(deltaTime);
         if(p->currentTask.id==TaskID::Idle){
             p->assignTask(Task(TaskID::Transport, player->hub, crafter, Resource::DummyOre));
         }
     }
-    crafter->tick();
+    crafter->tick(deltaTime);
 }

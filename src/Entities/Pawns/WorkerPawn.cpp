@@ -1,6 +1,7 @@
 #include "WorkerPawn.h"
 #include "../Buildings/Building.h"
 #include <cmath>
+#include <iostream>
 void WorkerPawn::create(Building* placeOfCreation) {
     currentTask = Task(TaskID::Idle, placeOfCreation);
     travelling = false;
@@ -8,45 +9,48 @@ void WorkerPawn::create(Building* placeOfCreation) {
     needed = Resource::DummyNothing;
     owner = placeOfCreation->owner;
     destination = placeOfCreation;
-    inside = placeOfCreation;
-    position = placeOfCreation->position;
+    IMHere(placeOfCreation);
 }
-void WorkerPawn::assignTask(Task toAssign) {
+void WorkerPawn::assignTask(const Task& toAssign) {
+    std::cout << "got task " << (int)toAssign.id << "\n";
     currentTask = toAssign;
     switch (toAssign.id) {
     case TaskID::Get:
         moveToBuilding(toAssign.destination);
         needed = toAssign.object;
         toTake = true;
+        break;
     case TaskID::Transport:
         moveToBuilding(toAssign.destination);
         moveToBuilding(toAssign.destination2);
         toDrop = true;
+        break;
     case TaskID::Move:
         moveToBuilding(toAssign.destination);
+        break;
     case TaskID::BeProcessed:
         moveToBuilding(toAssign.destination);
+        break;
     case TaskID::Idle:
-
+        break;
     default:
         throw("Unexpected WorkerPawn TaskID: ", toAssign.id);
     }
 }
-void WorkerPawn::tick() {
+void WorkerPawn::tick(double deltaTime) {
     if (currentInWay < onTheWay.size()){
         Building* dest = onTheWay[currentInWay];
-        position.first+= (dest->position.first - dest->position.first) / ticksPerSecond;
-        position.second+= (dest->position.first - dest->position.first) / ticksPerSecond;
+        position.first+= (dest->position.first - positionBuilding->position.first) * speed * deltaTime;
+        position.second+= (dest->position.first - positionBuilding->position.first) * speed * deltaTime;
         if (fabs(position.first - dest->position.first) < 1e-6 && fabs(position.second - dest->position.second) < 1e-6){
             IMHere(dest);
-            position = dest->position;
-            ++currentInWay;
+            ++currentInWay;//TODO:fix from here
             /*if (currentInWay < onTheWay.size() && onTheWay[currentInWay] == destination) {
                 takeResourceFromBuilding(needed);
 
             }*/
             if(currentInWay < onTheWay.size())
-                IMNotHere(positionBuilding);
+                IMNotHere();
         }
     }
     else {
@@ -83,7 +87,7 @@ void WorkerPawn::moveToBuilding(Building* dest) {
             visited[toGo].push_back(toGo);
             q.push(toGo);
         }
-        if (!visited[currentB->parent].empty())
+        if (currentB->parent== nullptr || !visited[currentB->parent].empty())
             continue;
         visited[currentB->parent] = way;
         visited[currentB->parent].push_back(currentB->parent);
@@ -93,4 +97,5 @@ void WorkerPawn::moveToBuilding(Building* dest) {
     {
         onTheWay.push_back(v);
     }
+    std::cout << "finished way search" << "\n";
 }

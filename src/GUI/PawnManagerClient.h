@@ -20,6 +20,7 @@ private:
     BuildingRenderer buildingRenderer;
     ResourceRenderer resourceRenderer;
     Player* player;
+    double curTime = 0;
 public:
     static constexpr float renderScale = 1.5f;
     GameWindowManager winManager;

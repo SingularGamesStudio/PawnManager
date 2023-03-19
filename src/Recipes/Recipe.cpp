@@ -109,8 +109,8 @@ void Recipe::start(CraftBuilding* place){
     checkRequirements(place, true);
 }
 
-void Recipe::tick() {
-    progress++;
+void Recipe::tick(double deltaTime) {
+    progress+=deltaTime;
     if(progress>=duration)
         finish();
 }

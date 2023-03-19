@@ -8,5 +8,6 @@
 #include "Player.h"
 
 Player* initTest();
-void tick();
+
+void tick(double deltaTime);
 #endif //PAWNMANAGER_TESTSYSTEM_H

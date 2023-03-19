@@ -10,6 +10,7 @@
 #include "../Entities/Pawns/WorkerPawn.h"
 #include "../Entities/Buildings/Building.h"
 #include <random>
+#include <ctime>
 
 PawnManagerClient::PawnManagerClient() : window(sf::VideoMode(800, 600), "Pawn Manager"),
                                          view(window.getDefaultView()), winManager(), pawnRenderer(window),
@@ -45,8 +46,11 @@ PawnManagerClient::~PawnManagerClient() {
     }
 }
 
+
 void PawnManagerClient::updateAndRender() {
-    tick();
+    double newTime = clock();
+    tick((newTime-curTime)/CLOCKS_PER_SEC);
+    curTime = newTime;
     window.clear(sf::Color::White);
     winManager.updateAndRender();
     sf::Vector2f center = ((sf::Vector2f )window.getSize()) * 0.5f;

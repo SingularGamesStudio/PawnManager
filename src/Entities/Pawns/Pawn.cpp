@@ -14,34 +14,40 @@ void Pawn::drop(Building* in, std::pair<double, double> pos) {
         ResourceEntity(holding, pos);
 }
 void Pawn::destroy() {
-    if (inside != nullptr && holding != Resource::DummyNothing) {
-        drop(inside, position);
+    if (positionBuilding != nullptr && holding != Resource::DummyNothing) {
+        drop(positionBuilding, position);
     }
     else if (holding != Resource::DummyNothing) {
-        drop(inside, position);
+        drop(positionBuilding, position);
     }
     ///TODO task not done... god object taskmanager not happy :(
     //~Pawn();
     }
-void Pawn::IMNotHere(Building* from) {
-    if (from != nullptr)
-        from->removePawn(this);
+void Pawn::IMNotHere() {
+    if (positionBuilding != nullptr) {
+        positionBuilding->removePawn(this);
+        positionBuilding = nullptr;
+    }
 }
 void Pawn::IMHere(Building* to) {
-    if (to != nullptr)
+    if (to != nullptr) {
         to->addPawn(this);
+        IMNotHere();
+        positionBuilding = to;
+        position = positionBuilding->position;
+    }
 }
 void Pawn::beIngridient() {
-    assignTask(Task(TaskID::BeProcessed, inside));
+    assignTask(Task(TaskID::BeProcessed, positionBuilding));
 }
 void Pawn::stopBeingIngridient() {
-    assignTask(Task(TaskID::Idle,inside));
+    assignTask(Task(TaskID::Idle,positionBuilding));
 }
 void Pawn::moveToBuilding(Building* toMove) {
     throw("How did we get here?");
 }
-void Pawn::assignTask(const Task& toAssign) {}
+//void Pawn::assignTask(const Task& toAssign) = 0;
 
-void Pawn::tick() {
+void Pawn::tick(double deltaTime) {
 
 }

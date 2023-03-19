@@ -27,14 +27,14 @@ FighterPawn* FighterPawn::createFighterPawn(FighterPawnType type, Building* plac
     }
 }
 void FighterPawn::getResource(ResourceEntity* toGet) {
-    if (inside != nullptr)
-        IMNotHere(inside);
+    if (positionBuilding != nullptr)
+        IMNotHere();
     moveToResource(toGet);
     takePresentResource(toGet);
     moveToBuilding(owner->hub);
-    inside = owner->hub;
+    positionBuilding = owner->hub;
     owner->hub->addPawn(this);
-    drop(inside, position);
+    drop(positionBuilding, position);
 }
 void FighterPawn::assignTask(const Task& task) {
     currentTask = task;
@@ -45,7 +45,7 @@ DummyMonk::DummyMonk(Task task, bool BOOL, Resource resource, Player* Owner, Bui
     holding = resource;
     owner = Owner;
     destination = dest;
-    inside = in;
+    IMHere(in);
 }
 DummySwordsman::DummySwordsman(Task task, bool BOOL, Resource resource, Player* Owner, Building* dest, Building* in) {
     currentTask = task;
@@ -53,7 +53,7 @@ DummySwordsman::DummySwordsman(Task task, bool BOOL, Resource resource, Player* 
     holding = resource;
     owner = Owner;
     destination = dest;
-    inside = in;
+    IMHere(in);
 }
 void FighterPawn::moveToResource(ResourceEntity* toGet) {
     moveToPosition(toGet->position);
@@ -63,17 +63,17 @@ void FighterPawn::takePresentResource(ResourceEntity* toTake) {
     toTake->destroy();
 }
 void FighterPawn::moveToPosition(std::pair<double, double> pos) {
-    IMNotHere(inside);
+    IMNotHere();
     destinationPosition = pos;
 }
 void FighterPawn::moveToBuilding(Building* dest)  {
     moveToPosition(dest->position);
     IMHere(dest);
 }
-void FighterPawn::tick() {
+void FighterPawn::tick(double deltaTime) {
     if (fabs(position.first - destinationPosition.first) < 1e-6 && fabs(position.second - destinationPosition.second) > 1e-6){
-    position.first += (destination->position.first - destination->position.first) / ticksPerSecond;
-    position.second += (destination->position.second - destination->position.second) / ticksPerSecond;
+    position.first += (destination->position.first - destination->position.first) *speed*deltaTime;
+    position.second += (destination->position.second - destination->position.second) *speed*deltaTime;
 
     }
     else

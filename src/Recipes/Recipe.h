@@ -18,7 +18,7 @@ private:
     std::vector<WorkerPawn*> workers;
     std::vector<Pawn*> procPawns;
     std::vector<Resource> procResources;
-    float progress;
+    double progress;
 public:
     static Recipe none();
 
@@ -32,7 +32,7 @@ public:
 
     void finish();
 
-    void tick();
+    void tick(double deltaTime);
 
     std::vector<expertisesID> reqWorkers;
 
