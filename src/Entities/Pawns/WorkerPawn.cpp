@@ -54,6 +54,7 @@ void WorkerPawn::tick(double deltaTime) {
         travelling = false;
         onTheWay.clear();
         currentInWay = 0;
+        bool temp = toTake;
         if (toDrop) {
             toDrop = false;
             drop(positionBuilding);
@@ -66,8 +67,10 @@ void WorkerPawn::tick(double deltaTime) {
         }
         switch (currentTask.id) {
             case TaskID::Transport:
-                moveToBuilding(currentTask.destination2);
-                toDrop = true;
+                if(temp) {
+                    moveToBuilding(currentTask.destination2);
+                    toDrop = true;
+                } else currentTask.id = TaskID::Idle;
                 break;
             case TaskID::BeProcessed:
                 //TODO:set pawn to be waiting, not free
