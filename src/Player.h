@@ -11,45 +11,36 @@ class Building;
 class Pawn;
 class Player;
 
-struct PawnFinder {
+struct PawnReq {
     virtual Pawn* find(Player* owner) = 0;
 };
 
-struct FighterFinder:public PawnFinder {
+struct FighterReq:public PawnReq {
     FighterPawnType type;
-    Pawn * find(Player *owner) override ;
+    FighterReq(FighterPawnType type) : type(type){}
+
+    Pawn * find(Player *owner) override {};
 };
 
-struct WorkerFinder:public PawnFinder {
+struct WorkerReq:public PawnReq {
     expertisesID expertise;
-    Pawn * find(Player *owner) override;
+    WorkerReq(expertisesID expertise):expertise(expertise){}
+
+    Pawn * find(Player *owner) override {};
 };
 
-struct PendingTask {
-    Task task;
-
-    bool checkPawn();
-
-    bool execute();
-
-    bool avaliable(Player* owner) {
-        if(!checkPawn())
-            return false;
-        if(task.id==TaskID::Transport){
-
-        } else return task.avaliable(owner);
-    }
-};
-
-struct RecipeInWork {
-    std::deque<std::set<PendingTask*>> steps;
+struct PendingRecipe {
+    std::multiset<Resource> needResources;
+    std::multiset<Resource> movedResources;
+    std::vector<PawnReq*> needPawns;
+    std::vector<PawnReq*> movedPawns;
 
     int ID;
     int priority;
     Recipe* recipe;
     Building* place;
 
-    RecipeInWork(Recipe* recipe, Building* place, int priority);
+    PendingRecipe(Recipe* recipe, Building* place, int priority);
 };
 
 
@@ -58,12 +49,14 @@ public:
     Player(){}
     Building* hub;
     std::vector<Pawn*> pawns;
-    std::vector<RecipeInWork*> work;
+    std::set<PendingRecipe*> work;
 
     bool startRecipe(Recipe* recipe, Building* where);
 
     bool checkRecipe(Recipe* recipe);
 
     CraftBuilding* placeBlueprint(std::pair<double, double> pos, Building* parent, double r);
+
+    void tick();
 };
 #endif //PLAYER_H

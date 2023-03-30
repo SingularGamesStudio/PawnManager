@@ -11,6 +11,7 @@ struct IDmanager {
 
     static int nextID;
     static int newEntity(Entity* entity);
+    static int newID();
     static Pawn* getPawn(int id);
     static Building* getBuilding(int id);
 };
