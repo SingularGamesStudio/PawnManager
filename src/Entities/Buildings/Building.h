@@ -17,7 +17,6 @@ public:
         Entity(pos, owner, hp, radius), children(), resources(), pawns() {
         this->parent = parent;
     }
-    int ID;
     Building* parent = nullptr;
     std::vector<Building*> children;
     std::multiset<Resource> resources;

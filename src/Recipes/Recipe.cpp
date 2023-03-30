@@ -8,11 +8,6 @@
 #include "../Entities/Pawns/WorkerPawn.h"
 #include "../Entities/Buildings/CraftBuilding.h"
 
-
-Recipe Recipe::none() {
-    return Recipe();
-}
-
 bool Recipe::checkRequirements(CraftBuilding* place, bool start){
     std::set<WorkerPawn*> workersInside;
     std::set<FighterPawn*> fightersInside;

@@ -4,10 +4,11 @@
 #include "Entities/Pawns/WorkerPawn.h"
 #include "Recipes/Recipe.h"
 #include "testSystem.h"
+#include "Recipes/CraftRecipe.h"
 #include <random>
 
 
-Recipe* recipe;
+CraftRecipe* recipe;
 Player* player;
 CraftBuilding* crafter;
 
@@ -27,7 +28,7 @@ Player* initTest() {
     crafter->radius = Building::baseBuildingRadius;
     player->hub->children.push_back(dynamic_cast<Building*>(crafter));
     crafter->parent = player->hub;
-    recipe = new Recipe();
+    recipe = new CraftRecipe();
     recipe->inResources.push_back(Resource::DummyOre);
     recipe->outResources.push_back(Resource::DummyIngot);
     recipe->duration = 5;

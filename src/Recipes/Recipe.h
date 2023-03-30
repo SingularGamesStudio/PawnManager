@@ -12,17 +12,16 @@ class WorkerPawn;
 enum class Resource;
 enum class expertisesID;
 enum class FighterPawnType;
-enum class RecipeType : uint8_t = { BASIC_RECIPE, CRAFT_RECIPE, BUILD_RECIPE, SHOOT_RECIPE };
+//enum class RecipeType : uint8_t = { BASIC_RECIPE, CRAFT_RECIPE, BUILD_RECIPE, SHOOT_RECIPE };
 
 class Recipe {
-private:
+protected:
     CraftBuilding* place;
     std::vector<WorkerPawn*> workers;
     std::vector<Pawn*> procPawns;
     std::vector<Resource> procResources;
     double progress;
 public:
-    static Recipe none();
 
     bool checkRequirements(CraftBuilding* place, bool start = false);
 
@@ -36,7 +35,7 @@ public:
 
     void tick(double deltaTime);
 
-    virtual std:string serialize() const = 0;
+    virtual std::string serialize() const = 0;
 
     virtual void deserialize() = 0;
 

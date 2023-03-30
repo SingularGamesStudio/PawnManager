@@ -7,7 +7,7 @@ public:
 
     void finish() override;
 
-    std:string serialize() const override {
+    std::string serialize() const override {
     	std::string result;
     	
     	return result;
@@ -16,15 +16,3 @@ public:
 
     }
 };
-
-void CraftRecipe::finish() {
-    for(Pawn* p :procPawns){delete p;}
-
-    for(FighterPawnType t : outFighters) {
-        place->addPawn(FighterPawn::createFighterPawn(t, place));
-    }
-    for(Resource t : outResources) {
-        place->addResource(t);
-    }
-    cleanup();
-}
