@@ -13,6 +13,7 @@ public:
     Entity(){}
     Entity(std::pair<double, double> pos, Player* owner, unsigned int hp, double radius):position(pos), owner(owner), hp(hp), radius(radius){}
 
+    int id;
     unsigned int hp;
     Player* owner;
     void changeHealth(int delta);
