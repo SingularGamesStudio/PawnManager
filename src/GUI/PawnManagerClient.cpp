@@ -41,6 +41,13 @@ void PawnManagerClient::run() {
             if(evt.type == sf::Event::MouseButtonPressed) {
                 onMouseClick(evt.mouseButton.x, evt.mouseButton.y, evt.mouseButton.button);
             }
+            if(evt.type == sf::Event::KeyPressed) {
+                if(evt.key.code == sf::Keyboard::Escape) {
+                    if(winManager.windowCount() > 0) {
+                        winManager.popWindow();
+                    }
+                }
+            }
         }
         updateAndRender();
         window.display();
