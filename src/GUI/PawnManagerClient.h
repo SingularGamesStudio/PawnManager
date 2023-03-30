@@ -12,6 +12,7 @@
 #include "../Player.h"
 #include "BuildingRenderer.h"
 #include "ResourceRenderer.h"
+#include "FontManager.h"
 
 class PawnManagerClient {
 public:
@@ -27,6 +28,7 @@ private:
 public:
     static constexpr float renderScale = 1.5f;
     GameWindowManager winManager;
+    FontManager fontManager;
     PawnManagerClient();
     void run();
     ~PawnManagerClient();

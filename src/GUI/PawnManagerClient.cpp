@@ -15,10 +15,12 @@
 #include "../Recipes/BuildRecipe.h"
 #include "../Entities/Buildings/CraftBuilding.h"
 #include "CraftBuildingWindow.h"
+#include "SFML/Graphics/Text.hpp"
 
 PawnManagerClient::PawnManagerClient() : window(sf::VideoMode(800, 600), "Pawn Manager"),
                                          view(window.getDefaultView()), winManager(), pawnRenderer(window),
-                                         buildingRenderer(window), resourceRenderer(window), selectedBuilding(-1) {
+                                         buildingRenderer(window), resourceRenderer(window), selectedBuilding(-1),
+                                         fontManager() {
 //    winManager.pushWindow(new MainMenuWindow());
 }
 
