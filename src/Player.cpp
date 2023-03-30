@@ -18,14 +18,14 @@ void dfs(Building* vertex, std::multiset<Resource>& resources){
     }
 }
 
-bool Player::checkRecipe(Recipe& recipe) {
+bool Player::checkRecipe(Recipe* recipe) {
     std::multiset<Resource> resources;
     std::multiset<FighterPawnType> fighters;
     std::multiset<expertisesID> workers;
-    for(Resource r:recipe.inResources){resources.insert(r);}
-    for(FighterPawnType t:recipe.inFighters){fighters.insert(t);}
-    for(expertisesID t:recipe.inWorkers){workers.insert(t);}
-    for(expertisesID t:recipe.reqWorkers){workers.insert(t);}
+    for(Resource r:recipe->inResources){resources.insert(r);}
+    for(FighterPawnType t:recipe->inFighters){fighters.insert(t);}
+    for(expertisesID t:recipe->inWorkers){workers.insert(t);}
+    for(expertisesID t:recipe->reqWorkers){workers.insert(t);}
     dfs(hub, resources);
     if(!resources.empty())
         return false;
@@ -47,8 +47,13 @@ bool Player::checkRecipe(Recipe& recipe) {
     return true;
 }
 
-bool Player::startRecipe(Recipe recipe, Building* where) {
+bool Player::startRecipe(Recipe* recipe, Building* where) {
     if(!checkRecipe(recipe))
         return false;
+    work.push_back(new RecipeInWork(recipe, where));
     return true;
+}
+
+RecipeInWork::RecipeInWork(Recipe *recipe, Building *place): recipe(recipe), place(place) {
+
 }

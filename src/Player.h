@@ -4,6 +4,7 @@
 #include "Recipes/Recipe.h"
 #include "Task.h"
 #include <vector>
+#include <deque>
 
 class Building;
 class Pawn;
@@ -12,9 +13,9 @@ class Player;
 struct PendingTask {
     Task task;
 
-    virtual bool checkPawn() = 0;
+    bool checkPawn();
 
-    virtual bool execute()=0;
+    bool execute();
 
     bool avaliable(Player* owner) {
         if(!checkPawn())
@@ -25,7 +26,7 @@ struct PendingTask {
     }
 };
 
-struct FighterPendingTask:public PendingTask {
+/*struct FighterPendingTask:public PendingTask {
     FighterPawnType pawnType;
 
     FighterPendingTask(Task t, FighterPawnType type) : pawnType(type) {
@@ -36,6 +37,17 @@ struct FighterPendingTask:public PendingTask {
         ///TO DO
         return false;
     }
+};*/
+
+struct RecipeInWork {
+    std::deque<std::set<PendingTask*>> steps;
+
+    int ID;
+    int priority;
+    Recipe* recipe;
+    Building* place;
+
+    RecipeInWork(Recipe* recipe, Building* place);
 };
 
 
@@ -44,10 +56,10 @@ public:
     Player(){}
     Building* hub;
     std::vector<Pawn*> pawns;
-    std::vector<PendingTask> tasks;
+    std::vector<RecipeInWork*> work;
 
-    bool startRecipe(Recipe recipe, Building* where);
+    bool startRecipe(Recipe* recipe, Building* where);
 
-    bool checkRecipe(Recipe& recipe);
+    bool checkRecipe(Recipe* recipe);
 };
 #endif //PLAYER_H
