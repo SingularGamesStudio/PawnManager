@@ -1,9 +1,5 @@
-#ifndef SHOOTRECIPE_H
-#define SHOOTRECIPE_H
-///misha does not believe in me  :(
 #include "Recipe.h"
 
 class ShootRecipe:Recipe {
-
+    //idk which fields would be here, we don't even have enemy pawns
 };
-#endif //SHOOTRECIPE_H

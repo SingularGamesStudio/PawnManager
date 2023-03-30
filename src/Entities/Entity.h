@@ -2,6 +2,7 @@
 #define ENTITY_H
 ///misha does not believe in me  :(
 #include <utility>
+#include "../IDmanager.h"
 
 class Player;
 
@@ -10,8 +11,8 @@ private:
     virtual void destroy();
 
 public:
-    Entity(){}
-    Entity(std::pair<double, double> pos, Player* owner, unsigned int hp, double radius):position(pos), owner(owner), hp(hp), radius(radius){}
+    Entity():id(IDmanager::newEntity(this)){}
+    Entity(std::pair<double, double> pos, Player* owner, unsigned int hp, double radius):position(pos), owner(owner), hp(hp), radius(radius), id(IDmanager::newEntity(this)){}
 
     int id;
     unsigned int hp;

@@ -1,13 +1,13 @@
-#include "IDmanager.h"
 #include <stdexcept>
 #include "Entities/Entity.h"
 #include "Entities/Buildings/Building.h"
 #include "Entities/Pawns/Pawn.h"
+std::unordered_map<int, Entity*> IDmanager::all;
+int IDmanager::nextID;
 
 int IDmanager::newEntity(Entity* entity) {
     all[nextID] = entity;
-    entity->id = nextID;
-    nextID++;
+    return nextID++;
 }
 
 Pawn* IDmanager::getPawn(int id) {
