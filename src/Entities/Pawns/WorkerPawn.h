@@ -16,8 +16,6 @@ public:
     void assignTask(const Task& toAssign) override;
     std::set<expertisesID> expertises;
     void moveToBuilding(Building* dest) override;
-    bool toDrop;
-    bool toTake;
     std::vector<Building*> onTheWay;
     size_t currentInWay;
     void tick(double deltaTime) override;

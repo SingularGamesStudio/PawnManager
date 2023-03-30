@@ -71,13 +71,57 @@ void FighterPawn::moveToBuilding(Building* dest)  {
     IMHere(dest);
 }
 void FighterPawn::tick(double deltaTime) {
-    if (fabs(position.first - destinationPosition.first) < 1e-6 && fabs(position.second - destinationPosition.second) > 1e-6){
-    position.first += (destination->position.first - destination->position.first) *speed*deltaTime;
-    position.second += (destination->position.second - destination->position.second) *speed*deltaTime;
-
+    if (travelling){
+        std::pair<double, double>  dest = destinationPosition;
+        double signX = position.first - dest.first;
+        double signY = position.second - dest.second;
+        double signX = position.first - dest.first;
+        double deltaX = fabs(position.first - dest.first);
+        double signY = position.second - dest.second;
+        double deltaY = fabs(position.second - dest.second);
+        double wholeDelta = deltaX * deltaX + deltaY * deltaY;
+        if (signX < -1e-2){
+            signX = -1;
+        } else if (signX > 1e-2){
+            signX = 1;
+        } else
+            signX = 0;
+        if (signY < -1e-2){
+            signY = -1;
+        } else if (signY > 1e-2){
+            signY = 1;
+        } else
+            signY = 0;
+        if (wholeDelta > 1e-7) {
+            position.first += -signX * (deltaX / sqrt(wholeDelta)) * speed * deltaTime;
+            position.second += -signY * (deltaY / sqrt(wholeDelta)) * speed * deltaTime;
+        }
+        //std::cerr<< position.first <<' '<< position.second <<'\n';
+        //std::cerr<< dest->position.first <<' '<< dest->position.second <<'\n';
+        if (signX * (position.first - dest.first) <= 1 && signY * (position.second - dest.second) <= 1){
+            if(destination != nullptr)
+                IMHere(destination);
+        }
     }
-    else
-    travelling = false;
+    else {
+        travelling = false;
+        if (toDrop) {
+            toDrop = false;
+            drop(positionBuilding);
+        }
+        if (toTake) {
+            toTake = false;
+            holding = needed;
+            needed = Resource::DummyNothing;
+            ///TO DO removeFromExistence needed
+            if(!toDrop)
+                currentTask = TaskID::Idle;
+        }
+        switch (currentTask.id) {
+            default:
+                currentTask.id = TaskID::Idle;
+        }
+    }
 }
 void FighterPawn::attack(Entity* attacked) {};
 FighterPawnType FighterPawn::getType() {

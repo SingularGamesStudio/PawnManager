@@ -14,7 +14,9 @@ public:
     Building* positionBuilding = nullptr;
     Task currentTask;
     bool travelling;
-    double speed = 0.3;
+    double speed = 111;
+    bool toDrop;
+    bool toTake;
     void drop(Building* in, std::pair<double, double> pos = { 0,0 });
     void destroy();
     void IMNotHere();

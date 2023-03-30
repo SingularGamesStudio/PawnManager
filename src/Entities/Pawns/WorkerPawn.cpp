@@ -42,11 +42,28 @@ void WorkerPawn::tick(double deltaTime) {
     if (currentInWay < onTheWay.size()){
         Building* dest = onTheWay[currentInWay];
         double signX = position.first - dest->position.first;
+        double deltaX = fabs(position.first - dest->position.first);
         double signY = position.second - dest->position.second;
-        position.first+= (dest->position.first - positionBuilding->position.first) * speed * deltaTime;
-        position.second+= (dest->position.second - positionBuilding->position.second) * speed * deltaTime;
-        //std::cerr<< position.first <<' '<< position.second <<'\n';
-        //std::cerr<< dest->position.first <<' '<< dest->position.second <<'\n';
+        double deltaY = fabs(position.second - dest->position.second);
+        double wholeDelta = deltaX * deltaX + deltaY * deltaY;
+        if (signX < -1e-2){
+            signX = -1;
+        } else if (signX > 1e-2){
+            signX = 1;
+        } else
+            signX = 0;
+        if (signY < -1e-2){
+            signY = -1;
+        } else if (signY > 1e-2){
+            signY = 1;
+        } else
+            signY = 0;
+        if (wholeDelta > 1e-7) {
+            position.first += -signX * (deltaX / sqrt(wholeDelta)) * speed * deltaTime;
+            position.second += -signY * (deltaY / sqrt(wholeDelta)) * speed * deltaTime;
+        }
+        std::cerr<< position.first <<' '<< position.second <<'\n';
+        std::cerr<< dest->position.first <<' '<< dest->position.second <<'\n';
         if (signX * (position.first - dest->position.first) <= 1 && signY * (position.second - dest->position.second) <= 1){
             IMHere(dest);
 
