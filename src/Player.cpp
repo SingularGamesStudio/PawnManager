@@ -2,6 +2,8 @@
 #include "Entities/Buildings/Building.h"
 #include "Entities/Pawns/WorkerPawn.h"
 #include "Entities/Pawns/FighterPawn.h"
+#include "Recipes/BuildRecipe.h"
+#include "Entities/Buildings/CraftBuilding.h"
 #include <set>
 #include <vector>
 
@@ -47,12 +49,24 @@ bool Player::checkRecipe(Recipe* recipe) {
     return true;
 }
 
+CraftBuilding* Player::placeBlueprint(std::pair<double, double> pos, Building *parent, double r) {
+    CraftBuilding* blueprint = new CraftBuilding(pos, this, 100, r, parent);
+    parent->children.push_back(dynamic_cast<Building*>(blueprint));
+    return blueprint;
+}
+
 bool Player::startRecipe(Recipe* recipe, Building* where) {
     if(!checkRecipe(recipe))
         return false;
+    if(dynamic_cast<BuildRecipe*>(recipe)!= nullptr) {
+        BuildRecipe* brecipe = dynamic_cast<BuildRecipe*>(recipe);
+        where = placeBlueprint(brecipe->pos, where, brecipe->toBuild.radius);
+    }
     work.push_back(new RecipeInWork(recipe, where, 0));
     return true;
 }
+
+
 
 RecipeInWork::RecipeInWork(Recipe *recipe, Building *place, int priority): recipe(recipe), place(place), priority(priority) {
     steps.push_back(std::set<PendingTask*>());
@@ -60,3 +74,4 @@ RecipeInWork::RecipeInWork(Recipe *recipe, Building *place, int priority): recip
 
     }
 }
+

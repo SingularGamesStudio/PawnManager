@@ -3,6 +3,7 @@
 ///misha does not believe in me  :(
 #include <utility>
 #include "../IDmanager.h"
+#include <iostream>
 
 class Player;
 
@@ -11,8 +12,10 @@ private:
     virtual void destroy();
 
 public:
-    Entity():id(IDmanager::newEntity(this)){}
-    Entity(std::pair<double, double> pos, Player* owner, unsigned int hp, double radius):position(pos), owner(owner), hp(hp), radius(radius), id(IDmanager::newEntity(this)){}
+    Entity():id(IDmanager::newEntity(this)){
+    }
+    Entity(std::pair<double, double> pos, Player* owner, unsigned int hp, double radius):position(pos), owner(owner), hp(hp), radius(radius), id(IDmanager::newEntity(this)){
+    }
 
     int id;
     unsigned int hp;

@@ -5,6 +5,7 @@
 #include "Recipes/Recipe.h"
 #include "testSystem.h"
 #include "Recipes/CraftRecipe.h"
+#include "Entities/Buildings/BuildingRegisty.h"
 #include <random>
 
 
@@ -13,7 +14,9 @@ Player* player;
 CraftBuilding* crafter;
 
 Player* initTest() {
+
     player = new Player();
+    BuildingRegisty::init();
     player->hub = new Building({80, -120}, player, 100);
     for(int i = 0; i<30; i++){
         player->hub->addResource(Resource::DummyOre);
@@ -24,16 +27,11 @@ Player* initTest() {
         player->pawns.push_back(pawn);
     }
     crafter = new CraftBuilding({100, 120}, player, 100);
-    crafter->position = {100, 120};
-    crafter->radius = Building::baseBuildingRadius;
     player->hub->children.push_back(dynamic_cast<Building*>(crafter));
-    crafter->parent = player->hub;
     recipe = new CraftRecipe();
     recipe->inResources.push_back(Resource::DummyOre);
     recipe->outResources.push_back(Resource::DummyIngot);
     recipe->duration = 5;
-
-
     return player;
 }
 std::mt19937 rnd(42);

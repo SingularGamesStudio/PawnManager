@@ -4,6 +4,7 @@
 #include "Building.h"
 #include "../../Recipes/Recipe.h"
 #include <vector>
+#include <iostream>
 
 class CraftBuilding:public Building {
 private:
@@ -11,7 +12,9 @@ private:
 
     void stopRecipe();
 public:
-    CraftBuilding(std::pair<double, double> pos, Player* owner, unsigned int hp, double radius = baseBuildingRadius, Building* parent= nullptr);
+    CraftBuilding(std::pair<double, double> pos, Player* owner, unsigned int hp, double radius = baseBuildingRadius, Building* parent= nullptr):
+            Building(pos, owner, hp, radius, parent), Entity(pos, owner, hp, radius), current(nullptr) {
+    }
     std::vector<Recipe*> recipes;
     Recipe* current;
 

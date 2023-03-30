@@ -5,6 +5,7 @@
 #include "../Entity.h"
 #include <vector>
 #include<set>
+#include <iostream>
 
 class Pawn;
 
@@ -14,7 +15,7 @@ private:
 public:
     constexpr static const double baseBuildingRadius = 30;
     Building(std::pair<double, double> pos, Player* owner, unsigned int hp, double radius = baseBuildingRadius, Building* parent= nullptr):
-        Entity(pos, owner, hp, radius), children(), resources(), pawns() {
+        Entity(pos, owner, hp, radius){
         this->parent = parent;
     }
     Building* parent = nullptr;

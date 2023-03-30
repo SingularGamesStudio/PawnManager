@@ -1,9 +1,6 @@
 #include "CraftBuilding.h"
 #include <iostream>
 
-CraftBuilding::CraftBuilding(std::pair<double, double> pos, Player* owner, unsigned int hp, double radius, Building* parent):
-Building(pos, owner, hp, radius, parent), current(nullptr) {
-}
 
 void CraftBuilding::destroy() {}
 
