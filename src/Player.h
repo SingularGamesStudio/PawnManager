@@ -6,9 +6,24 @@
 #include <vector>
 #include <deque>
 
+enum class expertisesID;
 class Building;
 class Pawn;
 class Player;
+
+struct PawnFinder {
+    virtual Pawn* find(Player* owner) = 0;
+};
+
+struct FighterFinder:public PawnFinder {
+    FighterPawnType type;
+    Pawn * find(Player *owner) override ;
+};
+
+struct WorkerFinder:public PawnFinder {
+    expertisesID expertise;
+    Pawn * find(Player *owner) override;
+};
 
 struct PendingTask {
     Task task;
@@ -26,19 +41,6 @@ struct PendingTask {
     }
 };
 
-/*struct FighterPendingTask:public PendingTask {
-    FighterPawnType pawnType;
-
-    FighterPendingTask(Task t, FighterPawnType type) : pawnType(type) {
-        task = t;
-    }
-
-    bool execute() override {
-        ///TO DO
-        return false;
-    }
-};*/
-
 struct RecipeInWork {
     std::deque<std::set<PendingTask*>> steps;
 
@@ -47,7 +49,7 @@ struct RecipeInWork {
     Recipe* recipe;
     Building* place;
 
-    RecipeInWork(Recipe* recipe, Building* place);
+    RecipeInWork(Recipe* recipe, Building* place, int priority);
 };
 
 

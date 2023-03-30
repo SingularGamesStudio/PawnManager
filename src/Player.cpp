@@ -50,10 +50,13 @@ bool Player::checkRecipe(Recipe* recipe) {
 bool Player::startRecipe(Recipe* recipe, Building* where) {
     if(!checkRecipe(recipe))
         return false;
-    work.push_back(new RecipeInWork(recipe, where));
+    work.push_back(new RecipeInWork(recipe, where, 0));
     return true;
 }
 
-RecipeInWork::RecipeInWork(Recipe *recipe, Building *place): recipe(recipe), place(place) {
+RecipeInWork::RecipeInWork(Recipe *recipe, Building *place, int priority): recipe(recipe), place(place), priority(priority) {
+    steps.push_back(std::set<PendingTask*>());
+    for(Resource r :recipe->inResources) {
 
+    }
 }
