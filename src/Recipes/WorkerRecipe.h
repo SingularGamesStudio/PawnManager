@@ -1,5 +1,5 @@
 #include "Recipe.h"
 
-class WorkerRecipe:Recipe {
+class WorkerRecipe: public Recipe {
 
 };

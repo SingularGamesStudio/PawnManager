@@ -23,14 +23,12 @@ namespace dlib {
             type = Type::ACCEPTED_MESSAGE;
             data.resize(size);
         }
-        template<typename U>
-        Packet& operator<<(const U& object) { // adds U to the packet, U has to be trivial type
-            static_assert(std::is_standard_layout<U>::value, "U is not trivial type");
+        Packet& operator<<(const string& object) { // adds U to the packet, U has to be trivial type
             if (type != Type::RAW_MESSAGE)
                 throw std::logic_error("ERROR: trying to add data(U) into not RAW_MESSAGE packet");
             size_t size = data.size();
-            data.resize(size + sizeof(U));
-            std::memcpy(data.data() + size, &object, sizeof(U));
+            data.resize(size + object.size());
+            std::memcpy(data.data() + size, object.data(), object.size());
             return *this;
         }
         Packet& operator+=(const Packet& that) { // adds contains of one RAW_MESSAGE packet into another

@@ -3,7 +3,8 @@
 ///misha does not believe in me  :(
 #include <vector>
 #include <cassert>
-#include<set>
+#include <string>
+#include <set>
 
 class CraftBuilding;
 class Pawn;
@@ -11,6 +12,7 @@ class WorkerPawn;
 enum class Resource;
 enum class expertisesID;
 enum class FighterPawnType;
+enum class RecipeType : uint8_t = { BASIC_RECIPE, CRAFT_RECIPE, BUILD_RECIPE, SHOOT_RECIPE };
 
 class Recipe {
 private:
@@ -30,9 +32,13 @@ public:
 
     void cancel();
 
-    void finish();
+    virtual void finish() = 0;
 
     void tick(double deltaTime);
+
+    virtual std:string serialize() const = 0;
+
+    virtual void deserialize() = 0;
 
     std::vector<expertisesID> reqWorkers;
 
@@ -40,10 +46,7 @@ public:
     std::vector<expertisesID> inWorkers;
     std::vector<Resource> inResources;
 
-    std::vector<FighterPawnType> outFighters;
-    std::vector<Resource> outResources;
-
-    float duration;
+    double duration;
 
 };
 #endif //RECIPE_H

@@ -135,15 +135,3 @@ void Recipe::cancel(){
     for(Resource p :procResources){place->addResource(p);}
     cleanup();
 }
-
-void Recipe::finish() {
-    for(Pawn* p :procPawns){delete p;}
-
-    for(FighterPawnType t : outFighters) {
-        place->addPawn(FighterPawn::createFighterPawn(t, place));
-    }
-    for(Resource t : outResources) {
-        place->addResource(t);
-    }
-    cleanup();
-}
