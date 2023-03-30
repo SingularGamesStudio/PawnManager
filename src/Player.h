@@ -63,5 +63,7 @@ public:
     bool startRecipe(Recipe* recipe, Building* where);
 
     bool checkRecipe(Recipe* recipe);
+
+    CraftBuilding* placeBlueprint(std::pair<double, double> pos, Building* parent, double r);
 };
 #endif //PLAYER_H
