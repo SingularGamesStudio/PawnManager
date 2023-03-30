@@ -15,7 +15,7 @@ Pawn* IDmanager::getPawn(int id) {
     Pawn* p = dynamic_cast<Pawn*>(res);
     if(p != nullptr)
         return p;
-    throw std::logic_error("Entity by this ID is not a pawn");
+    return nullptr;
 }
 
 Building* IDmanager::getBuilding(int id) {
@@ -23,5 +23,5 @@ Building* IDmanager::getBuilding(int id) {
     Building* p = dynamic_cast<Building*>(res);
     if(p != nullptr)
         return p;
-    throw std::logic_error("Entity by this ID is not a pawn");
+    return nullptr;
 }

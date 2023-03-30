@@ -21,6 +21,7 @@ private:
     ResourceRenderer resourceRenderer;
     Player* player;
     double curTime = 0;
+    int selectedBuilding;
 public:
     static constexpr float renderScale = 1.5f;
     GameWindowManager winManager;
@@ -30,6 +31,8 @@ public:
 private:
     void updateAndRender();
     void buildingRenderDfs(Building* b, sf::Vector2f center);
+    void onMouseClick(int x, int y);
+    bool onBuildingMouseClick(Building* b, sf::Vector2f pos);
 };
 
 

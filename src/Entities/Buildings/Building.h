@@ -33,8 +33,4 @@ public:
 
     virtual void tick(double deltaTime){};
 };
-
-class BuildingFactory{
-
-};
 #endif //BUILDING_H
