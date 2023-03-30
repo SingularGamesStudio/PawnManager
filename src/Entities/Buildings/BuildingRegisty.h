@@ -1,7 +1,11 @@
 #include <vector>
 
-class BuildingIdea {
+class Recipe;
 
+class BuildingIdea {
+    std::vector<Recipe*> available;
+    int radius;
+    int index;
 };
 
 class BuildingRegisty {

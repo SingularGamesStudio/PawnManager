@@ -1,8 +1,8 @@
 #include "Recipe.h"
+#include "../Entities/Buildings/BuildingRegisty.h"
 #include <utility>
 
-class BuildRecipe:Recipe {
+class BuildRecipe:public Recipe {
     std::pair<double, double> pos;
-    double r;
     BuildingIdea toBuild;
 };
