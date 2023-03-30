@@ -41,10 +41,13 @@ void WorkerPawn::assignTask(const Task& toAssign) {
 void WorkerPawn::tick(double deltaTime) {
     if (currentInWay < onTheWay.size()){
         Building* dest = onTheWay[currentInWay];
+        double signX = position.first - dest->position.first;
+        double signY = position.second - dest->position.second;
         position.first+= (dest->position.first - positionBuilding->position.first) * speed * deltaTime;
         position.second+= (dest->position.second - positionBuilding->position.second) * speed * deltaTime;
-
-        if (fabs(position.first - dest->position.first) < 1e-1 && fabs(position.second - dest->position.second) < 1e-1){
+        //std::cerr<< position.first <<' '<< position.second <<'\n';
+        //std::cerr<< dest->position.first <<' '<< dest->position.second <<'\n';
+        if (signX * (position.first - dest->position.first) <= 1 && signY * (position.second - dest->position.second) <= 1){
             IMHere(dest);
 
             ++currentInWay;
