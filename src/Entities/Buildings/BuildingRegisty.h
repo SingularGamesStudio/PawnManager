@@ -9,5 +9,6 @@ class BuildingIdea {
 };
 
 class BuildingRegisty {
-    std::vector<BuildingIdea> database;
+public:
+    static std::vector<BuildingIdea> database;
 };

@@ -74,8 +74,6 @@ void FighterPawn::tick(double deltaTime) {
     if (travelling){
         std::pair<double, double>  dest = destinationPosition;
         double signX = position.first - dest.first;
-        double signY = position.second - dest.second;
-        double signX = position.first - dest.first;
         double deltaX = fabs(position.first - dest.first);
         double signY = position.second - dest.second;
         double deltaY = fabs(position.second - dest.second);

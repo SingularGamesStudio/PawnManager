@@ -5,4 +5,6 @@
 class BuildRecipe:public Recipe {
     std::pair<double, double> pos;
     BuildingIdea toBuild;
+
+    BuildRecipe(std::pair<double, double> pos, int index):pos(pos), toBuild(BuildingRegisty::database[index]){}
 };
