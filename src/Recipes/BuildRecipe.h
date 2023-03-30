@@ -3,6 +3,7 @@
 #include <utility>
 
 class BuildRecipe:public Recipe {
+public:
     std::pair<double, double> pos;
     BuildingIdea toBuild;
 

@@ -11,10 +11,12 @@
 #include "../Entities/Buildings/Building.h"
 #include <random>
 #include <ctime>
+#include <iostream>
+#include "../Recipes/BuildRecipe.h"
 
 PawnManagerClient::PawnManagerClient() : window(sf::VideoMode(800, 600), "Pawn Manager"),
                                          view(window.getDefaultView()), winManager(), pawnRenderer(window),
-                                         buildingRenderer(window), resourceRenderer(window) {
+                                         buildingRenderer(window), resourceRenderer(window), selectedBuilding(-1) {
     winManager.pushWindow(new MainMenuWindow());
 }
 
@@ -33,6 +35,9 @@ void PawnManagerClient::run() {
                              });
                 view.setCenter(evt.size.width / 2, evt.size.height / 2);
                 window.setView(view);
+            }
+            if(evt.type == sf::Event::MouseButtonPressed) {
+                onMouseClick(evt.mouseButton.x, evt.mouseButton.y);
             }
         }
         updateAndRender();
@@ -92,4 +97,30 @@ void PawnManagerClient::buildingRenderDfs(Building* b, sf::Vector2f center) {
         sf::Vector2f pos = (sf::Vector2f(x, y) * (float)(b->radius - 7 / renderScale) + p) * renderScale + center;
         resourceRenderer.drawResource(res, pos, rotation);
     }
+}
+
+void PawnManagerClient::onMouseClick(int x, int y) {
+    sf::Vector2f center = ((sf::Vector2f )window.getSize()) * 0.5f;
+    sf::Vector2f pos = (sf::Vector2f(x, y) - center) / renderScale;
+    if(!onBuildingMouseClick(player->hub, pos)) {
+        Building* b = IDmanager::getBuilding(selectedBuilding);
+        if(b != nullptr) {
+            player->startRecipe(new BuildRecipe({pos.x, pos.y}, 0), b);
+        }
+    }
+}
+
+bool PawnManagerClient::onBuildingMouseClick(Building* b, sf::Vector2f pos) {
+    auto [x, y] = b->position;
+    sf::Vector2f delta = sf::Vector2f(x, y) - pos;
+    if(delta.x * delta.x + delta.y * delta.y <= b->radius * b->radius) {
+        selectedBuilding = b->id;
+        return true;
+    }
+    for(Building* ob : b->children) {
+        if(onBuildingMouseClick(ob, pos)) {
+            return true;
+        }
+    }
+    return false;
 }
