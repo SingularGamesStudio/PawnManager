@@ -166,3 +166,11 @@ PendingRecipe::~PendingRecipe() {
             std::cerr << "when deleting PendingRecipe, trying to unreserve resource, but it is not reserved";
     }
 }
+
+void Player::PawnManager::cancelTask(Task task) {
+
+}
+
+void Player::PawnManager::finishTask(Task task) {
+
+}

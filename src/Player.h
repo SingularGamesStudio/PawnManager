@@ -56,6 +56,16 @@ public:
     Building* hub;
     std::vector<Pawn*> pawns;
     std::set<PendingRecipe*> work;
+    struct PawnManager {
+
+        Player* owner;
+
+        void finishTask(Task task);
+
+        void cancelTask(Task task);
+    };
+
+    PawnManager pawnManager;
 
     bool startRecipe(Recipe* recipe, Building* where);
 

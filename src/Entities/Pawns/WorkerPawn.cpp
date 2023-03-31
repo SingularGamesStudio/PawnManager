@@ -93,7 +93,10 @@ void WorkerPawn::tick(double deltaTime) {
                 if(temp) {
                     moveToBuilding(currentTask.destination2);
                     toDrop = true;
-                } else currentTask.id = TaskID::Idle;
+                } else {
+                    currentTask.id = TaskID::Idle;
+                    owner->pawnManager.finishTask(currentTask);
+                }
                 break;
             case TaskID::BeProcessed:
                 //TODO:set pawn to be waiting, not free
