@@ -99,28 +99,50 @@ void Player::tick() {//TODO:rewrite to mincost
             haulers.push_back(worker);
         }
     }
-    std::vector<PendingRecipe*> toClose;
+    std::vector<std::pair<PendingRecipe*, bool>> toClose;
     for(PendingRecipe* rec : work){
         if(!rec->needResources.empty()){
             for(Resource resource:rec->needResources){
                 Building* where = findResource(hub, resource);
                 if(!where){
-                    toClose.push_back(rec);
+                    toClose.push_back({rec, false});
                     break;
                 }
                 haulers.back()->assignTask(Task(TaskID::Transport, where, rec->place, resource));
                 haulers.pop_back();
             }
+            rec->needResources.clear();
         } else if(rec->movedResources.empty()) {
             if(!rec->needPawns.empty()) {
-                //move needed pawns
+                for(PawnReq* p :rec->needPawns){
+                    Pawn* pawn = p->find(this);
+                    if(pawn== nullptr) {
+                        toClose.push_back({rec, false});
+                        break;
+                    }
+                    pawn->moveToBuilding(rec->place);//TODO:remake this when the method is implemented
+                }
+                rec->needPawns.clear();
             } else if(rec->movedPawns.empty()) {
-                //start recipe
+                toClose.push_back({rec, true});
             }
         }
     }
 
-    for(PendingRecipe* rec:toClose) {
-
+    for(auto pr:toClose) {
+        PendingRecipe* cur = pr.first;
+        if(pr.second){
+            cur->start();
+        }
+        work.erase(cur);
+        delete cur;
     }
+}
+
+void PendingRecipe::start() {
+
+}
+
+PendingRecipe::~PendingRecipe() {
+
 }

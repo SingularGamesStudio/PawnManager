@@ -32,8 +32,10 @@ struct WorkerReq:public PawnReq {
 struct PendingRecipe {
     std::multiset<Resource> needResources;
     std::multiset<Resource> movedResources;
+    std::multiset<Resource> doneResources;
     std::vector<PawnReq*> needPawns;
     std::vector<PawnReq*> movedPawns;
+    std::vector<Pawn*> donePawns;
 
     int ID;
     int priority;
@@ -41,6 +43,10 @@ struct PendingRecipe {
     Building* place;
 
     PendingRecipe(Recipe* recipe, Building* place, int priority);
+
+    void start();
+
+    ~PendingRecipe();
 };
 
 
