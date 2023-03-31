@@ -24,10 +24,11 @@ public:
     Building* destination;
     Resource object;
     Building* destination2;
+    int returnID;
 
     bool avaliable(Player* owner);
 
-    Task(TaskID taskid = TaskID::Idle, Building* building = nullptr, Building* building2 = nullptr, Resource resource = Resource::DummyNothing);
+    Task(TaskID taskid = TaskID::Idle, Building* building = nullptr, Building* building2 = nullptr, Resource resource = Resource::DummyNothing, int returnID = -1);
     ///TASK_REFORM(player -> pawn commands)
 };
 #endif //TASK_H

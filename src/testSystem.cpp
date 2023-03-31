@@ -28,6 +28,7 @@ Player* initTest() {
     }
     crafter = new CraftBuilding({100, 120}, player, 100);
     player->hub->children.push_back(dynamic_cast<Building*>(crafter));
+    crafter->parent = player->hub;
     recipe = new CraftRecipe();
     recipe->inResources.push_back(Resource::DummyOre);
     recipe->outResources.push_back(Resource::DummyIngot);

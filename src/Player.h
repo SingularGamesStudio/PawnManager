@@ -34,7 +34,7 @@ struct PendingRecipe {
     std::multiset<Resource> movedResources;
     std::multiset<Resource> doneResources;
     std::vector<PawnReq*> needPawns;
-    std::vector<PawnReq*> movedPawns;
+    std::vector<Pawn*> movedPawns;
     std::vector<Pawn*> donePawns;
 
     int ID;

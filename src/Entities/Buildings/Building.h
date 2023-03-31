@@ -21,6 +21,7 @@ public:
     Building* parent = nullptr;
     std::vector<Building*> children;
     std::multiset<Resource> resources;
+    std::multiset<Resource> reservedResources;
     std::set<Pawn*> pawns;
 
     void addResource(Resource resource);
