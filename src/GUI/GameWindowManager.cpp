@@ -35,3 +35,7 @@ void GameWindowManager::updateAndRender() {
         windows.back()->updateAndRender();
     }
 }
+
+void GameWindowManager::onMouseClick(int x, int y, sf::Mouse::Button button) {
+
+}

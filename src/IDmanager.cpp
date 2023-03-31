@@ -10,6 +10,10 @@ int IDmanager::newEntity(Entity* entity) {
     return nextID++;
 }
 
+int IDmanager::newID() {
+    return nextID++;
+}
+
 Pawn* IDmanager::getPawn(int id) {
     Entity* res = all[id];
     Pawn* p = dynamic_cast<Pawn*>(res);

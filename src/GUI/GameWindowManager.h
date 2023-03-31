@@ -7,6 +7,7 @@
 #include <cstddef>
 #include <vector>
 #include "GameWindow.h"
+#include "SFML/Window.hpp"
 
 class GameWindowManager {
 private:
@@ -18,6 +19,7 @@ public:
     void swapWindow(GameWindow* win);
     size_t windowCount();
     void updateAndRender();
+    void onMouseClick(int x, int y, sf::Mouse::Button button);
 };
 
 
