@@ -12,7 +12,7 @@ class WorkerPawn;
 enum class Resource;
 enum class expertisesID;
 enum class FighterPawnType;
-//enum class RecipeType : uint8_t = { BASIC_RECIPE, CRAFT_RECIPE, BUILD_RECIPE, SHOOT_RECIPE };
+enum class RecipeType : uint8_t { BASIC_RECIPE, CRAFT_RECIPE, BUILD_RECIPE, SHOOT_RECIPE };
 
 class Recipe {
 protected:
@@ -35,9 +35,9 @@ public:
 
     void tick(double deltaTime);
 
-    virtual std::string serialize() const = 0;
+    virtual std::vector<uint8_t> serialize() const = 0;
 
-    virtual void deserialize() = 0;
+    virtual void deserialize(const std::vector<uint8_t>& data) = 0;
 
     std::vector<expertisesID> reqWorkers;
 
