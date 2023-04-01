@@ -34,13 +34,17 @@ struct PendingRecipe {
     std::multiset<Resource> movedResources;
     std::multiset<Resource> doneResources;
     std::vector<PawnReq*> needPawns;
-    std::vector<PawnReq*> movedPawns;
+    std::vector<Pawn*> movedPawns;
     std::vector<Pawn*> donePawns;
 
     int ID;
     int priority;
     Recipe* recipe;
     Building* place;
+
+    bool operator<(const PendingRecipe& other) const {
+        return ID<other.ID;
+    }
 
     PendingRecipe(Recipe* recipe, Building* place, int priority);
 
@@ -56,6 +60,16 @@ public:
     Building* hub;
     std::vector<Pawn*> pawns;
     std::set<PendingRecipe*> work;
+    struct PawnManager {
+
+        Player* owner;
+
+        void finishTask(Task task, Pawn* pawn);
+
+        void cancelTask(Task task, Pawn* pawn);
+    };
+
+    PawnManager pawnManager;
 
     bool startRecipe(Recipe* recipe, Building* where);
 

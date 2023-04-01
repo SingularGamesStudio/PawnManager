@@ -7,6 +7,7 @@
 #include <set>
 
 class CraftBuilding;
+class Building;
 class Pawn;
 class WorkerPawn;
 enum class Resource;
@@ -27,7 +28,7 @@ public:
 
     void start(CraftBuilding* place);
 
-    void cleanup();
+    void cleanup(Building* where = nullptr);
 
     void cancel();
 

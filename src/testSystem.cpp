@@ -16,6 +16,7 @@ CraftBuilding* crafter;
 Player* initTest() {
 
     player = new Player();
+    player->pawnManager.owner = player;
     BuildingRegisty::init();
     player->hub = new Building({80, -120}, player, 100);
     for(int i = 0; i<30; i++){
@@ -28,14 +29,23 @@ Player* initTest() {
     }
     crafter = new CraftBuilding({100, 120}, player, 100);
     player->hub->children.push_back(dynamic_cast<Building*>(crafter));
+    crafter->parent = player->hub;
     recipe = new CraftRecipe();
     recipe->inResources.push_back(Resource::DummyOre);
     recipe->outResources.push_back(Resource::DummyIngot);
     recipe->duration = 5;
     return player;
 }
+
+void tickBuildings(Building* place, double deltaTime) {
+    place->tick(deltaTime);
+    for(Building* ch:place->children){
+        tickBuildings(ch, deltaTime);
+    }
+}
 std::mt19937 rnd(42);
 void tick(double deltaTime) {
+    player->tick();
     if(crafter->current== nullptr)
         crafter->assignRecipe(recipe);
     for(Pawn* p:player->pawns){
@@ -44,5 +54,6 @@ void tick(double deltaTime) {
             p->assignTask(Task(TaskID::Transport, player->hub, crafter, Resource::DummyOre));
         }
     }
-    crafter->tick(deltaTime);
+    tickBuildings(player->hub, deltaTime);
 }
+

@@ -1,5 +1,6 @@
 #include "WorkerPawn.h"
 #include "../Buildings/Building.h"
+#include "../../Player.h"
 #include <cmath>
 #include <iostream>
 void WorkerPawn::create(Building* placeOfCreation) {
@@ -62,8 +63,6 @@ void WorkerPawn::tick(double deltaTime) {
             position.first += -signX * (deltaX / sqrt(wholeDelta)) * speed * deltaTime;
             position.second += -signY * (deltaY / sqrt(wholeDelta)) * speed * deltaTime;
         }
-        std::cerr<< position.first <<' '<< position.second <<'\n';
-        std::cerr<< dest->position.first <<' '<< dest->position.second <<'\n';
         if (signX * (position.first - dest->position.first) <= 1 && signY * (position.second - dest->position.second) <= 1){
             IMHere(dest);
 
@@ -86,6 +85,7 @@ void WorkerPawn::tick(double deltaTime) {
                 needed = Resource::DummyNothing;
             }
             else{
+                owner->pawnManager.cancelTask(currentTask, this);
                 currentTask = TaskID::Idle;
             }
         }
@@ -94,10 +94,14 @@ void WorkerPawn::tick(double deltaTime) {
                 if(temp) {
                     moveToBuilding(currentTask.destination2);
                     toDrop = true;
-                } else currentTask.id = TaskID::Idle;
+                } else {
+                    owner->pawnManager.finishTask(currentTask, this);
+                    currentTask.id = TaskID::Idle;
+                }
                 break;
             case TaskID::BeProcessed:
                 //TODO:set pawn to be waiting, not free
+                owner->pawnManager.finishTask(currentTask, this);
                 break;
             default:
                 currentTask.id = TaskID::Idle;

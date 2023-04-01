@@ -108,8 +108,9 @@ void Player::tick() {//TODO:rewrite to mincost
                     toClose.push_back({rec, false});
                     break;
                 }
-                haulers.back()->assignTask(Task(TaskID::Transport, where, rec->place, resource));
+                haulers.back()->assignTask(Task(TaskID::Transport, where, rec->place, resource, rec->ID));
                 haulers.pop_back();
+                rec->movedResources.insert(resource);
             }
             rec->needResources.clear();
         } else if(rec->movedResources.empty()) {
@@ -121,6 +122,7 @@ void Player::tick() {//TODO:rewrite to mincost
                         break;
                     }
                     pawn->moveToBuilding(rec->place);//TODO:remake this when the method is implemented
+                    rec->movedPawns.push_back(pawn);
                 }
                 rec->needPawns.clear();
             } else if(rec->movedPawns.empty()) {
@@ -140,9 +142,73 @@ void Player::tick() {//TODO:rewrite to mincost
 }
 
 void PendingRecipe::start() {
-
+    CraftBuilding* crafter = dynamic_cast<CraftBuilding*>(place);
+    if(crafter== nullptr)
+        throw std::logic_error("requested recipe for building which could not craft");
+    if(!crafter->assignRecipe(recipe)) {
+        std::cerr << "requested recipe start in building by id " << place->id << ", but recipe requirements are not met\n";
+    }
+    donePawns.clear();
+    doneResources.clear();
 }
 
 PendingRecipe::~PendingRecipe() {
+    for(Pawn* p :movedPawns) {
+        p->assignTask(Task(TaskID::Idle));
+    }
+    for(Pawn* p :donePawns) {
+        p->assignTask(Task(TaskID::Idle));
+    }
+    for(Resource r:doneResources) {
+        if(place->reservedResources.contains(r))
+            place->reservedResources.erase(place->reservedResources.find(r));
+        else
+            std::cerr << "when deleting PendingRecipe, trying to unreserve resource, but it is not reserved";
+    }
+}
 
+void Player::PawnManager::cancelTask(Task task, Pawn* pawn) {
+    PendingRecipe* pr = nullptr;
+    for(PendingRecipe* t : owner->work){
+        if(t->ID==task.returnID){
+            pr = t;
+            break;
+        }
+    }
+    if(pr== nullptr)
+        return;
+    switch (task.id) {
+        case TaskID::Transport:
+            pr->movedResources.erase(pr->movedResources.find(task.object));
+            pr->needResources.insert(task.object);
+            break;
+        case TaskID::BeProcessed:
+            //TODO
+            break;
+        default:
+            break;
+    }
+}
+
+void Player::PawnManager::finishTask(Task task, Pawn* pawn) {
+    PendingRecipe* pr = nullptr;
+    for(PendingRecipe* t : owner->work){
+        if(t->ID==task.returnID){
+            pr = t;
+            break;
+        }
+    }
+    if(pr== nullptr)
+        return;
+
+    switch (task.id) {
+        case TaskID::Transport:
+            pr->movedResources.erase(pr->movedResources.find(task.object));
+            break;
+        case TaskID::BeProcessed:
+            //TODO
+            break;
+        default:
+            break;
+    }
 }

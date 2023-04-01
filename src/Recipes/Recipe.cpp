@@ -110,15 +110,18 @@ void Recipe::tick(double deltaTime) {
         finish();
 }
 
-void Recipe::cleanup() {
+void Recipe::cleanup(Building* where) {
+    if(where== nullptr) {
+        where = dynamic_cast<Building *>(place);
+        place->current = nullptr;
+    }
     for(WorkerPawn* p :workers){
-        place->addPawn(dynamic_cast<Pawn*>(p));
+        where->addPawn(dynamic_cast<Pawn*>(p));
         dynamic_cast<Pawn*>(p)->stopBeingIngridient();
     }
     procPawns.clear();
     procResources.clear();
     workers.clear();
-    place->current = nullptr;
     progress = 0;
 }
 
