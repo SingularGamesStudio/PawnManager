@@ -42,6 +42,10 @@ struct PendingRecipe {
     Recipe* recipe;
     Building* place;
 
+    bool operator<(const PendingRecipe& other) const {
+        return ID<other.ID;
+    }
+
     PendingRecipe(Recipe* recipe, Building* place, int priority);
 
     void start();
@@ -60,9 +64,9 @@ public:
 
         Player* owner;
 
-        void finishTask(Task task);
+        void finishTask(Task task, Pawn* pawn);
 
-        void cancelTask(Task task);
+        void cancelTask(Task task, Pawn* pawn);
     };
 
     PawnManager pawnManager;

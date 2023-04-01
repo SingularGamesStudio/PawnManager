@@ -108,7 +108,7 @@ void Player::tick() {//TODO:rewrite to mincost
                     toClose.push_back({rec, false});
                     break;
                 }
-                haulers.back()->assignTask(Task(TaskID::Transport, where, rec->place, resource));
+                haulers.back()->assignTask(Task(TaskID::Transport, where, rec->place, resource, rec->ID));
                 haulers.pop_back();
                 rec->movedResources.insert(resource);
             }
@@ -167,10 +167,48 @@ PendingRecipe::~PendingRecipe() {
     }
 }
 
-void Player::PawnManager::cancelTask(Task task) {
-
+void Player::PawnManager::cancelTask(Task task, Pawn* pawn) {
+    PendingRecipe* pr = nullptr;
+    for(PendingRecipe* t : owner->work){
+        if(t->ID==task.returnID){
+            pr = t;
+            break;
+        }
+    }
+    if(pr== nullptr)
+        return;
+    switch (task.id) {
+        case TaskID::Transport:
+            pr->movedResources.erase(pr->movedResources.find(task.object));
+            pr->needResources.insert(task.object);
+            break;
+        case TaskID::BeProcessed:
+            //TODO
+            break;
+        default:
+            break;
+    }
 }
 
-void Player::PawnManager::finishTask(Task task) {
+void Player::PawnManager::finishTask(Task task, Pawn* pawn) {
+    PendingRecipe* pr = nullptr;
+    for(PendingRecipe* t : owner->work){
+        if(t->ID==task.returnID){
+            pr = t;
+            break;
+        }
+    }
+    if(pr== nullptr)
+        return;
 
+    switch (task.id) {
+        case TaskID::Transport:
+            pr->movedResources.erase(pr->movedResources.find(task.object));
+            break;
+        case TaskID::BeProcessed:
+            //TODO
+            break;
+        default:
+            break;
+    }
 }
