@@ -1,5 +1,5 @@
 
-#include "GUI/PawnManagerClient.h"
+#include "PawnManagerClient.h"
 
 int main() {
     PawnManagerClient().run();
