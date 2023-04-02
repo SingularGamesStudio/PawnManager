@@ -8,7 +8,9 @@ FetchContent_Declare(SFML
         GIT_TAG 2.6.x)
 FetchContent_MakeAvailable(SFML)
 
-add_executable(PawnManagerGUI BuildingRenderer.cpp CraftBuildingWindow.cpp FontManager.cpp GameWindow.cpp GameWindowManager.cpp MainMenuWindow.cpp PawnManagerClient.cpp PawnRenderer.cpp ResourceRenderer.cpp ClientMain.cpp)
+add_executable(PawnManagerGUI BuildingRenderer.cpp CraftBuildingWindow.cpp FontManager.cpp GameWindow.cpp
+        GameWindowManager.cpp MainMenuWindow.cpp PawnManagerClient.cpp PawnRenderer.cpp ResourceRenderer.cpp
+        ClientMain.cpp)
 
 target_link_libraries(PawnManagerGUI PRIVATE sfml-graphics PawnManager)
 target_compile_features(PawnManagerGUI PRIVATE cxx_std_20)
