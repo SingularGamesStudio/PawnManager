@@ -7,7 +7,7 @@
 #include <queue>
 #include <vector>
 #include <cstddef>
-enum class expertisesID{DummySmeltery, DummyMetalworking, DummtTrainership};
+enum class expertisesID{DummySmeltery, DummyMetalworking, DummyTrainership};
 class WorkerPawn: public Pawn{
 public:
     

@@ -26,5 +26,7 @@ public:
     void beIngridient();
     void stopBeingIngridient();
     virtual void tick(double deltaTime);
+    virtual std::vector<uint8_t> serialize() const;
+    virtual void deserialize(const std::vector<uint8_t>& data) const;
 };
 #endif //PAWN_H

@@ -51,3 +51,11 @@ void Pawn::moveToBuilding(Building* toMove) {
 void Pawn::tick(double deltaTime) {
 
 }
+
+void Pawn::deserialize(const std::vector<uint8_t>& data) {
+
+}
+
+std::vector<uint8_t> Pawn::serialize() const {
+
+}
