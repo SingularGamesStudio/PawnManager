@@ -1,5 +1,5 @@
-#Паттерны использованные в проекте
-####Кирьянов Григорий(SingularGamesStudio):
+# Паттерны использованные в проекте
+#### Кирьянов Григорий(SingularGamesStudio):
 
 Entity - Composite
 
@@ -9,16 +9,16 @@ Player - Facade между реальным игроком и Recipe
 
 Recipe - Command (из задач для Pawn/Building)
 
-####Косов Михаил(128-bit-guy):
+#### Косов Михаил(128-bit-guy):
 
 BuildingRenderer, FontManager, GameWindowManager, PawnRenderer, ResourceRenderer - Singleton'ы
 
-####Дубини Василий:
+#### Дубини Василий:
 
 Connection - Adapter сетевой библиотеки (для сервера/клиента)
 
 clientInterface/serverInterface - Interface для Connection
 
-####Тамьяров Илья(vertignesss):
+#### Тамьяров Илья(vertignesss):
 FighterPawn - AbstractFactory
 
