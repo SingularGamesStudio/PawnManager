@@ -3,14 +3,8 @@
 #include "../ResourceEntity.h"
 #include "../Buildings/Building.h"
 #include "../../Player.h"
-void DummyMonk::attack(Entity* attacked) {
-    
-}
 FighterPawnType DummyMonk::getType()  {
     return FighterPawnType::DummyMonk;
-}
-void DummySwordsman::attack(Entity* attacked)  {
-    
 }
 FighterPawnType DummySwordsman::getType()  {
     return FighterPawnType::DummySwordsman;
@@ -37,7 +31,7 @@ void FighterPawn::getResource(ResourceEntity* toGet) {
     drop(positionBuilding, position);
 }
 void FighterPawn::assignTask(const Task& toAssign) {
-    currentTask = task;
+    currentTask = toAssign;
     switch (toAssign.id) {
         case TaskID::Get:
             moveToBuilding(toAssign.destination);
@@ -96,10 +90,11 @@ void FighterPawn::moveToBuilding(ptr<Building> dest)  {
     IMHere(dest);
 }
 void FighterPawn::tick(double deltaTime) {
+    std::pair<double, double>  dest = destinationPosition;
     double deltaX = fabs(position.first - dest.first);
     double deltaY = fabs(position.second - dest.second);
     double wholeDelta = deltaX * deltaX + deltaY * deltaY;
-    if(toAttack && wholeDelta <= currentTask.destination.radius){
+    if(toAttack && wholeDelta <= currentTask.destination->radius){
         attack(currentTask.destination);
         if (currentTask.destination->hp <= 0){
             toAttack = false;
@@ -107,7 +102,6 @@ void FighterPawn::tick(double deltaTime) {
         }
     }
     if (travelling){
-        std::pair<double, double>  dest = destinationPosition;
         double signX = position.first - dest.first;
         double signY = position.second - dest.second;
         if (signX < -1e-2){
@@ -153,9 +147,9 @@ void FighterPawn::tick(double deltaTime) {
         }
     }
 }
-void FighterPawn::attack(Entity* attacked) {
-    attacked.hp -= atk;
+void FighterPawn::attack(ptr<Entity> attacked) {
+    attacked->hp -= atk;
 };
 FighterPawnType FighterPawn::getType() {
-    return FighterPawnType::DummyNotFound;
+    return FighterPawnType::DummNotFound;
 };

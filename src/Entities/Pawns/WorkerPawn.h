@@ -19,6 +19,5 @@ public:
     std::vector<ptr<Building>> onTheWay;
     size_t currentInWay;
     void tick(double deltaTime) override;
-    void moveToPosition(std::pair<double, double> toMove) = delete;
 };
 #endif //WORKERPAWN_H
