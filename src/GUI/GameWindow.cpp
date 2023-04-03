@@ -9,6 +9,7 @@
 void GameWindow::updateAndRender() {
     drawBackground();
     drawWindow();
+    updateAndRenderControls();
 }
 
 GameWindow::GameWindow() = default;
@@ -83,4 +84,30 @@ void GameWindow::drawBorderedRect(sf::FloatRect rect, float borderSize, sf::Colo
                            borderSize),border);
     drawRect(sf::FloatRect(rect.left + rect.width - borderSize, rect.top, borderSize,
                            rect.height),border);
+}
+
+void GameWindow::updateAndRenderControls() {
+    for(Control* c : controls) {
+        c->updateAndRender();
+    }
+}
+
+GameWindow::~GameWindow() {
+    for(Control* c : controls) {
+        delete c;
+    }
+}
+
+sf::FloatRect GameWindow::getGridRectangle(sf::IntRect rect) {
+    sf::FloatRect minCellRect = getGridCellRectangle(rect.getPosition());
+    sf::FloatRect maxCellRect = getGridCellRectangle(rect.getPosition() + rect.getSize());
+    sf::Vector2f minPos = minCellRect.getPosition();
+    sf::Vector2f maxPos = maxCellRect.getPosition() + maxCellRect.getSize();
+    return sf::FloatRect(minPos, maxPos - minPos);
+}
+
+void GameWindow::onMouseClick(int x, int y, sf::Mouse::Button b) {
+    for(Control* c : controls) {
+        c->onMouseClick(x, y, b);
+    }
 }

@@ -22,7 +22,9 @@ private:
     static PawnRenderer* pawnRenderer;
     static BuildingRenderer* buildingRenderer;
     static ResourceRenderer* resourceRenderer;
+public:
     static ptr<Player> player;
+private:
     static double curTime;
     static int selectedBuilding;
 public:
