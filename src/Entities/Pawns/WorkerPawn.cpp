@@ -3,13 +3,12 @@
 #include "../../Player.h"
 #include <cmath>
 #include <iostream>
-void WorkerPawn::create(Building* placeOfCreation) {
+void WorkerPawn::create(ptr<Building> placeOfCreation) {
     currentTask = Task(TaskID::Idle, placeOfCreation);
     travelling = false;
     holding = Resource::DummyNothing;
     needed = Resource::DummyNothing;
     owner = placeOfCreation->owner;
-    //destination = placeOfCreation;
     IMHere(placeOfCreation);
 }
 void WorkerPawn::assignTask(const Task& toAssign) {
@@ -41,7 +40,7 @@ void WorkerPawn::assignTask(const Task& toAssign) {
 }
 void WorkerPawn::tick(double deltaTime) {
     if (currentInWay < onTheWay.size()){
-        Building* dest = onTheWay[currentInWay];
+        ptr<Building> dest = onTheWay[currentInWay];
         double signX = position.first - dest->position.first;
         double deltaX = fabs(position.first - dest->position.first);
         double signY = position.second - dest->position.second;
@@ -85,7 +84,7 @@ void WorkerPawn::tick(double deltaTime) {
                 needed = Resource::DummyNothing;
             }
             else{
-                owner->manager.cancelTask(currentTask, this);
+                owner->manager.cancelTask(currentTask, ptr<Pawn>(id));
                 currentTask = TaskID::Idle;
             }
         }
@@ -95,31 +94,31 @@ void WorkerPawn::tick(double deltaTime) {
                     moveToBuilding(currentTask.destination2);
                     toDrop = true;
                 } else {
-                    owner->manager.finishTask(currentTask, this);
+                    owner->manager.finishTask(currentTask, ptr<Pawn>(id));
                     currentTask.id = TaskID::Idle;
                 }
                 break;
             case TaskID::BeProcessed:
                 //TODO:set pawn to be waiting, not free
-                owner->manager.finishTask(currentTask, this);
+                owner->manager.finishTask(currentTask, ptr<Pawn>(id));
                 break;
             default:
                 currentTask.id = TaskID::Idle;
         }
     }
 }
-void WorkerPawn::moveToBuilding(Building* dest) {
+void WorkerPawn::moveToBuilding(ptr<Building> dest) {
     travelling = true;
-    std::unordered_map<Building*, std::vector<Building*> > visited;
-    std::queue<Building*> q;
-    visited[positionBuilding] = std::vector<Building*>();
+    std::unordered_map<ptr<Building>, std::vector<ptr<Building>> > visited;
+    std::queue<ptr<Building>> q;
+    visited[positionBuilding] = std::vector<ptr<Building>>();
     visited[positionBuilding].push_back(positionBuilding);
     q.push(positionBuilding);
     while (!q.empty()) {
-        Building* currentB = q.front();
+        ptr<Building> currentB = q.front();
         q.pop();
-        std::vector<Building*> way = visited[currentB];
-        for (Building* toGo : currentB->children)
+        std::vector<ptr<Building>> way = visited[currentB];
+        for (ptr<Building> toGo : currentB->children)
         {
             if (!visited[toGo].empty())
                 continue;
@@ -127,13 +126,13 @@ void WorkerPawn::moveToBuilding(Building* dest) {
             visited[toGo].push_back(toGo);
             q.push(toGo);
         }
-        if (currentB->parent== nullptr || !visited[currentB->parent].empty())
+        if (!currentB->parent || !visited[currentB->parent].empty())
             continue;
         visited[currentB->parent] = way;
         visited[currentB->parent].push_back(currentB->parent);
         q.push(currentB->parent);
     }
-    for (Building* v : visited[dest])
+    for (ptr<Building> v : visited[dest])
     {
         onTheWay.push_back(v);
     }

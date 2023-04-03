@@ -19,10 +19,10 @@ bool Building::removeResource(Resource resource) {
     return true;
 }
 
-void Building::addPawn(Pawn* pawn) {
+void Building::addPawn(ptr<Pawn> pawn) {
     pawns.insert(pawn);
 }
 
-void Building::removePawn(Pawn* pawn) {
+void Building::removePawn(ptr<Pawn> pawn) {
     pawns.erase(pawn);
 }

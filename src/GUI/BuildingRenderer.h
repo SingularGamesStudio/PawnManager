@@ -6,6 +6,7 @@
 #define PAWNMANAGER_BUILDINGRENDERER_H
 
 #include "SFML/Graphics/RenderWindow.hpp"
+#include "../IDmanager.h"
 
 class Building;
 
@@ -13,8 +14,8 @@ class BuildingRenderer {
     sf::RenderWindow& window;
 public:
     explicit BuildingRenderer(sf::RenderWindow& window);
-    void drawBuilding(Building* b, sf::Vector2f pos);
-    void drawEdge(Building* a, Building* b, sf::Vector2f center);
+    void drawBuilding(ptr<Building> b, sf::Vector2f pos);
+    void drawEdge(ptr<Building> a, ptr<Building> b, sf::Vector2f center);
 };
 
 

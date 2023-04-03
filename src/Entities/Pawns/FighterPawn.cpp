@@ -15,31 +15,31 @@ void DummySwordsman::attack(Entity* attacked)  {
 FighterPawnType DummySwordsman::getType()  {
     return FighterPawnType::DummySwordsman;
 }
-FighterPawn* FighterPawn::createFighterPawn(FighterPawnType type, Building* placeOfCreation) {
-    FighterPawn* newborn;
+ptr<FighterPawn> FighterPawn::createFighterPawn(FighterPawnType type, ptr<Building> placeOfCreation) {
+    ptr<FighterPawn> newborn;
     switch (type) {
     case FighterPawnType::DummyMonk:
-        newborn = new DummyMonk(Task(TaskID::Idle, placeOfCreation), false, Resource::DummyNothing, placeOfCreation->owner, placeOfCreation, placeOfCreation);
+        newborn = static_cast<ptr<FighterPawn>>(makeptr<DummyMonk>(Task(TaskID::Idle, placeOfCreation), false, Resource::DummyNothing, placeOfCreation->owner, placeOfCreation, placeOfCreation));
     case FighterPawnType::DummySwordsman:
-        newborn = new DummySwordsman(Task(TaskID::Idle, placeOfCreation), false, Resource::DummyNothing, placeOfCreation->owner, placeOfCreation, placeOfCreation);
+        newborn = static_cast<ptr<FighterPawn>>(makeptr<DummySwordsman>(Task(TaskID::Idle, placeOfCreation), false, Resource::DummyNothing, placeOfCreation->owner, placeOfCreation, placeOfCreation));
     default:
         throw("Type of FighterPawn not found");
     }
 }
 void FighterPawn::getResource(ResourceEntity* toGet) {
-    if (positionBuilding != nullptr)
+    if (positionBuilding)
         IMNotHere();
     moveToResource(toGet);
     takePresentResource(toGet);
     moveToBuilding(owner->hub);
     positionBuilding = owner->hub;
-    owner->hub->addPawn(this);
+    owner->hub->addPawn(ptr<Pawn>(id));
     drop(positionBuilding, position);
 }
 void FighterPawn::assignTask(const Task& task) {
     currentTask = task;
 }
-DummyMonk::DummyMonk(Task task, bool BOOL, Resource resource, Player* Owner, Building* dest, Building* in) {
+DummyMonk::DummyMonk(Task task, bool BOOL, Resource resource, ptr<Player> Owner, ptr<Building> dest, ptr<Building> in) {
     currentTask = task;
     travelling = BOOL;
     holding = resource;
@@ -47,7 +47,7 @@ DummyMonk::DummyMonk(Task task, bool BOOL, Resource resource, Player* Owner, Bui
     destination = dest;
     IMHere(in);
 }
-DummySwordsman::DummySwordsman(Task task, bool BOOL, Resource resource, Player* Owner, Building* dest, Building* in) {
+DummySwordsman::DummySwordsman(Task task, bool BOOL, Resource resource, ptr<Player> Owner, ptr<Building> dest, ptr<Building> in) {
     currentTask = task;
     travelling = BOOL;
     holding = resource;
@@ -66,7 +66,7 @@ void FighterPawn::moveToPosition(std::pair<double, double> pos) {
     IMNotHere();
     destinationPosition = pos;
 }
-void FighterPawn::moveToBuilding(Building* dest)  {
+void FighterPawn::moveToBuilding(ptr<Building> dest)  {
     moveToPosition(dest->position);
     IMHere(dest);
 }
@@ -97,7 +97,7 @@ void FighterPawn::tick(double deltaTime) {
         //std::cerr<< position.first <<' '<< position.second <<'\n';
         //std::cerr<< dest->position.first <<' '<< dest->position.second <<'\n';
         if (signX * (position.first - dest.first) <= 1 && signY * (position.second - dest.second) <= 1){
-            if(destination != nullptr)
+            if(!destination)
                 IMHere(destination);
         }
     }

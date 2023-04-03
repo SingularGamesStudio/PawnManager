@@ -22,7 +22,7 @@ private:
     static PawnRenderer* pawnRenderer;
     static BuildingRenderer* buildingRenderer;
     static ResourceRenderer* resourceRenderer;
-    static Player* player;
+    static ptr<Player> player;
     static double curTime;
     static int selectedBuilding;
 public:
@@ -36,9 +36,9 @@ public:
 private:
     static void init();
     static void updateAndRender();
-    static void buildingRenderDfs(Building* b, sf::Vector2f center);
+    static void buildingRenderDfs(ptr<Building> b, sf::Vector2f center);
     static void onMouseClick(int x, int y, sf::Mouse::Button b);
-    static bool onBuildingMouseClick(Building* b, sf::Vector2f pos, sf::Mouse::Button button);
+    static bool onBuildingMouseClick(ptr<Building> b, sf::Vector2f pos, sf::Mouse::Button button);
     static void shutdown();
 };
 

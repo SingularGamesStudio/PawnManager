@@ -23,7 +23,7 @@ sf::View PawnManagerClient::view;
 PawnRenderer* PawnManagerClient::pawnRenderer;
 BuildingRenderer* PawnManagerClient::buildingRenderer;
 ResourceRenderer* PawnManagerClient::resourceRenderer;
-Player* PawnManagerClient::player;
+ptr<Player> PawnManagerClient::player;
 double PawnManagerClient::curTime;
 int PawnManagerClient::selectedBuilding;
 GameWindowManager PawnManagerClient::winManager;
@@ -75,10 +75,10 @@ void PawnManagerClient::updateAndRender() {
     buildingRenderDfs(player->hub, center);
     std::default_random_engine rng;
     std::uniform_real_distribution<float> dist2(0, std::numbers::pi_v<float>);
-    for (Pawn* p: player->pawns) {
+    for (ptr<Pawn> p: player->pawns) {
         auto [x, y] = p->position;
-        auto* wp = dynamic_cast<WorkerPawn*>(p);
-        if(wp != nullptr) {
+        ptr<WorkerPawn> wp = static_cast<ptr<WorkerPawn>>(p);
+        if(wp) {
             pawnRenderer->drawWorkerPawn(wp->expertises,sf::Vector2f(x, y) * renderScale + center);
             if(wp->holding!=Resource::DummyNothing){
                 float rotation = dist2(rng);
@@ -89,9 +89,9 @@ void PawnManagerClient::updateAndRender() {
     winManager.updateAndRender();
 }
 
-void PawnManagerClient::buildingRenderDfs(Building* b, sf::Vector2f center) {
+void PawnManagerClient::buildingRenderDfs(ptr<Building> b, sf::Vector2f center) {
     auto [x, y] = b->position;
-    for(Building* ob : b->children) {
+    for(ptr<Building> ob : b->children) {
         buildingRenderer->drawEdge(b, ob, center);
         buildingRenderDfs(ob, center);
     }
@@ -121,30 +121,30 @@ void PawnManagerClient::onMouseClick(int x, int y, sf::Mouse::Button b) {
     sf::Vector2f center = ((sf::Vector2f )window->getSize()) * 0.5f;
     sf::Vector2f pos = (sf::Vector2f(x, y) - center) / renderScale;
     if(!onBuildingMouseClick(player->hub, pos, b)) {
-        Building* b = reinterpret_cast<Building*>(IDmanager::get(selectedBuilding));
-        if(b != nullptr) {
+        ptr<Building> b = ptr<Building>(selectedBuilding);
+        if(b) {
             player->manager.startRecipe(new BuildRecipe({pos.x, pos.y}, 0), b);
             selectedBuilding = -1;
         }
     }
 }
 
-bool PawnManagerClient::onBuildingMouseClick(Building* b, sf::Vector2f pos, sf::Mouse::Button button) {
+bool PawnManagerClient::onBuildingMouseClick(ptr<Building> b, sf::Vector2f pos, sf::Mouse::Button button) {
     auto [x, y] = b->position;
     sf::Vector2f delta = sf::Vector2f(x, y) - pos;
     if(delta.x * delta.x + delta.y * delta.y <= b->radius * b->radius) {
         if(button == sf::Mouse::Left) {
             selectedBuilding = b->id;
         } else if(button == sf::Mouse::Right) {
-            CraftBuilding* c = dynamic_cast<CraftBuilding*>(b);
-            if(c != nullptr) {
+            ptr<CraftBuilding> c = static_cast<ptr<CraftBuilding>>(b);
+            if(c) {
                 winManager.pushWindow(new CraftBuildingWindow(c->id));
             }
         }
         return true;
 
     }
-    for(Building* ob : b->children) {
+    for(ptr<Building> ob : b->children) {
         if(onBuildingMouseClick(ob, pos, button)) {
             return true;
         }

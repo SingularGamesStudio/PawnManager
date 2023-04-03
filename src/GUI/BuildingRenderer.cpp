@@ -13,7 +13,7 @@ BuildingRenderer::BuildingRenderer(sf::RenderWindow& window) : window(window) {
 
 }
 
-void BuildingRenderer::drawBuilding(Building* b, sf::Vector2f pos) {
+void BuildingRenderer::drawBuilding(ptr<Building> b, sf::Vector2f pos) {
     std::vector<sf::Vector2f> vertices;
     std::vector<sf::Vector2f> outerVertices;
     int cnt = 30;
@@ -30,7 +30,7 @@ void BuildingRenderer::drawBuilding(Building* b, sf::Vector2f pos) {
     arr.setPrimitiveType(sf::PrimitiveType::Triangles);
     for(int i = 0; i < vertices.size(); ++i) {
         sf::Color col = sf::Color::White;
-        if(dynamic_cast<CraftBuilding*>(b) != nullptr) {
+        if(b.dyn_cast<CraftBuilding>()) {
             col = sf::Color::Green;
         }
         int j = i + 1;
@@ -50,7 +50,7 @@ void BuildingRenderer::drawBuilding(Building* b, sf::Vector2f pos) {
     window.draw(arr);
 }
 
-void BuildingRenderer::drawEdge(Building* a, Building* b, sf::Vector2f center) {
+void BuildingRenderer::drawEdge(ptr<Building> a, ptr<Building> b, sf::Vector2f center) {
     sf::Vector2f aPos = sf::Vector2f(a->position.first, a->position.second) * PawnManagerClient::renderScale + center;
     sf::Vector2f bPos = sf::Vector2f(b->position.first, b->position.second) * PawnManagerClient::renderScale + center;
     sf::Vector2f delta = bPos - aPos;

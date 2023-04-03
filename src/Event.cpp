@@ -15,11 +15,11 @@ Event::Event(Event::Type t, int id) : p(Packet::Type::RAW_MESSAGE) {
 	std::vector<uint8_t> tmp(sizeof(t));
 	std::memcpy(tmp.data(), &t, sizeof(t));
 	if(t == Event::Type::BUILDING_APPEAR) {
-		Building* bu = getBuilding(id);
+		ptr<Building> bu = getBuilding(id);
 		tmp += bu->serialize();
 	}
 	else if (t == Event::Type::PAWN_APPEAR) {
-		Pawn* pw = getPawn(id);
+		ptr<Pawn> pw = getPawn(id);
 		tmp += pw->serialize();
 	}
 	else{

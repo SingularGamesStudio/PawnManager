@@ -4,8 +4,8 @@
 #include "../Buildings/Building.h"
 
 
-void Pawn::drop(Building* in, std::pair<double, double> pos) {
-    if (in != nullptr && holding != Resource::DummyNothing) {
+void Pawn::drop(ptr<Building> in, std::pair<double, double> pos) {
+    if (in && holding != Resource::DummyNothing) {
         in->addResource(holding);
         holding = Resource::DummyNothing;
         return;
@@ -14,7 +14,7 @@ void Pawn::drop(Building* in, std::pair<double, double> pos) {
         ResourceEntity(holding, pos);
 }
 void Pawn::destroy() {
-    if (positionBuilding != nullptr && holding != Resource::DummyNothing) {
+    if (positionBuilding && holding != Resource::DummyNothing) {
         drop(positionBuilding, position);
     }
     else if (holding != Resource::DummyNothing) {
@@ -24,14 +24,14 @@ void Pawn::destroy() {
     //~Pawn();
     }
 void Pawn::IMNotHere() {
-    if (positionBuilding != nullptr) {
-        positionBuilding->removePawn(this);
-        positionBuilding = nullptr;
+    if (positionBuilding) {
+        positionBuilding->removePawn(ptr<Pawn>(id));
+        positionBuilding = ptr<Building>();
     }
 }
-void Pawn::IMHere(Building* to) {
-    if (to != nullptr) {
-        to->addPawn(this);
+void Pawn::IMHere(ptr<Building> to) {
+    if (to) {
+        to->addPawn(ptr<Pawn>(id));
         IMNotHere();
         positionBuilding = to;
         position = positionBuilding->position;
@@ -43,7 +43,7 @@ void Pawn::beIngridient() {
 void Pawn::stopBeingIngridient() {
     assignTask(Task(TaskID::Idle,positionBuilding));
 }
-void Pawn::moveToBuilding(Building* toMove) {
+void Pawn::moveToBuilding(ptr<Building> toMove) {
     throw("How did we get here?");
 }
 //void Pawn::assignTask(const Task& toAssign) = 0;

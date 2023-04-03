@@ -7,19 +7,20 @@
 #include "../Entities/Pawns/FighterPawn.h"
 #include "../Entities/Pawns/WorkerPawn.h"
 #include "../Entities/Buildings/CraftBuilding.h"
+#include "../testSystem.h"
 
-bool Recipe::checkRequirements(CraftBuilding* place, bool start){
-    std::set<WorkerPawn*> workersInside;
-    std::set<FighterPawn*> fightersInside;
+bool Recipe::checkRequirements(ptr<CraftBuilding> place, bool start){
+    std::set<ptr<WorkerPawn>> workersInside;
+    std::set<ptr<FighterPawn>> fightersInside;
     std::multiset<Resource> resourcesInside;
-    std::vector<Pawn*> usedPawns;
-    std::vector<WorkerPawn*> workingPawns;
+    std::vector<ptr<Pawn>> usedPawns;
+    std::vector<ptr<WorkerPawn>> workingPawns;
     std::vector<Resource> usedResources;
     for(Resource r:place->resources){resourcesInside.insert(r);}
-    for(Pawn* p:place->pawns) {
-        if (WorkerPawn *worker = dynamic_cast<WorkerPawn *>(p); worker != nullptr) {
+    for(ptr<Pawn> p:place->pawns) {
+        if (ptr<WorkerPawn>worker = static_cast<ptr<WorkerPawn>>(p); worker) {
             workersInside.insert(worker);
-        } else if (FighterPawn *fighter = dynamic_cast<FighterPawn *>(p); fighter != nullptr) {
+        } else if (ptr<FighterPawn>fighter = static_cast<ptr<FighterPawn>>(p); fighter) {
             fightersInside.insert(fighter);
         } else
             assert(0);
@@ -29,7 +30,7 @@ bool Recipe::checkRequirements(CraftBuilding* place, bool start){
         bool ok = false;
         for(auto it = fightersInside.begin(); it!=fightersInside.end(); it++){
             if((*it)->getType()==t){
-                usedPawns.push_back(dynamic_cast<Pawn*>(*it));
+                usedPawns.push_back(static_cast<ptr<Pawn>>(*it));
                 fightersInside.erase(it);
                 ok = true;
                 break;
@@ -43,7 +44,7 @@ bool Recipe::checkRequirements(CraftBuilding* place, bool start){
         bool ok = false;
         for(auto it = workersInside.begin(); it!=workersInside.end(); it++){
             if((*it)->expertises.contains(t)){
-                usedPawns.push_back(dynamic_cast<Pawn*>(*it));
+                usedPawns.push_back(static_cast<ptr<Pawn>>(*it));
                 workersInside.erase(it);
                 ok = true;
                 break;
@@ -85,20 +86,20 @@ bool Recipe::checkRequirements(CraftBuilding* place, bool start){
         place->pawns.clear();
         place->resources.clear();
         for(Resource p :resourcesInside){place->addResource(p);}
-        for(WorkerPawn* p :workersInside){place->addPawn(dynamic_cast<Pawn*>(p));}
-        for(FighterPawn* p :fightersInside){place->addPawn(dynamic_cast<Pawn*>(p));}
+        for(ptr<WorkerPawn> p :workersInside){place->addPawn(static_cast<ptr<Pawn>>(p));}
+        for(ptr<FighterPawn> p :fightersInside){place->addPawn(static_cast<ptr<Pawn>>(p));}
 
         procResources = usedResources;
         procPawns = usedPawns;
         workers = workingPawns;
 
-        for(Pawn* p:usedPawns){p->beIngridient();}
-        for(WorkerPawn* p:workingPawns){dynamic_cast<Pawn*>(p)->beIngridient();}
+        for(ptr<Pawn> p:usedPawns){p->beIngridient();}
+        for(ptr<WorkerPawn> p:workingPawns){static_cast<ptr<Pawn>>(p)->beIngridient();}
     }
     return true;
 }
 
-void Recipe::start(CraftBuilding* place){
+void Recipe::start(ptr<CraftBuilding> place){
     this->place = place;
     progress = 0;
     checkRequirements(place, true);
@@ -107,17 +108,17 @@ void Recipe::start(CraftBuilding* place){
 void Recipe::tick(double deltaTime) {
     progress+=deltaTime;
     if(progress>=duration)
-        finish();
+        place->owner->toFinish.push_back(this);
 }
 
-void Recipe::cleanup(Building* where) {
-    if(where== nullptr) {
-        where = dynamic_cast<Building *>(place);
+void Recipe::cleanup(ptr<Building> where) {
+    if(!where) {
+        where = static_cast<ptr<Building>>(place);
         place->current = nullptr;
     }
-    for(WorkerPawn* p :workers){
-        where->addPawn(dynamic_cast<Pawn*>(p));
-        dynamic_cast<Pawn*>(p)->stopBeingIngridient();
+    for(ptr<WorkerPawn> p :workers){
+        where->addPawn(static_cast<ptr<Pawn>>(p));
+        static_cast<ptr<Pawn>>(p)->stopBeingIngridient();
     }
     procPawns.clear();
     procResources.clear();
@@ -126,7 +127,7 @@ void Recipe::cleanup(Building* where) {
 }
 
 void Recipe::cancel(){
-    for(Pawn* p :procPawns){
+    for(ptr<Pawn> p :procPawns){
         place->addPawn(p);
         p->stopBeingIngridient();
     }

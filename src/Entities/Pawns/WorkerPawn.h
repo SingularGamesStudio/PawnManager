@@ -11,12 +11,12 @@ enum class expertisesID{DummySmeltery, DummyMetalworking, DummyTrainership};
 class WorkerPawn: public Pawn{
 public:
     
-    void create(Building* placeOfCreation);
+    void create(ptr<Building> placeOfCreation);
 
     void assignTask(const Task& toAssign) override;
     std::set<expertisesID> expertises;
-    void moveToBuilding(Building* dest) override;
-    std::vector<Building*> onTheWay;
+    void moveToBuilding(ptr<Building> dest) override;
+    std::vector<ptr<Building>> onTheWay;
     size_t currentInWay;
     void tick(double deltaTime) override;
 };

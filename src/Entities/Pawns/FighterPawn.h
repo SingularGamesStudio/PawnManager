@@ -18,11 +18,11 @@ public:
     std::pair<double, double> destinationPosition;
     virtual void attack(Entity* attacked);
     virtual FighterPawnType getType();
-    static FighterPawn* createFighterPawn(FighterPawnType type, Building* placeOfCreation);
+    static ptr<FighterPawn> createFighterPawn(FighterPawnType type, ptr<Building> placeOfCreation);
     void moveToResource(ResourceEntity* toGet);
     void takePresentResource(ResourceEntity* toTake);
     void moveToPosition(std::pair<double, double> pos);
-    void moveToBuilding(Building* dest) override;
+    void moveToBuilding(ptr<Building> dest) override;
     void getResource(ResourceEntity* toGet);
     void assignTask(const Task& task) override;
     void tick(double deltaTime) override;
@@ -31,12 +31,12 @@ class DummyMonk : public FighterPawn {
 public:
     void attack(Entity* attacked) override;
     FighterPawnType getType() override;
-    DummyMonk(Task task, bool BOOL, Resource resource, Player* Owner, Building* dest, Building* in);
+    DummyMonk(Task task, bool BOOL, Resource resource, ptr<Player> Owner, ptr<Building> dest, ptr<Building> in);
 };
 class DummySwordsman : public FighterPawn {
 public:
     void attack(Entity* attacked) override;
     FighterPawnType getType() override;
-    DummySwordsman(Task task, bool BOOL, Resource resource, Player* Owner, Building* dest, Building* in);
+    DummySwordsman(Task task, bool BOOL, Resource resource, ptr<Player> Owner, ptr<Building> dest, ptr<Building> in);
 };
 #endif //FIGHTERPAWN_H

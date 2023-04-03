@@ -28,20 +28,51 @@ struct ptr{
 
     ptr(int id):id(id){}
 
-    bool isnull() {
+    explicit operator bool() const {
         if(id==-1 || IDmanager::get(id)== nullptr)
-            return true;
-        return false;
+            return false;
+        return true;
     }
 
-    T operator*() {
+    template<typename Q>
+    Q* dyn_cast() const {
+        return dynamic_cast<Q*>(reinterpret_cast<T*>(IDmanager::get(id)));
+    }
+
+    T operator*() const {
         return *(reinterpret_cast<T*>(IDmanager::get(id)));
     }
 
-    T* operator->() {
+    T* operator->() const {
         return reinterpret_cast<T*>(IDmanager::get(id));
     }
+
+    bool operator<(const ptr& other) const {
+        return id<other.id;
+    }
+    bool operator==(const ptr& other) const {
+        return id==other.id;
+    }
+
+    void del() const {
+        delete reinterpret_cast<T*>(IDmanager::get(id));
+        IDmanager::set(id, nullptr);
+    }
+
+    template<typename Q>
+    operator ptr<Q>() const {
+        return ptr<Q>(id);
+    }
 };
+
+namespace std {
+    template <typename T>
+    struct hash<ptr<T>> {
+        size_t operator()(const ptr<T>& p) const {
+            return p.id;
+        }
+    };
+}
 
 template<typename T,  typename... Targs>
 ptr<T> makeptr(Targs... args) {
@@ -54,4 +85,4 @@ ptr<T> makeptr(Targs... args) {
     return ptr<T>(id);
 }
 
-#endif PAWNMANAGER_IDMANAGER_H
+#endif

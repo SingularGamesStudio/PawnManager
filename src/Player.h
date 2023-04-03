@@ -14,28 +14,30 @@ class Player;
 
 class Player:public RequiresID {
 public:
+    std::vector<Recipe*> toFinish;
+
     Player(){}
-    Building* hub;
-    std::vector<Pawn*> pawns;
+    ptr<Building> hub;
+    std::vector<ptr<Pawn>> pawns;
 
     struct TaskManager {
 
         struct PawnReq {
-            virtual Pawn* find(Player* owner) = 0;
+            virtual ptr<Pawn> find(ptr<Player> owner) = 0;
         };
 
         struct FighterReq:public PawnReq {
             FighterPawnType type;
             FighterReq(FighterPawnType type) : type(type){}
 
-            Pawn * find(Player *owner) override {};
+            ptr<Pawn> find(ptr<Player> owner) override {};
         };
 
         struct WorkerReq:public PawnReq {
             expertisesID expertise;
             WorkerReq(expertisesID expertise):expertise(expertise){}
 
-            Pawn * find(Player *owner) override {};
+            ptr<Pawn> find(ptr<Player> owner) override {};
         };
 
         struct PendingRecipe {
@@ -43,19 +45,19 @@ public:
             std::multiset<Resource> movedResources;
             std::multiset<Resource> doneResources;
             std::vector<PawnReq*> needPawns;
-            std::vector<Pawn*> movedPawns;
-            std::vector<Pawn*> donePawns;
+            std::vector<ptr<Pawn>> movedPawns;
+            std::vector<ptr<Pawn>> donePawns;
 
             int ID;
             int priority;
             Recipe* recipe;
-            Building* place;
+            ptr<Building> place;
 
             bool operator<(const PendingRecipe& other) const {
                 return ID<other.ID;
             }
 
-            PendingRecipe(Recipe* recipe, Building* place, int priority);
+            PendingRecipe(Recipe* recipe, ptr<Building> place, int priority);
 
             void start();
 
@@ -64,13 +66,13 @@ public:
 
         std::set<PendingRecipe*> work;
 
-        Player* owner;
+        ptr<Player> owner;
 
-        void finishTask(Task task, Pawn* pawn);
+        void finishTask(Task task, ptr<Pawn> pawn);
 
-        void cancelTask(Task task, Pawn* pawn);
+        void cancelTask(Task task, ptr<Pawn> pawn);
 
-        bool startRecipe(Recipe* recipe, Building* where);
+        bool startRecipe(Recipe* recipe, ptr<Building> where);
 
         void tick();
     };
@@ -79,7 +81,7 @@ public:
 
     bool checkRecipe(Recipe* recipe);
 
-    CraftBuilding* placeBlueprint(std::pair<double, double> pos, Building* parent, double r);
+    ptr<CraftBuilding> placeBlueprint(std::pair<double, double> pos, ptr<Building> parent, double r);
 
     void tick();
 };

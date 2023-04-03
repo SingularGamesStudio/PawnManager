@@ -13,11 +13,11 @@ void CraftBuilding::stopRecipe() {
 
 bool CraftBuilding::assignRecipe(Recipe* recipe){
     stopRecipe();
-    if(!recipe->checkRequirements(this))
+    if(!recipe->checkRequirements(ptr<CraftBuilding>(id)))
         return false;
     //std::cout << "recipe started\n";
     current = recipe;
-    current->start(this);
+    current->start(ptr<CraftBuilding>(id));
     return true;
 }
 

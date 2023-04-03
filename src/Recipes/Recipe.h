@@ -5,6 +5,7 @@
 #include <cassert>
 #include <string>
 #include <set>
+#include "../IDmanager.h"
 
 class CraftBuilding;
 class Building;
@@ -17,18 +18,18 @@ enum class RecipeType : uint8_t { BASIC_RECIPE, CRAFT_RECIPE, BUILD_RECIPE, SHOO
 
 class Recipe {
 protected:
-    CraftBuilding* place;
-    std::vector<WorkerPawn*> workers;
-    std::vector<Pawn*> procPawns;
+    ptr<CraftBuilding> place;
+    std::vector<ptr<WorkerPawn>> workers;
+    std::vector<ptr<Pawn>> procPawns;
     std::vector<Resource> procResources;
     double progress;
 public:
 
-    bool checkRequirements(CraftBuilding* place, bool start = false);
+    bool checkRequirements(ptr<CraftBuilding> place, bool start = false);
 
-    void start(CraftBuilding* place);
+    void start(ptr<CraftBuilding> place);
 
-    void cleanup(Building* where = nullptr);
+    void cleanup(ptr<Building> where = ptr<Building>());
 
     void cancel();
 

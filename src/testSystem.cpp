@@ -10,25 +10,25 @@
 
 
 CraftRecipe* recipe;
-Player* player;
-CraftBuilding* crafter;
+ptr<Player> player;
+ptr<CraftBuilding> crafter;
 
-Player* initTest() {
+ptr<Player> initTest() {
 
-    player = new Player();
+    player = makeptr<Player>();
     player->manager.owner = player;
     BuildingRegisty::init();
-    player->hub = new Building({80, -120}, player, 100);
+    player->hub = makeptr<Building>(std::make_pair(80, -120), player, 100);
     for(int i = 0; i<30; i++){
         player->hub->addResource(Resource::DummyOre);
     }
     for(int i = 0; i<5; i++){
-        WorkerPawn* pawn = new WorkerPawn();
+        ptr<WorkerPawn> pawn = makeptr<WorkerPawn>();
         pawn->create(player->hub);
-        player->pawns.push_back(pawn);
+        player->pawns.push_back(static_cast<ptr<Pawn>>(pawn));
     }
-    crafter = new CraftBuilding({100, 120}, player, 100);
-    player->hub->children.push_back(dynamic_cast<Building*>(crafter));
+    crafter = makeptr<CraftBuilding>(std::make_pair(100, 120), player, 100);
+    player->hub->children.push_back(static_cast<ptr<Building>>(crafter));
     crafter->parent = player->hub;
     recipe = new CraftRecipe();
     recipe->inResources.push_back(Resource::DummyOre);
@@ -37,9 +37,9 @@ Player* initTest() {
     return player;
 }
 
-void tickBuildings(Building* place, double deltaTime) {
+void tickBuildings(ptr<Building> place, double deltaTime) {
     place->tick(deltaTime);
-    for(Building* ch:place->children){
+    for(ptr<Building> ch:place->children){
         tickBuildings(ch, deltaTime);
     }
 }
@@ -47,13 +47,17 @@ std::mt19937 rnd(42);
 void tick(double deltaTime) {
     player->tick();
     if(crafter->current== nullptr)
-        crafter->assignRecipe(recipe);
-    for(Pawn* p:player->pawns){
+        crafter->assignRecipe(dynamic_cast<Recipe*>(recipe));
+    for(ptr<Pawn> p:player->pawns){
         p->tick(deltaTime);
         if(p->currentTask.id==TaskID::Idle && rnd()%5000==0){
-            p->assignTask(Task(TaskID::Transport, player->hub, crafter, Resource::DummyOre));
+            p->assignTask(Task(TaskID::Transport, player->hub, static_cast<ptr<Building>>(crafter), Resource::DummyOre));
         }
     }
     tickBuildings(player->hub, deltaTime);
+    for(Recipe* r:player->toFinish){
+        r->finish();
+    }
+    player->toFinish.clear();
 }
 

@@ -22,10 +22,10 @@ unsigned int unparseVector(const uint8_t* v, std::vector<T>& result) {
 }
 
 void CraftRecipe::finish() {
-    for(Pawn* p : procPawns) {delete p;}
+    for(ptr<Pawn> p : procPawns) {p.del();}
 
     for(FighterPawnType t : outFighters) {
-        place->addPawn(FighterPawn::createFighterPawn(t, place));
+        place->addPawn(static_cast<ptr<Pawn>>(FighterPawn::createFighterPawn(t, static_cast<ptr<Building>>(place))));
     }
     for(Resource t : outResources) {
         place->addResource(t);
