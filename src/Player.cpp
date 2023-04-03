@@ -108,7 +108,7 @@ void Player::TaskManager::tick() {//TODO:rewrite to mincost
         if(!rec->needResources.empty()){
             for(Resource resource:rec->needResources){
                 ptr<Building> where = findResource(owner->hub, resource);
-                if(!where){
+                if (!where) {
                     toClose.push_back({rec, false});
                     break;
                 }

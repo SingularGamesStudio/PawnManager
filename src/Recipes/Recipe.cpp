@@ -108,7 +108,7 @@ void Recipe::start(ptr<CraftBuilding> place){
 void Recipe::tick(double deltaTime) {
     progress+=deltaTime;
     if(progress>=duration)
-        place->owner->toFinish.push_back(this);
+        finish();
 }
 
 void Recipe::cleanup(ptr<Building> where) {

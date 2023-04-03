@@ -13,23 +13,13 @@ void BuildRecipe::finish() {
         res = makeptr<Building>(place->position, place->owner, 100, place->radius, place->parent);
     }
     res->children = place->children;
-    for(ptr<Building> b:place->children) {
-        b->parent = res;
-    }
-    for(auto it = res->parent->children.begin(); it!=res->parent->children.end(); it++){
-        if((*it).id==place.id){
-            res->parent->children.erase(it);
-            break;
-        }
-    }
-    res->parent->children.push_back(res);
-    for(ptr<Pawn> p:res->pawns) {
-        p->positionBuilding = res;
-    }
     res->pawns = place->pawns;
     res->resources = place->resources;
     res->reservedResources = place->reservedResources;
+    int newid = place.id;
     place.del();
+    IDmanager::set(newid, res.pointer());
+    IDmanager::set(res.id, nullptr);
+    res.id = newid;
     cleanup(res);
-    std::cout << "aboba" << "\n";
 }

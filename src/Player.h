@@ -14,7 +14,6 @@ class Player;
 
 class Player:public RequiresID {
 public:
-    std::vector<Recipe*> toFinish;
 
     Player(){}
     ptr<Building> hub;

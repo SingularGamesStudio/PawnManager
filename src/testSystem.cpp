@@ -55,9 +55,5 @@ void tick(double deltaTime) {
         }
     }
     tickBuildings(player->hub, deltaTime);
-    for(Recipe* r:player->toFinish){
-        r->finish();
-    }
-    player->toFinish.clear();
 }
 

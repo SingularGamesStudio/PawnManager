@@ -59,6 +59,10 @@ struct ptr{
         IDmanager::set(id, nullptr);
     }
 
+    T* pointer() const {
+        return reinterpret_cast<T*>(IDmanager::get(id));
+    }
+
     template<typename Q>
     operator ptr<Q>() const {
         return ptr<Q>(id);
