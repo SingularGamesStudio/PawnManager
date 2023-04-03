@@ -16,7 +16,7 @@ CraftBuilding* crafter;
 Player* initTest() {
 
     player = new Player();
-    player->pawnManager.owner = player;
+    player->manager.owner = player;
     BuildingRegisty::init();
     player->hub = new Building({80, -120}, player, 100);
     for(int i = 0; i<30; i++){

@@ -85,7 +85,7 @@ void WorkerPawn::tick(double deltaTime) {
                 needed = Resource::DummyNothing;
             }
             else{
-                owner->pawnManager.cancelTask(currentTask, this);
+                owner->manager.cancelTask(currentTask, this);
                 currentTask = TaskID::Idle;
             }
         }
@@ -95,13 +95,13 @@ void WorkerPawn::tick(double deltaTime) {
                     moveToBuilding(currentTask.destination2);
                     toDrop = true;
                 } else {
-                    owner->pawnManager.finishTask(currentTask, this);
+                    owner->manager.finishTask(currentTask, this);
                     currentTask.id = TaskID::Idle;
                 }
                 break;
             case TaskID::BeProcessed:
                 //TODO:set pawn to be waiting, not free
-                owner->pawnManager.finishTask(currentTask, this);
+                owner->manager.finishTask(currentTask, this);
                 break;
             default:
                 currentTask.id = TaskID::Idle;

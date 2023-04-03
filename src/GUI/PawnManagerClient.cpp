@@ -120,7 +120,7 @@ void PawnManagerClient::onMouseClick(int x, int y, sf::Mouse::Button b) {
     if(!onBuildingMouseClick(player->hub, pos, b)) {
         Building* b = IDmanager::getBuilding(selectedBuilding);
         if(b != nullptr) {
-            player->startRecipe(new BuildRecipe({pos.x, pos.y}, 0), b);
+            player->manager.startRecipe(new BuildRecipe({pos.x, pos.y}, 0), b);
             selectedBuilding = -1;
         }
     }

@@ -65,18 +65,18 @@ CraftBuilding* Player::placeBlueprint(std::pair<double, double> pos, Building *p
     return blueprint;
 }
 
-bool Player::startRecipe(Recipe* recipe, Building* where) {
-    if(!checkRecipe(recipe))
+bool Player::TaskManager::startRecipe(Recipe* recipe, Building* where) {
+    if(!owner->checkRecipe(recipe))
         return false;
     if(dynamic_cast<BuildRecipe*>(recipe)!= nullptr) {
         BuildRecipe* brecipe = dynamic_cast<BuildRecipe*>(recipe);
-        where = placeBlueprint(brecipe->pos, where, brecipe->toBuild.radius);
+        where = owner->placeBlueprint(brecipe->pos, where, brecipe->toBuild.radius);
     }
     work.insert(new PendingRecipe(recipe, where, 0));
     return true;
 }
 
-PendingRecipe::PendingRecipe(Recipe *recipe, Building *place, int priority): recipe(recipe), place(place), priority(priority), ID(IDmanager::newID()) {
+Player::TaskManager::PendingRecipe::PendingRecipe(Recipe *recipe, Building *place, int priority): recipe(recipe), place(place), priority(priority), ID(IDmanager::newID()) {
     for(Resource r :recipe->inResources) {
         needResources.insert(r);
     }
@@ -91,9 +91,13 @@ PendingRecipe::PendingRecipe(Recipe *recipe, Building *place, int priority): rec
     }
 }
 
-void Player::tick() {//TODO:rewrite to mincost
+void Player::tick() {
+    manager.tick();
+}
+
+void Player::TaskManager::tick() {//TODO:rewrite to mincost
     std::vector<WorkerPawn*> haulers;
-    for(Pawn* p:pawns) {
+    for(Pawn* p:owner->pawns) {
         WorkerPawn* worker = dynamic_cast<WorkerPawn*>(p);
         if(worker!=nullptr && worker->currentTask.id==TaskID::Idle) {
             haulers.push_back(worker);
@@ -103,7 +107,7 @@ void Player::tick() {//TODO:rewrite to mincost
     for(PendingRecipe* rec : work){
         if(!rec->needResources.empty()){
             for(Resource resource:rec->needResources){
-                Building* where = findResource(hub, resource);
+                Building* where = findResource(owner->hub, resource);
                 if(!where){
                     toClose.push_back({rec, false});
                     break;
@@ -116,7 +120,7 @@ void Player::tick() {//TODO:rewrite to mincost
         } else if(rec->movedResources.empty()) {
             if(!rec->needPawns.empty()) {
                 for(PawnReq* p :rec->needPawns){
-                    Pawn* pawn = p->find(this);
+                    Pawn* pawn = p->find(owner);
                     if(pawn== nullptr) {
                         toClose.push_back({rec, false});
                         break;
@@ -141,7 +145,7 @@ void Player::tick() {//TODO:rewrite to mincost
     }
 }
 
-void PendingRecipe::start() {
+void Player::TaskManager::PendingRecipe::start() {
     CraftBuilding* crafter = dynamic_cast<CraftBuilding*>(place);
     if(crafter== nullptr)
         throw std::logic_error("requested recipe for building which could not craft");
@@ -152,7 +156,7 @@ void PendingRecipe::start() {
     doneResources.clear();
 }
 
-PendingRecipe::~PendingRecipe() {
+Player::TaskManager::PendingRecipe::~PendingRecipe() {
     for(Pawn* p :movedPawns) {
         p->assignTask(Task(TaskID::Idle));
     }
@@ -167,9 +171,9 @@ PendingRecipe::~PendingRecipe() {
     }
 }
 
-void Player::PawnManager::cancelTask(Task task, Pawn* pawn) {
+void Player::TaskManager::cancelTask(Task task, Pawn* pawn) {
     PendingRecipe* pr = nullptr;
-    for(PendingRecipe* t : owner->work){
+    for(PendingRecipe* t : work){
         if(t->ID==task.returnID){
             pr = t;
             break;
@@ -190,9 +194,9 @@ void Player::PawnManager::cancelTask(Task task, Pawn* pawn) {
     }
 }
 
-void Player::PawnManager::finishTask(Task task, Pawn* pawn) {
+void Player::TaskManager::finishTask(Task task, Pawn* pawn) {
     PendingRecipe* pr = nullptr;
-    for(PendingRecipe* t : owner->work){
+    for(PendingRecipe* t : work){
         if(t->ID==task.returnID){
             pr = t;
             break;

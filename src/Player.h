@@ -11,67 +11,70 @@ class Building;
 class Pawn;
 class Player;
 
-struct PawnReq {
-    virtual Pawn* find(Player* owner) = 0;
-};
-
-struct FighterReq:public PawnReq {
-    FighterPawnType type;
-    FighterReq(FighterPawnType type) : type(type){}
-
-    Pawn * find(Player *owner) override {};
-};
-
-struct WorkerReq:public PawnReq {
-    expertisesID expertise;
-    WorkerReq(expertisesID expertise):expertise(expertise){}
-
-    Pawn * find(Player *owner) override {};
-};
-
-struct PendingRecipe {
-    std::multiset<Resource> needResources;
-    std::multiset<Resource> movedResources;
-    std::multiset<Resource> doneResources;
-    std::vector<PawnReq*> needPawns;
-    std::vector<Pawn*> movedPawns;
-    std::vector<Pawn*> donePawns;
-
-    int ID;
-    int priority;
-    Recipe* recipe;
-    Building* place;
-
-    bool operator<(const PendingRecipe& other) const {
-        return ID<other.ID;
-    }
-
-    PendingRecipe(Recipe* recipe, Building* place, int priority);
-
-    void start();
-
-    ~PendingRecipe();
-};
-
-
 class Player {
 public:
     Player(){}
     Building* hub;
     std::vector<Pawn*> pawns;
-    std::set<PendingRecipe*> work;
-    struct PawnManager {
+
+    struct TaskManager {
+
+        struct PawnReq {
+            virtual Pawn* find(Player* owner) = 0;
+        };
+
+        struct FighterReq:public PawnReq {
+            FighterPawnType type;
+            FighterReq(FighterPawnType type) : type(type){}
+
+            Pawn * find(Player *owner) override {};
+        };
+
+        struct WorkerReq:public PawnReq {
+            expertisesID expertise;
+            WorkerReq(expertisesID expertise):expertise(expertise){}
+
+            Pawn * find(Player *owner) override {};
+        };
+
+        struct PendingRecipe {
+            std::multiset<Resource> needResources;
+            std::multiset<Resource> movedResources;
+            std::multiset<Resource> doneResources;
+            std::vector<PawnReq*> needPawns;
+            std::vector<Pawn*> movedPawns;
+            std::vector<Pawn*> donePawns;
+
+            int ID;
+            int priority;
+            Recipe* recipe;
+            Building* place;
+
+            bool operator<(const PendingRecipe& other) const {
+                return ID<other.ID;
+            }
+
+            PendingRecipe(Recipe* recipe, Building* place, int priority);
+
+            void start();
+
+            ~PendingRecipe();
+        };
+
+        std::set<PendingRecipe*> work;
 
         Player* owner;
 
         void finishTask(Task task, Pawn* pawn);
 
         void cancelTask(Task task, Pawn* pawn);
+
+        bool startRecipe(Recipe* recipe, Building* where);
+
+        void tick();
     };
 
-    PawnManager pawnManager;
-
-    bool startRecipe(Recipe* recipe, Building* where);
+    TaskManager manager;
 
     bool checkRecipe(Recipe* recipe);
 
