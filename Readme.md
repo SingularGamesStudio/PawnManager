@@ -1,3 +1,10 @@
+#PawnManager
+
+###Overview
+PawnManager is Real-Time Strategy game where you compete with other player via clever use of Tasks: the only tool to command your lazy Pawns to do something, you will start with only a few building and a couple of Pawns, but develop and soon you will find yourself in the middle of thriving civilization. But beware, other players want to have your items! 
+
+####Develop, build, craft, defend! And become the best PawnManger!
+
 ### Requirements
 MinGW w64 (with MSVCRT, UCRT will not work)
 ### Building
