@@ -37,9 +37,6 @@ void Pawn::IMHere(ptr<Building> to) {
         position = positionBuilding->position;
     }
 }
-void Pawn::beIngridient() {
-    assignTask(Task(TaskID::BeProcessed, positionBuilding));
-}
 void Pawn::stopBeingIngridient() {
     assignTask(Task(TaskID::Idle,positionBuilding));
 }

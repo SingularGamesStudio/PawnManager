@@ -36,8 +36,33 @@ void FighterPawn::getResource(ResourceEntity* toGet) {
     owner->hub->addPawn(ptr<Pawn>(id));
     drop(positionBuilding, position);
 }
-void FighterPawn::assignTask(const Task& task) {
+void FighterPawn::assignTask(const Task& toAssign) {
     currentTask = task;
+    switch (toAssign.id) {
+        case TaskID::Get:
+            moveToBuilding(toAssign.destination);
+            needed = toAssign.object;
+            toTake = true;
+            break;
+        case TaskID::Transport:
+            moveToBuilding(toAssign.destination);
+            toTake = true;
+            needed = toAssign.object;
+            break;
+        case TaskID::Move:
+            moveToBuilding(toAssign.destination);
+            break;
+        case TaskID::BeProcessed:
+            moveToBuilding(toAssign.destination);
+            break;
+        case TaskID::Idle:
+            break;
+        case TaskID::Attack:
+            toAttack = true;
+            moveToBuilding(toAssign.destination);
+        default:
+            throw("Unexpected FighterPawn TaskID: ", toAssign.id);
+    }
 }
 DummyMonk::DummyMonk(Task task, bool BOOL, Resource resource, ptr<Player> Owner, ptr<Building> dest, ptr<Building> in) {
     currentTask = task;
@@ -71,13 +96,20 @@ void FighterPawn::moveToBuilding(ptr<Building> dest)  {
     IMHere(dest);
 }
 void FighterPawn::tick(double deltaTime) {
+    double deltaX = fabs(position.first - dest.first);
+    double deltaY = fabs(position.second - dest.second);
+    double wholeDelta = deltaX * deltaX + deltaY * deltaY;
+    if(toAttack && wholeDelta <= currentTask.destination.radius){
+        attack(currentTask.destination);
+        if (currentTask.destination->hp <= 0){
+            toAttack = false;
+            currentTask = Task(TaskID::Move, owner->hub);
+        }
+    }
     if (travelling){
         std::pair<double, double>  dest = destinationPosition;
         double signX = position.first - dest.first;
-        double deltaX = fabs(position.first - dest.first);
         double signY = position.second - dest.second;
-        double deltaY = fabs(position.second - dest.second);
-        double wholeDelta = deltaX * deltaX + deltaY * deltaY;
         if (signX < -1e-2){
             signX = -1;
         } else if (signX > 1e-2){
@@ -121,7 +153,9 @@ void FighterPawn::tick(double deltaTime) {
         }
     }
 }
-void FighterPawn::attack(Entity* attacked) {};
+void FighterPawn::attack(Entity* attacked) {
+    attacked.hp -= atk;
+};
 FighterPawnType FighterPawn::getType() {
-    return FighterPawnType::DummNotFound;
+    return FighterPawnType::DummyNotFound;
 };

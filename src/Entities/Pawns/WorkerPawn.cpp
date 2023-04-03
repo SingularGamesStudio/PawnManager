@@ -99,6 +99,7 @@ void WorkerPawn::tick(double deltaTime) {
                 }
                 break;
             case TaskID::BeProcessed:
+                currentTask.id = TaskID::BeProcessed;
                 //TODO:set pawn to be waiting, not free
                 owner->manager.finishTask(currentTask, ptr<Pawn>(id));
                 break;

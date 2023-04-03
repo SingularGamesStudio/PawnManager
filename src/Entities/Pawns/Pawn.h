@@ -25,7 +25,6 @@ public:
     virtual void moveToBuilding(ptr<Building> toMove) = 0;
     virtual void moveToPosition(std::pair<double, double> toMove) = 0;
     virtual void assignTask(const Task& toAssign) = 0;
-    void beIngridient();
     void stopBeingIngridient();
     virtual void tick(double deltaTime);
     virtual std::vector<uint8_t> serialize() const;
