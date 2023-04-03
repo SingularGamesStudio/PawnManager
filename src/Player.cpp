@@ -106,17 +106,22 @@ void Player::TaskManager::tick() {//TODO:rewrite to mincost
     std::vector<std::pair<PendingRecipe*, bool>> toClose;
     for(PendingRecipe* rec : work){
         if(!rec->needResources.empty()){
+            std::multiset<Resource> newNeed;
             for(Resource resource:rec->needResources){
                 ptr<Building> where = findResource(owner->hub, resource);
                 if (!where) {
                     toClose.push_back({rec, false});
                     break;
                 }
-                haulers.back()->assignTask(Task(TaskID::Transport, where, rec->place, resource, rec->ID));
-                haulers.pop_back();
-                rec->movedResources.insert(resource);
+                if(haulers.size()==0){
+                    newNeed.insert(resource);
+                } else {
+                    haulers.back()->assignTask(Task(TaskID::Transport, where, rec->place, resource, rec->ID));
+                    haulers.pop_back();
+                    rec->movedResources.insert(resource);
+                }
             }
-            rec->needResources.clear();
+            rec->needResources = newNeed;
         } else if(rec->movedResources.empty()) {
             if(!rec->needPawns.empty()) {
                 for(PawnReq* p :rec->needPawns){
