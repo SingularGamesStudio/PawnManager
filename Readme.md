@@ -1,13 +1,13 @@
 # PawnManager
 
-### Overview
+## Overview
 PawnManager is Real-Time Strategy game where you compete with other player via clever use of Tasks: the only tool to command your lazy Pawns to do something, you will start with only a few building and a couple of Pawns, but develop and soon you will find yourself in the middle of thriving civilization. But beware, other players want to have your items! 
 
 #### Develop, build, craft, defend! And become the best PawnManager!
 
-### Requirements
+## Requirements
 MinGW w64 (with MSVCRT, UCRT will not work)
-### Building
+## Building
 Building is done using CMake. At first you should generate makefiles. This is done using the following command:
 ```
 cmake . -G "MinGW Makefiles" -DCMAKE_MAKE_PROGRAM=path/to/make -DCMAKE_C_COMPILER=path/to/gcc -DCMAKE_CXX_COMPILER=path/to/g++
@@ -26,3 +26,14 @@ C:/mingw64/bin/mingw32-make.exe
 ```
 
 After running these commands the resulting build files should be in project root directory. Remember that all dlls which are put into directory as well as libgcc_s_seh-1.dll, libstdc++-6.dll and libwinpthread-1 are required to be in same directory as the game in order to run it.
+
+## Structure
+Entity <- Pawn, Building, ResourceEntity
+
+Pawn <- WorkerPawn, FighterPawn
+
+Building <- CraftBuilding 
+
+RecipeEntity is a part of Recipe (not inheritance)
+
+(That's it for CP1, but Server Part is currently developed in /dev)
