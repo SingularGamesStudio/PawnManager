@@ -11,7 +11,7 @@ class Building;
 class Pawn;
 class Player;
 
-class Player {
+class Player:public RequiresID {
 public:
     Player(){}
     Building* hub;

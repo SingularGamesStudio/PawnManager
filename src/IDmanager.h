@@ -16,11 +16,22 @@ struct IDmanager {
     static void set(int id, void* data);
 };
 
+struct RequiresID{
+    int id;
+};
+
 template<typename T>
-class ptr{
+struct ptr{
     int id = -1;
+    ptr():id(-1){}
 
     ptr(int id):id(id){}
+
+    bool isnull() {
+        if(id==-1 || IDmanager::get(id)== nullptr)
+            return true;
+        return false;
+    }
 
     T operator*() {
         return *(reinterpret_cast<T*>(IDmanager::get(id)));
@@ -30,3 +41,14 @@ class ptr{
         return reinterpret_cast<T*>(IDmanager::get(id));
     }
 };
+
+template<typename T,  typename... Targs>
+ptr<T> makeptr(Targs... args) {
+    T* mem = reinterpret_cast<T*>(new char[sizeof(T)]);
+    new (mem) T(args...);
+    int id = IDmanager::newObject(mem);
+    if(dynamic_cast<RequiresID*>(mem)!= nullptr) {
+        dynamic_cast<RequiresID*>(mem)->id = id;
+    }
+    return ptr<T>(id);
+}

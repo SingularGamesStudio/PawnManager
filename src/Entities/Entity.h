@@ -7,17 +7,15 @@
 
 class Player;
 
-class Entity {
+class Entity: public RequiresID{
 private:
     virtual void destroy();
 
 public:
-    Entity():id(IDmanager::newObject(this)){
+    Entity(){
     }
-    Entity(std::pair<double, double> pos, Player* owner, unsigned int hp, double radius):position(pos), owner(owner), hp(hp), radius(radius), id(IDmanager::newObject(this)){
+    Entity(std::pair<double, double> pos, Player* owner, unsigned int hp, double radius):position(pos), owner(owner), hp(hp), radius(radius){
     }
-
-    int id;
     unsigned int hp;
     Player* owner;
     void changeHealth(int delta);
