@@ -27,7 +27,7 @@ clientInterface/serverInterface - Interface для Connection
 
 #### Тамьяров Илья(vertignesss):
 
-Pawn
+Pawn + наследники
 
 FighterPawn - AbstractFactory
 
