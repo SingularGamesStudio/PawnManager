@@ -12,9 +12,9 @@ private:
     virtual void destroy();
 
 public:
-    Entity():id(IDmanager::newEntity(this)){
+    Entity():id(IDmanager::newObject(this)){
     }
-    Entity(std::pair<double, double> pos, Player* owner, unsigned int hp, double radius):position(pos), owner(owner), hp(hp), radius(radius), id(IDmanager::newEntity(this)){
+    Entity(std::pair<double, double> pos, Player* owner, unsigned int hp, double radius):position(pos), owner(owner), hp(hp), radius(radius), id(IDmanager::newObject(this)){
     }
 
     int id;

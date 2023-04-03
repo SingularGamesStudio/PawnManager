@@ -121,7 +121,7 @@ void PawnManagerClient::onMouseClick(int x, int y, sf::Mouse::Button b) {
     sf::Vector2f center = ((sf::Vector2f )window->getSize()) * 0.5f;
     sf::Vector2f pos = (sf::Vector2f(x, y) - center) / renderScale;
     if(!onBuildingMouseClick(player->hub, pos, b)) {
-        Building* b = IDmanager::getBuilding(selectedBuilding);
+        Building* b = reinterpret_cast<Building*>(IDmanager::get(selectedBuilding));
         if(b != nullptr) {
             player->manager.startRecipe(new BuildRecipe({pos.x, pos.y}, 0), b);
             selectedBuilding = -1;

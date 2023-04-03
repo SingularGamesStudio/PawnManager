@@ -12,7 +12,7 @@ CraftBuildingWindow::CraftBuildingWindow(int id) : id(id) {
 }
 
 void CraftBuildingWindow::updateAndRender() {
-    if(IDmanager::getBuilding(id) == nullptr) {
+    if(IDmanager::get(id) == nullptr) {
         PawnManagerClient::winManager.popWindow();
         return;
     }
