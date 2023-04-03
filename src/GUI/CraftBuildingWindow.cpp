@@ -6,9 +6,19 @@
 #include "../IDmanager.h"
 #include "PawnManagerClient.h"
 #include "SFML/Graphics/Text.hpp"
+#include "ButtonControl.h"
+#include "../Entities/Buildings/CraftBuilding.h"
 
 CraftBuildingWindow::CraftBuildingWindow(int id) : id(id) {
     slotCounts = sf::Vector2i(5, 5);
+    controls.push_back(new ButtonControl(*this, sf::IntRect(0, 4, 4, 0),
+                                         "Assign recipe",
+                                         [id=id](){
+        ptr<CraftBuilding> p(id);
+        Recipe* r = p->recipes[0];
+        PawnManagerClient::player->manager.startRecipe(r,p);
+        PawnManagerClient::winManager.popWindow();
+    }));
 }
 
 void CraftBuildingWindow::updateAndRender() {
