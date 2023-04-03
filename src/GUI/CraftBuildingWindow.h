@@ -11,7 +11,7 @@ class CraftBuildingWindow : public GameWindow {
     int id;
 
 public:
-    CraftBuildingWindow(PawnManagerClient* client, int id);
+    explicit CraftBuildingWindow(int id);
 
     void updateAndRender() override;
 };

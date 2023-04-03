@@ -34,7 +34,7 @@ void PawnRenderer::drawWorkerPawn(const std::set<expertisesID>& expertises, sf::
                 case expertisesID::DummySmeltery:
                     col = sf::Color::Red;
                     break;
-                case expertisesID::DummtTrainership:
+                case expertisesID::DummyTrainership:
                     col = sf::Color::Green;
                     break;
                 case expertisesID::DummyMetalworking:

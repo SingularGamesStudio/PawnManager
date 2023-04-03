@@ -11,13 +11,13 @@ void GameWindow::updateAndRender() {
     drawWindow();
 }
 
-GameWindow::GameWindow(PawnManagerClient* client) : client(client) {}
+GameWindow::GameWindow() = default;
 
 void GameWindow::drawBackground() {
     sf::VertexArray arr;
     arr.setPrimitiveType(sf::Triangles);
     sf::Color c = sf::Color(0, 0, 0, 127);
-    sf::Vector2u sz = client->window.getSize();
+    sf::Vector2u sz = PawnManagerClient::window->getSize();
     arr.append(sf::Vertex(sf::Vector2f(0, 0), c));
     arr.append(sf::Vertex(sf::Vector2f(sz.x, 0), c));
     arr.append(sf::Vertex(sf::Vector2f(sz.x, sz.y), c));
@@ -26,7 +26,7 @@ void GameWindow::drawBackground() {
     arr.append(sf::Vertex(sf::Vector2f(0, sz.y), c));
     sf::RenderStates states = sf::RenderStates::Default;
     states.blendMode = sf::BlendAlpha;
-    client->window.draw(arr, states);
+    PawnManagerClient::window->draw(arr, states);
 }
 
 void GameWindow::drawWindow() {
@@ -37,7 +37,7 @@ void GameWindow::drawWindow() {
 }
 
 sf::Vector2f GameWindow::getMinGridCellPos() {
-    auto [width, height] = client->window.getSize();
+    auto [width, height] = PawnManagerClient::window->getSize();
     auto center = sf::Vector2f(width, height) * (1 / 2.0f);
     auto gridSize = static_cast<sf::Vector2f>(slotCounts) * (gridCellSize + gridCellPadding) -
                     sf::Vector2f(gridCellPadding, gridCellPadding);
@@ -72,7 +72,7 @@ void GameWindow::drawRect(sf::FloatRect rect, sf::Color c) {
     arr.append(sf::Vertex(sf::Vector2f(left, top), c));
     arr.append(sf::Vertex(sf::Vector2f(right, bottom), c));
     arr.append(sf::Vertex(sf::Vector2f(left, bottom), c));
-    client->window.draw(arr);
+    PawnManagerClient::window->draw(arr);
 }
 
 void GameWindow::drawBorderedRect(sf::FloatRect rect, float borderSize, sf::Color c, sf::Color border) {

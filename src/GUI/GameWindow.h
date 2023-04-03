@@ -12,13 +12,11 @@
 class PawnManagerClient;
 
 class GameWindow {
-protected:
-    PawnManagerClient* client;
 public:
     constexpr static float gridCellSize = 64;
     constexpr static float gridCellPadding = 8;
     constexpr static float windowSizeExtension = 16;
-    explicit GameWindow(PawnManagerClient* client);
+    GameWindow();
 
     virtual void updateAndRender();
     sf::Vector2i slotCounts;

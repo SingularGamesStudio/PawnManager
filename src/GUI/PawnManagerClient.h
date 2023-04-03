@@ -16,27 +16,30 @@
 
 class PawnManagerClient {
 public:
-    sf::RenderWindow window;
-    sf::View view;
+    static sf::RenderWindow* window;
+    static sf::View view;
 private:
-    PawnRenderer pawnRenderer;
-    BuildingRenderer buildingRenderer;
-    ResourceRenderer resourceRenderer;
-    Player* player;
-    double curTime = 0;
-    int selectedBuilding;
+    static PawnRenderer* pawnRenderer;
+    static BuildingRenderer* buildingRenderer;
+    static ResourceRenderer* resourceRenderer;
+    static Player* player;
+    static double curTime;
+    static int selectedBuilding;
 public:
     static constexpr float renderScale = 1.5f;
-    GameWindowManager winManager;
-    FontManager fontManager;
-    PawnManagerClient();
-    void run();
-    ~PawnManagerClient();
+    static GameWindowManager winManager;
+    static FontManager fontManager;
+    static void run();
+    PawnManagerClient() = delete;
+    PawnManagerClient(const PawnManagerClient& o) = delete;
+    PawnManagerClient& operator=(const PawnManagerClient& other) = delete;
 private:
-    void updateAndRender();
-    void buildingRenderDfs(Building* b, sf::Vector2f center);
-    void onMouseClick(int x, int y, sf::Mouse::Button b);
-    bool onBuildingMouseClick(Building* b, sf::Vector2f pos, sf::Mouse::Button button);
+    static void init();
+    static void updateAndRender();
+    static void buildingRenderDfs(Building* b, sf::Vector2f center);
+    static void onMouseClick(int x, int y, sf::Mouse::Button b);
+    static bool onBuildingMouseClick(Building* b, sf::Vector2f pos, sf::Mouse::Button button);
+    static void shutdown();
 };
 
 
