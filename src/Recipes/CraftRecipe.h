@@ -7,6 +7,6 @@ public:
 
     void finish() override;
 
-    std::string serialize() const override;
+    std::vector<uint8_t> serialize() const override;
     void deserialize(const std::vector<uint8_t>& data) override;
 };

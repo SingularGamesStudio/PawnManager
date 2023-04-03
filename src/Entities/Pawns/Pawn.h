@@ -5,6 +5,7 @@
 #include "../../Resource.h"
 #include "../../Task.h"
 #include "../Entity.h"
+#include <vector>
 class Building;
 class Pawn : public Entity {
 public:

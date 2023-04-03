@@ -1,6 +1,7 @@
 #include "BuildRecipe.h"
 #include "../Entities/Buildings/Building.h"
 #include "../Entities/Buildings/CraftBuilding.h"
+#include "../Entities/Pawns/Pawn.h"
 
 void BuildRecipe::finish() {
     for(Pawn* p :procPawns){delete p;}
@@ -22,6 +23,12 @@ void BuildRecipe::finish() {
         }
     }
     res->parent->children.push_back(res);
+    for(Pawn* p:res->pawns) {
+        p->positionBuilding = res;
+    }
+    res->pawns = place->pawns;
+    res->resources = place->resources;
+    res->reservedResources = place->reservedResources;
     delete place;
     cleanup(res);
 }

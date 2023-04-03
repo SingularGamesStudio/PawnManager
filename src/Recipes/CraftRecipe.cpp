@@ -1,19 +1,20 @@
 #include "CraftRecipe.h"
 #include "../Entities/Buildings/CraftBuilding.h"
 #include "../Entities/Pawns/FighterPawn.h"
+#include <cstring>
 
 template<typename T> // parses vector of simple objects inty byte array
 std::vector<uint8_t> parseVector(const std::vector<T>& v) {
     unsigned int sz = v.size();
     std::vector<uint8_t> result(4 + sz * sizeof(T));
-    std::copy(result.data(), &sz, 4);
-    std::copy(result.data() + 4, v.data(), sz * sizeof(T));
+    std::memcpy(result.data(), &sz, 4);
+    std::memcpy(result.data() + 4, v.data(), sz * sizeof(T));
 }
 
 template<typename T> // parses vector of simple objects inty byte array
 unsigned int unparseVector(const uint8_t* v, std::vector<T>& result) {
     unsigned int sz = 0;
-    std::copy(&sz, v, 4);
+    std::memcpy(&sz, v, 4);
     result.resize(sz);
     std::copy(result.data(), v + 4, sz * sizeof(T));
     return 4 + sz * sizeof(T);

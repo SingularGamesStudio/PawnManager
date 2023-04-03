@@ -52,7 +52,7 @@ void Pawn::tick(double deltaTime) {
 
 }
 
-void Pawn::deserialize(const std::vector<uint8_t>& data) {
+void Pawn::deserialize(const std::vector<uint8_t>& data) const {
 
 }
 
