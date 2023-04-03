@@ -1,24 +1,24 @@
-#Паттерны использованные в проекте.
-####Кирьянов Григорий(SingularGamesStudio):
+#╨Я╨░╤В╤В╨╡╤А╨╜╤Л ╨╕╤Б╨┐╨╛╨╗╤М╨╖╨╛╨▓╨░╨╜╨╜╤Л╨╡ ╨▓ ╨┐╤А╨╛╨╡╨║╤В╨╡
+####╨Ъ╨╕╤А╤М╤П╨╜╨╛╨▓ ╨У╤А╨╕╨│╨╛╤А╨╕╨╣(SingularGamesStudio):
 Entity - Composite
 
-Player::TaskManager - Bridge между Pawn и Player.
+Player::TaskManager - Bridge ╨╝╨╡╨╢╨┤╤Г Pawn ╨╕ Player.
 
-Player - Facade между реальным игроком и Recipe
+Player - Facade ╨╝╨╡╨╢╨┤╤Г ╤А╨╡╨░╨╗╤М╨╜╤Л╨╝ ╨╕╨│╤А╨╛╨║╨╛╨╝ ╨╕ Recipe
 
-Recipe - Command (из задач для Pawn/Building)
+Recipe - Command (╨╕╨╖ ╨╖╨░╨┤╨░╤З ╨┤╨╗╤П Pawn/Building)
 
-####Косов Михаил(128-bit-guy):
-BuildingRenderer, FontManager, GameWindowManager, PawnRenderer, ResourceRenderer - Singleton'ы
+####╨Ъ╨╛╤Б╨╛╨▓ ╨Ь╨╕╤Е╨░╨╕╨╗(128-bit-guy):
+BuildingRenderer, FontManager, GameWindowManager, PawnRenderer, ResourceRenderer - Singleton'╤Л
 
 Control, Window - 
 
-####Дубинин Василий:
+####╨Ф╤Г╨▒╨╕╨╜╨╕ ╨Т╨░╤Б╨╕╨╗╨╕╨╣:
 
-Connection - Адаптер сетевой библиотеки (для сервера/клиента)
+Connection - Adapter ╤Б╨╡╤В╨╡╨▓╨╛╨╣ ╨▒╨╕╨▒╨╗╨╕╨╛╤В╨╡╨║╨╕ (╨┤╨╗╤П ╤Б╨╡╤А╨▓╨╡╤А╨░/╨║╨╗╨╕╨╡╨╜╤В╨░)
 
-clientInterface/serverInterface - Interface для Connection
+clientInterface/serverInterface - Interface ╨┤╨╗╤П Connection
 
-####Тамьяров Илья(vertignesss):
+####╨в╨░╨╝╤М╤П╤А╨╛╨▓ ╨Ш╨╗╤М╤П(vertignesss):
 FighterPawn - AbstractFactory
 
