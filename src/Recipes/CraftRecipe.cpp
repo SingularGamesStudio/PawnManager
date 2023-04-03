@@ -9,6 +9,7 @@ std::vector<uint8_t> parseVector(const std::vector<T>& v) {
     std::vector<uint8_t> result(4 + sz * sizeof(T));
     std::memcpy(result.data(), &sz, 4);
     std::memcpy(result.data() + 4, v.data(), sz * sizeof(T));
+    return result;
 }
 
 template<typename T> // parses vector of simple objects inty byte array
@@ -16,7 +17,7 @@ unsigned int unparseVector(const uint8_t* v, std::vector<T>& result) {
     unsigned int sz = 0;
     std::memcpy(&sz, v, 4);
     result.resize(sz);
-    std::copy(result.data(), v + 4, sz * sizeof(T));
+    std::memcpy(result.data(), v + 4, sz * sizeof(T));
     return 4 + sz * sizeof(T);
 }
 
@@ -35,26 +36,32 @@ void CraftRecipe::finish() {
 std::vector<uint8_t> CraftRecipe::serialize() const {
     std::vector<uint8_t> result(1);
     result[0] = (uint8_t)RecipeType::CRAFT_RECIPE;
-    result += parseVector(reqWorkers);
+    std::vector<uint8_t> tmp = parseVector(reqWorkers);
+    std::copy(tmp.begin(), tmp.end(), std::back_inserter(result));
 
-    result += parseVector(inFighters);
-    result += parseVector(inWorkers);
-    result += parseVector(inResources);
+    tmp = parseVector(inFighters);
+    std::copy(tmp.begin(), tmp.end(), std::back_inserter(result));
+    tmp = parseVector(inWorkers);
+    std::copy(tmp.begin(), tmp.end(), std::back_inserter(result));
+    tmp = parseVector(inResources);
+    std::copy(tmp.begin(), tmp.end(), std::back_inserter(result));
 
-    result += parseVector(outFighters);
-    result += parseVector(outResources);
+    tmp = parseVector(outFighters);
+    std::copy(tmp.begin(), tmp.end(), std::back_inserter(result));
+    tmp = parseVector(outResources);
+    std::copy(tmp.begin(), tmp.end(), std::back_inserter(result));
     return result;
 }
 
 void CraftRecipe::deserialize(const std::vector<uint8_t>& data) {
     unsigned int pos = 0;
     const uint8_t* ptr = data.data();
-    pos += parseVector(ptr + pos, reqWorkers);
+    pos += unparseVector(ptr + pos, reqWorkers);
 
-    pos += parseVector(ptr + pos, inFighters);
-    pos += parseVector(ptr + pos, inWorkers);
-    pos += parseVector(ptr + pos, inResources);
+    pos += unparseVector(ptr + pos, inFighters);
+    pos += unparseVector(ptr + pos, inWorkers);
+    pos += unparseVector(ptr + pos, inResources);
 
-    pos += parseVector(ptr + pos, outFighters);
-    pos += parseVector(ptr + pos, outResources);
+    pos += unparseVector(ptr + pos, outFighters);
+    pos += unparseVector(ptr + pos, outResources);
 }
