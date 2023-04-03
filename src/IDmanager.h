@@ -1,4 +1,5 @@
-
+#ifndef PAWNMANAGER_IDMANAGER_H
+#define PAWNMANAGER_IDMANAGER_H
 
 #include <unordered_map>
 
@@ -52,3 +53,5 @@ ptr<T> makeptr(Targs... args) {
     }
     return ptr<T>(id);
 }
+
+#endif PAWNMANAGER_IDMANAGER_H

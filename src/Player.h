@@ -3,6 +3,7 @@
 
 #include "Recipes/Recipe.h"
 #include "Task.h"
+#include "IDmanager.h"
 #include <vector>
 #include <deque>
 
