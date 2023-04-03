@@ -26,6 +26,7 @@ Connection - Adapter сетевой библиотеки (для сервера/
 clientInterface/serverInterface - Interface для Connection
 
 #### Тамьяров Илья(vertignesss):
+
 Pawn
 
 FighterPawn - AbstractFactory
