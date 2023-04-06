@@ -29,5 +29,5 @@ clientInterface/serverInterface - Interface для Connection
 
 Pawn + наследники
 
-FighterPawn - AbstractFactory
+FighterPawn - Factory
 

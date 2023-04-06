@@ -1,6 +1,5 @@
 #ifndef TASK_H
 #define TASK_H
-///misha does not believe in me  :(
 #include "Resource.h"
 
 class Player;

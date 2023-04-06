@@ -1,25 +1,32 @@
 #ifndef WORKERPAWN_H
 #define WORKERPAWN_H
-///misha does not believe in me  :(
+
 #include "Pawn.h"
+
+#include <cstddef>
+#include <queue>
 #include <set>
 #include <unordered_map>
-#include <queue>
 #include <vector>
-#include <cstddef>
+
 enum class expertisesID{DummySmeltery, DummyMetalworking, DummtTrainership};
+
 class WorkerPawn: public Pawn{
 public:
-    
-    void create(Building* placeOfCreation);
 
-    void assignTask(const Task& toAssign) override;
     std::set<expertisesID> expertises;
-    void moveToBuilding(Building* dest) override;
     bool toDrop;
     bool toTake;
     std::vector<Building*> onTheWay;
     size_t currentInWay;
+
+    void create(Building* placeOfCreation);
+
+    void assignTask(const Task& toAssign) override;
+
+    void moveToBuilding(Building* dest) override;
+
     void tick(double deltaTime) override;
 };
+
 #endif //WORKERPAWN_H

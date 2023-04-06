@@ -1,19 +1,20 @@
-#include "WorkerPawn.h"
 #include "../Buildings/Building.h"
+#include "WorkerPawn.h"
+
 #include <cmath>
 #include <iostream>
+
 void WorkerPawn::create(Building* placeOfCreation) {
     currentTask = Task(TaskID::Idle, placeOfCreation);
     travelling = false;
     holding = Resource::DummyNothing;
     needed = Resource::DummyNothing;
     owner = placeOfCreation->owner;
-    //destination = placeOfCreation;
-    IMHere(placeOfCreation);
+    GetIntoBuilding(placeOfCreation);
 }
+
 void WorkerPawn::assignTask(const Task& toAssign) {
     currentTask = toAssign;
-    //std::cout << "task " << (int)toAssign.id << "\n";
     switch (toAssign.id) {
     case TaskID::Get:
         moveToBuilding(toAssign.destination);
@@ -22,7 +23,6 @@ void WorkerPawn::assignTask(const Task& toAssign) {
         break;
     case TaskID::Transport:
         moveToBuilding(toAssign.destination);
-        //moveToBuilding(toAssign.destination2);
         toTake = true;
         needed = toAssign.object;
         break;
@@ -38,6 +38,7 @@ void WorkerPawn::assignTask(const Task& toAssign) {
         throw("Unexpected WorkerPawn TaskID: ", toAssign.id);
     }
 }
+
 void WorkerPawn::tick(double deltaTime) {
     if (currentInWay < onTheWay.size()){
         Building* dest = onTheWay[currentInWay];
@@ -45,8 +46,7 @@ void WorkerPawn::tick(double deltaTime) {
         position.second+= (dest->position.second - positionBuilding->position.second) * speed * deltaTime;
 
         if (fabs(position.first - dest->position.first) < 1e-1 && fabs(position.second - dest->position.second) < 1e-1){
-            IMHere(dest);
-
+            GetIntoBuilding(dest);
             ++currentInWay;
         }
     }
@@ -84,6 +84,7 @@ void WorkerPawn::tick(double deltaTime) {
         }
     }
 }
+
 void WorkerPawn::moveToBuilding(Building* dest) {
     travelling = true;
     std::unordered_map<Building*, std::vector<Building*> > visited;

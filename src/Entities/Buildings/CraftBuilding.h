@@ -1,6 +1,5 @@
 #ifndef CRAFTBUILDING_H
 #define CRAFTBUILDING_H
-///misha does not believe in me  :(
 #include "Building.h"
 #include "../../Recipes/Recipe.h"
 #include <vector>

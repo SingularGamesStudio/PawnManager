@@ -1,11 +1,14 @@
 #ifndef PAWN_H
 #define PAWN_H
-///misha does not believe in me  :(
-#include <utility>
+
 #include "../../Resource.h"
 #include "../../Task.h"
 #include "../Entity.h"
+
+#include <utility>
+
 class Building;
+
 class Pawn : public Entity {
 public:
     Resource holding;
@@ -15,14 +18,21 @@ public:
     Task currentTask;
     bool travelling;
     double speed = 0.3;
+
     void drop(Building* in, std::pair<double, double> pos = { 0,0 });
+
     void destroy();
-    void IMNotHere();
-    void IMHere(Building* to);
+
+    void GetOutOfBuilding();
+    void GetIntoBuilding(Building* to);
+
     virtual void moveToBuilding(Building* toMove) = 0;
+
     virtual void assignTask(const Task& toAssign) = 0;
+
     void beIngridient();
     void stopBeingIngridient();
+
     virtual void tick(double deltaTime);
 };
 #endif //PAWN_H

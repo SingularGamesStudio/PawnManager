@@ -1,6 +1,5 @@
 #ifndef RESOURCEENTITY_H
 #define RESOURCEENTITY_H
-///misha does not believe in me  :(
 #include "../Resource.h"
 #include "Entity.h"
 #include <utility>
