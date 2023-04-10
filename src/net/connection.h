@@ -1,26 +1,26 @@
 #pragma once
 #include "general.h"
 #include "packet.h"
-#include "mqueue.h"
+#include "blocking_queue.h"
 
 namespace dlib {
 
     class Connection : public std::enable_shared_from_this<Connection> {
     public:
-        enum class Owner : char {CLIENT, SERVER};
+        enum class Owner : uint8_t {CLIENT, SERVER};
     protected:
         Owner owner;
         boost::asio::io_context& context;
         boost::asio::ip::tcp::socket soc;
-        MQueue<Packet> sendQueue;
-        MQueue<std::pair<Packet, std::shared_ptr<Connection>>>& receiveQueue;
+        BlockingQueue<Packet> sendQueue;
+        BlockingQueue<std::pair<Packet, std::shared_ptr<Connection>>>& receiveQueue;
         uint32_t id;
     private:
         Packet tmpPacket;
     public:
 
         Connection(Owner owner, boost::asio::io_context& context, boost::asio::ip::tcp::socket soc,
-            MQueue<std::pair<Packet, std::shared_ptr<Connection>>>& receiveQueue) : owner(owner), context(context),
+            BlockingQueue<std::pair<Packet, std::shared_ptr<Connection>>>& receiveQueue) : owner(owner), context(context),
                 soc(std::move(soc)), receiveQueue(receiveQueue), id(-1)  {
         }
         virtual ~Connection () {

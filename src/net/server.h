@@ -1,22 +1,22 @@
 #pragma once
 #include "general.h"
 #include "packet.h"
-#include "mqueue.h"
+#include "blocking_queue.h"
 #include "connection.h"
 
 namespace dlib {
 
-    class serverInterface {
+    class ServerInterface {
     protected:
         boost::asio::io_context serverContext;
         std::thread contextThread;
         boost::asio::ip::tcp::acceptor serverAcceptor;
-        MQueue<std::pair<Packet, std::shared_ptr<Connection>>> inQueue;
+        BlockingQueue<std::pair<Packet, std::shared_ptr<Connection>>> inQueue;
         std::vector<std::shared_ptr<Connection>> connections;
     public:
-        serverInterface(uint16_t port) : serverAcceptor(serverContext, boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), port)) {
+        ServerInterface(uint16_t port) : serverAcceptor(serverContext, boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), port)) {
         }
-        virtual ~serverInterface() {
+        virtual ~ServerInterface() {
             stop();
         }
 

@@ -1,25 +1,27 @@
 #pragma once
 #include "general.h"
 #include "packet.h"
-#include "mqueue.h"
+#include "blocking_queue.h"
 #include "connection.h"
 
 namespace dlib {
 
-    class clientInterface {
+    class ClientInterface {
     private:
         boost::asio::io_context connectionContext;
         std::thread contextThread;
         std::unique_ptr<Connection> connectionPtr;
         boost::asio::ip::tcp::endpoint server;
-        MQueue<std::pair<Packet, std::shared_ptr<Connection>>> inQueue;
+        BlockingQueue<std::pair<Packet, std::shared_ptr<Connection>>> inQueue;
     public:
-        clientInterface() {}
-        virtual ~clientInterface() {
+        ClientInterface() {}
+        
+        virtual ~ClientInterface() {
             disconnect();
         }
-        virtual void onPacketReceive(const Packet& p) {
-        }
+
+        virtual void onPacketReceive(const Packet& p) {}
+
         bool connect(const std::string& address, const uint16_t port) {
             try {
                 boost::asio::ip::tcp::resolver resolver(connectionContext);
@@ -39,6 +41,7 @@ namespace dlib {
             }
             return false;
         }
+
         void disconnect() {
             if (isConnected())
                 connectionPtr->disconnect();
@@ -48,15 +51,18 @@ namespace dlib {
             connectionPtr->~Connection();
             connectionPtr.release();
         }
+
         bool isConnected() {
             if(!connectionPtr)
                 return false;
             return connectionPtr->isConnected();
         }
+
         void send(const Packet& p) {
             if (isConnected())
                 connectionPtr->send(p);
         }
+
         void respond(size_t limit = -1) {
             size_t processed = 0;
             while(!inQueue.empty() && processed < limit){
