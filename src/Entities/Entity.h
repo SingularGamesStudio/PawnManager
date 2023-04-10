@@ -16,11 +16,14 @@ public:
     }
     Entity(std::pair<double, double> pos, ptr<Player> owner, unsigned int hp, double radius):position(pos), owner(owner), hp(hp), radius(radius){
     }
-    unsigned int hp;
+    int hp;
     ptr<Player> owner;
     void changeHealth(int delta);
 
     std::pair<double, double> position;
     double radius;
+    virtual std::vector<uint8_t> serialize() const;
+    virtual void deserialize(const std::vector<uint8_t>& data);
+    virtual ~Entity();
 };
 #endif //ENTITY_H

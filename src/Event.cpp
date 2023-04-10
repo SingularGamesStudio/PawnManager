@@ -1,11 +1,11 @@
 #include "Event.h"
 #include "IDmanager.h"
-#include "Pawns/Pawn.h"
-#include "Buildings/Building.h"
+#include "Entities/Pawns/Pawn.h"
+#include "Entities/Buildings/Building.h"
 #include <stdexcept>
 
 
-Event::Event(Event::Type t, int id) : p(Packet::Type::RAW_MESSAGE) {
+Event::Event(Event::Type t, int id) : p(dlib::Packet::Type::RAW_MESSAGE) {
 	if(t != Event::Type::BUILDING_APPEAR &&
 	   t != Event::Type::BUILDING_DISAPPEAR &&
 	   t != Event::Type::PAWN_APPEAR &&
@@ -15,12 +15,14 @@ Event::Event(Event::Type t, int id) : p(Packet::Type::RAW_MESSAGE) {
 	std::vector<uint8_t> tmp(sizeof(t));
 	std::memcpy(tmp.data(), &t, sizeof(t));
 	if(t == Event::Type::BUILDING_APPEAR) {
-		ptr<Building> bu = getBuilding(id);
-		tmp += bu->serialize();
+		ptr<Building> bu(id);
+        auto bu_s = bu->serialize();
+		std::copy(bu_s.begin(), bu_s.end(), std::back_inserter(tmp));
 	}
 	else if (t == Event::Type::PAWN_APPEAR) {
-		ptr<Pawn> pw = getPawn(id);
-		tmp += pw->serialize();
+		ptr<Pawn> pw(id);
+        auto pw_s = pw->serialize();
+        std::copy(pw_s.begin(), pw_s.end(), std::back_inserter(tmp));
 	}
 	else{
 		tmp.resize(sizeof(t) + sizeof(id));
