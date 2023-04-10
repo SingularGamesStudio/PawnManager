@@ -54,5 +54,5 @@ void Pawn::moveToBuilding(Building* toMove) {
 }
 
 void Pawn::tick(double deltaTime) {
-    throw("How did we get here?(tick)")
+    throw("How did we get here?(tick)");
 }

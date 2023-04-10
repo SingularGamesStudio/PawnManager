@@ -53,7 +53,7 @@ void PawnManagerClient::updateAndRender() {
     curTime = newTime;
     window.clear(sf::Color::White);
     winManager.updateAndRender();
-    sf::Vector2f center = ((sf::Vector2f )window.getSize()) * 0.5f;
+    Vec2f center = ((Vec2f )(Vector2<unsigned int>)window.getSize()) * 0.5f;
     buildingRenderDfs(player->hub, center);
     std::default_random_engine rng;
     std::uniform_real_distribution<float> dist2(0, std::numbers::pi_v<float>);
@@ -61,22 +61,22 @@ void PawnManagerClient::updateAndRender() {
         auto [x, y] = p->position;
         auto* wp = dynamic_cast<WorkerPawn*>(p);
         if(wp != nullptr) {
-            pawnRenderer.drawWorkerPawn(wp->expertises,sf::Vector2f(x, y) * renderScale + center);
+            pawnRenderer.drawWorkerPawn(wp->expertises,Vec2f(x, y) * renderScale + center);
             if(wp->holding!=Resource::DummyNothing){
                 float rotation = dist2(rng);
-                resourceRenderer.drawResource(wp->holding, sf::Vector2f(x, y) * renderScale + center, rotation);
+                resourceRenderer.drawResource(wp->holding, Vec2f(x, y) * renderScale + center, rotation);
             }
         }
     }
 }
 
-void PawnManagerClient::buildingRenderDfs(Building* b, sf::Vector2f center) {
+void PawnManagerClient::buildingRenderDfs(Building* b, Vec2f center) {
     auto [x, y] = b->position;
     for(Building* ob : b->children) {
         buildingRenderer.drawEdge(b, ob, center);
         buildingRenderDfs(ob, center);
     }
-    sf::Vector2f p(x, y);
+    Vec2f p(x, y);
     buildingRenderer.drawBuilding(b, p * renderScale + center);
     std::default_random_engine rng;
     std::uniform_real_distribution<float> dist(-1, 1);
@@ -89,7 +89,7 @@ void PawnManagerClient::buildingRenderDfs(Building* b, sf::Vector2f center) {
             y = dist(rng);
         }
         float rotation = dist2(rng);
-        sf::Vector2f pos = (sf::Vector2f(x, y) * (float)(b->radius - 7 / renderScale) + p) * renderScale + center;
+        Vec2f pos = (Vec2f(x, y) * (float)(b->radius - 7 / renderScale) + p) * renderScale + center;
         resourceRenderer.drawResource(res, pos, rotation);
     }
 }

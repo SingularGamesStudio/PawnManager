@@ -11,6 +11,8 @@
 #include "../Player.h"
 #include "BuildingRenderer.h"
 #include "ResourceRenderer.h"
+#include "Vector.h"
+#include "Rect.h"
 
 class PawnManagerClient {
 private:
@@ -29,7 +31,7 @@ public:
     ~PawnManagerClient();
 private:
     void updateAndRender();
-    void buildingRenderDfs(Building* b, sf::Vector2f center);
+    void buildingRenderDfs(Building* b, Vec2f center);
 };
 
 

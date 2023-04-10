@@ -13,17 +13,17 @@ BuildingRenderer::BuildingRenderer(sf::RenderWindow& window) : window(window) {
 
 }
 
-void BuildingRenderer::drawBuilding(Building* b, sf::Vector2f pos) {
-    std::vector<sf::Vector2f> vertices;
-    std::vector<sf::Vector2f> outerVertices;
+void BuildingRenderer::drawBuilding(Building* b, Vec2f pos) {
+    std::vector<Vec2f> vertices;
+    std::vector<Vec2f> outerVertices;
     int cnt = 30;
     float radius = b->radius * PawnManagerClient::renderScale;
     for(int i = 0; i < cnt; ++i) {
         float angle = static_cast<float>(i) * 2 * std::numbers::pi_v<float> / cnt;
         float x = std::cos(angle);
         float y = std::sin(angle);
-        vertices.push_back(sf::Vector2f(x * (radius - 2), y * (radius - 2)) + pos);
-        outerVertices.push_back(sf::Vector2f(x * radius, y * radius) + pos);
+        vertices.push_back(Vec2f(x * (radius - 2), y * (radius - 2)) + pos);
+        outerVertices.push_back(Vec2f(x * radius, y * radius) + pos);
     }
     sf::VertexArray arr;
     sf::Transform t;
@@ -37,33 +37,34 @@ void BuildingRenderer::drawBuilding(Building* b, sf::Vector2f pos) {
         if(j == vertices.size()) {
             j = 0;
         }
-        arr.append(sf::Vertex(vertices[j], col));
-        arr.append(sf::Vertex(vertices[i], col));
-        arr.append(sf::Vertex(pos, col));
-        arr.append(sf::Vertex(vertices[j], sf::Color::Black));
-        arr.append(sf::Vertex(outerVertices[j], sf::Color::Black));
-        arr.append(sf::Vertex(outerVertices[i], sf::Color::Black));
-        arr.append(sf::Vertex(vertices[j], sf::Color::Black));
-        arr.append(sf::Vertex(outerVertices[i], sf::Color::Black));
-        arr.append(sf::Vertex(vertices[i], sf::Color::Black));
+        arr.append(sf::Vertex((sf::Vector2f)vertices[j], col));
+        arr.append(sf::Vertex((sf::Vector2f)vertices[i], col));
+        arr.append(sf::Vertex((sf::Vector2f)pos, col));
+        arr.append(sf::Vertex((sf::Vector2f)vertices[j], sf::Color::Black));
+        arr.append(sf::Vertex((sf::Vector2f)outerVertices[j], sf::Color::Black));
+        arr.append(sf::Vertex((sf::Vector2f)outerVertices[i], sf::Color::Black));
+        arr.append(sf::Vertex((sf::Vector2f)vertices[j], sf::Color::Black));
+        arr.append(sf::Vertex((sf::Vector2f)outerVertices[i], sf::Color::Black));
+        arr.append(sf::Vertex((sf::Vector2f)vertices[i], sf::Color::Black));
     }
     window.draw(arr);
 }
 
-void BuildingRenderer::drawEdge(Building* a, Building* b, sf::Vector2f center) {
-    sf::Vector2f aPos = sf::Vector2f(a->position.first, a->position.second) * PawnManagerClient::renderScale + center;
-    sf::Vector2f bPos = sf::Vector2f(b->position.first, b->position.second) * PawnManagerClient::renderScale + center;
-    sf::Vector2f delta = bPos - aPos;
-    sf::Vector2f orth(delta.y, -delta.x);
-    orth *= (5.0f / sqrtf(orth.x * orth.x + orth.y * orth.y));
+void BuildingRenderer::drawEdge(Building* a, Building* b, Vec2f center) {
+    Vec2f aPos = Vec2f(a->position.first, a->position.second) * PawnManagerClient::renderScale + center;
+    Vec2f bPos = Vec2f(b->position.first, b->position.second) * PawnManagerClient::renderScale + center;
+    Vec2f delta = bPos - aPos;
+    Vec2f orth(delta.y, -delta.x);
+    float l = abs(orth);
+    orth *= (5.0f / l);
     sf::VertexArray arr;
     arr.setPrimitiveType(sf::Triangles);
     sf::Color c(127, 127, 127);
-    arr.append(sf::Vertex(aPos + orth, c));
-    arr.append(sf::Vertex(bPos + orth, c));
-    arr.append(sf::Vertex(bPos - orth, c));
-    arr.append(sf::Vertex(aPos + orth, c));
-    arr.append(sf::Vertex(bPos - orth, c));
-    arr.append(sf::Vertex(aPos - orth, c));
+    arr.append(sf::Vertex((sf::Vector2f)(aPos + orth), c));
+    arr.append(sf::Vertex((sf::Vector2f)(bPos + orth), c));
+    arr.append(sf::Vertex((sf::Vector2f)(bPos - orth), c));
+    arr.append(sf::Vertex((sf::Vector2f)(aPos + orth), c));
+    arr.append(sf::Vertex((sf::Vector2f)(bPos - orth), c));
+    arr.append(sf::Vertex((sf::Vector2f)(aPos - orth), c));
     window.draw(arr);
 }

@@ -6,6 +6,8 @@
 #define PAWNMANAGER_PAWNRENDERER_H
 #include <set>
 #include "SFML/Graphics/RenderWindow.hpp"
+#include "Vector.h"
+#include "Rect.h"
 
 enum class expertisesID;
 
@@ -14,7 +16,7 @@ private:
     sf::RenderWindow& window;
 public:
     explicit PawnRenderer(sf::RenderWindow& window);
-    void drawWorkerPawn(const std::set<expertisesID>& expertises, sf::Vector2f pos);
+    void drawWorkerPawn(const std::set<expertisesID>& expertises, Vec2f pos);
 };
 
 

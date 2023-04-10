@@ -9,9 +9,9 @@
 #include <cmath>
 #include <numbers>
 
-void ResourceRenderer::drawResource(Resource r, sf::Vector2f pos, float rotation) {
-    std::vector<sf::Vector2f> vertices;
-    std::vector<sf::Vector2f> outerVertices;
+void ResourceRenderer::drawResource(Resource r, Vec2f pos, float rotation) {
+    std::vector<Vec2f> vertices;
+    std::vector<Vec2f> outerVertices;
     int cnt = 3;
     switch (r) {
         case Resource::DummyIngot:
@@ -28,8 +28,8 @@ void ResourceRenderer::drawResource(Resource r, sf::Vector2f pos, float rotation
         float angle = static_cast<float>(i) * 2 * std::numbers::pi_v<float> / cnt + rotation;
         float x = std::cos(angle);
         float y = std::sin(angle);
-        vertices.push_back(sf::Vector2f(x * 5.0f, y * 5.0f) + pos);
-        outerVertices.push_back(sf::Vector2f(x * 7.0f, y * 7.0f) + pos);
+        vertices.push_back(Vec2f(x * 5.0f, y * 5.0f) + pos);
+        outerVertices.push_back(Vec2f(x * 7.0f, y * 7.0f) + pos);
     }
     sf::VertexArray arr;
     sf::Transform t;
@@ -52,15 +52,15 @@ void ResourceRenderer::drawResource(Resource r, sf::Vector2f pos, float rotation
         if(j == vertices.size()) {
             j = 0;
         }
-        arr.append(sf::Vertex(vertices[j], col));
-        arr.append(sf::Vertex(vertices[i], col));
-        arr.append(sf::Vertex(pos, col));
-        arr.append(sf::Vertex(vertices[j], sf::Color::Black));
-        arr.append(sf::Vertex(outerVertices[j], sf::Color::Black));
-        arr.append(sf::Vertex(outerVertices[i], sf::Color::Black));
-        arr.append(sf::Vertex(vertices[j], sf::Color::Black));
-        arr.append(sf::Vertex(outerVertices[i], sf::Color::Black));
-        arr.append(sf::Vertex(vertices[i], sf::Color::Black));
+        arr.append(sf::Vertex((sf::Vector2f)vertices[j], col));
+        arr.append(sf::Vertex((sf::Vector2f)vertices[i], col));
+        arr.append(sf::Vertex((sf::Vector2f)pos, col));
+        arr.append(sf::Vertex((sf::Vector2f)vertices[j], sf::Color::Black));
+        arr.append(sf::Vertex((sf::Vector2f)outerVertices[j], sf::Color::Black));
+        arr.append(sf::Vertex((sf::Vector2f)outerVertices[i], sf::Color::Black));
+        arr.append(sf::Vertex((sf::Vector2f)vertices[j], sf::Color::Black));
+        arr.append(sf::Vertex((sf::Vector2f)outerVertices[i], sf::Color::Black));
+        arr.append(sf::Vertex((sf::Vector2f)vertices[i], sf::Color::Black));
     }
     window.draw(arr);
 }
