@@ -3,17 +3,19 @@
 //
 
 #include "PawnRenderer.h"
-#include "SFML/Window.hpp"
-#include "VertexArray.h"
-#include "../Entities/Pawns/WorkerPawn.h"
+
 #include <cmath>
 #include <numbers>
+
+#include "../Entities/Pawns/WorkerPawn.h"
+#include "SFML/Window.hpp"
+#include "VertexArray.h"
 
 void PawnRenderer::drawWorkerPawn(const std::set<expertisesID>& expertises, Vec2f pos) {
     std::vector<Vec2f> vertices;
     std::vector<Vec2f> outerVertices;
     int cnt = 30;
-    for(int i = 0; i < cnt; ++i) {
+    for (int i = 0; i < cnt; ++i) {
         float angle = static_cast<float>(i) * 2 * std::numbers::pi_v<float> / cnt;
         float x = std::cos(angle);
         float y = std::sin(angle);
@@ -23,9 +25,9 @@ void PawnRenderer::drawWorkerPawn(const std::set<expertisesID>& expertises, Vec2
     VertexArray arr;
     sf::Transform t;
     std::vector<expertisesID> expertisesVec(expertises.begin(), expertises.end());
-    for(int i = 0; i < vertices.size(); ++i) {
+    for (int i = 0; i < vertices.size(); ++i) {
         Color col;
-        if(expertisesVec.empty()) {
+        if (expertisesVec.empty()) {
             col = Color(127, 127, 127);
         } else {
             int expertiseIndex = (i * static_cast<int>(expertisesVec.size())) / cnt;
@@ -42,9 +44,7 @@ void PawnRenderer::drawWorkerPawn(const std::set<expertisesID>& expertises, Vec2
             }
         }
         int j = i + 1;
-        if(j == vertices.size()) {
-            j = 0;
-        }
+        if (j == vertices.size()) { j = 0; }
         arr.appendVertex(vertices[j], col);
         arr.appendVertex(vertices[i], col);
         arr.appendVertex(pos, col);
@@ -58,6 +58,4 @@ void PawnRenderer::drawWorkerPawn(const std::set<expertisesID>& expertises, Vec2
     arr.draw(window);
 }
 
-PawnRenderer::PawnRenderer(sf::RenderWindow& window) : window(window) {
-
-}
+PawnRenderer::PawnRenderer(sf::RenderWindow& window) : window(window) {}

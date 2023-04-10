@@ -7,7 +7,7 @@
 
 #include "Vector.h"
 
-template <typename T>
+template<typename T>
 struct Rect2 {
     Vector2<T> pos;
     Vector2<T> size;
@@ -19,4 +19,4 @@ struct Rect2 {
 using Rect2f = Rect2<float>;
 using Rect2i = Rect2<int>;
 
-#endif //PAWNMANAGER_RECT_H
+#endif//PAWNMANAGER_RECT_H

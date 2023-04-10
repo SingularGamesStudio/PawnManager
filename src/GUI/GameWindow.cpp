@@ -4,6 +4,4 @@
 
 #include "GameWindow.h"
 
-void GameWindow::updateAndRender() {
-
-}
+void GameWindow::updateAndRender() {}

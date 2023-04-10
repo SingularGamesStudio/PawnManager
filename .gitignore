@@ -1048,3 +1048,5 @@ dkms.conf
 
 #Test Files
 dlib*
+
+.idea/*

@@ -1,22 +1,18 @@
 #ifndef FIGHTERPAWN_H
 #define FIGHTERPAWN_H
 
-#include "Pawn.h"
-
 #include <cmath>
 #include <vector>
 
-enum class FighterPawnType{
-    DummyMonk,
-    DummySwordsman,
-    DummNotFound
-};
+#include "Pawn.h"
+
+enum class FighterPawnType { DummyMonk, DummySwordsman, DummNotFound };
 
 class Entity;
 
 class ResourceEntity;
 
-class FighterPawn : public Pawn{
+class FighterPawn : public Pawn {
 public:
     double atk;
     double speed;
@@ -52,4 +48,4 @@ public:
     FighterPawnType getType() override;
     DummySwordsman(Task task, bool _travelling, Resource resource, Player* Owner, Building* dest, Building* in);
 };
-#endif //FIGHTERPAWN_H
+#endif//FIGHTERPAWN_H

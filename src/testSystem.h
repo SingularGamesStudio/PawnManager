@@ -10,4 +10,4 @@
 Player* initTest();
 
 void tick(double deltaTime);
-#endif //PAWNMANAGER_TESTSYSTEM_H
+#endif//PAWNMANAGER_TESTSYSTEM_H

@@ -5,14 +5,15 @@
 #ifndef PAWNMANAGER_BUILDINGRENDERER_H
 #define PAWNMANAGER_BUILDINGRENDERER_H
 
+#include "Rect.h"
 #include "SFML/Graphics/RenderWindow.hpp"
 #include "Vector.h"
-#include "Rect.h"
 
 class Building;
 
 class BuildingRenderer {
     sf::RenderWindow& window;
+
 public:
     explicit BuildingRenderer(sf::RenderWindow& window);
     void drawBuilding(Building* b, Vec2f pos);
@@ -20,4 +21,4 @@ public:
 };
 
 
-#endif //PAWNMANAGER_BUILDINGRENDERER_H
+#endif//PAWNMANAGER_BUILDINGRENDERER_H

@@ -12,4 +12,4 @@ public:
 };
 
 
-#endif //PAWNMANAGER_GAMEWINDOW_H
+#endif//PAWNMANAGER_GAMEWINDOW_H

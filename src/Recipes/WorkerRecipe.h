@@ -2,7 +2,5 @@
 #define WORKERRECIPE_H
 #include "Recipe.h"
 
-class WorkerRecipe:Recipe {
-
-};
-#endif //WORKERRECIPE_H
+class WorkerRecipe : Recipe {};
+#endif//WORKERRECIPE_H

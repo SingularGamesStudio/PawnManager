@@ -1,11 +1,11 @@
 #ifndef PAWN_H
 #define PAWN_H
 
+#include <utility>
+
 #include "../../Resource.h"
 #include "../../Task.h"
 #include "../Entity.h"
-
-#include <utility>
 
 class Building;
 
@@ -19,7 +19,7 @@ public:
     bool travelling;
     double speed = 0.3;
 
-    void drop(Building* in, std::pair<double, double> pos = { 0,0 });
+    void drop(Building* in, std::pair<double, double> pos = {0, 0});
 
     void destroy();
 
@@ -35,4 +35,4 @@ public:
 
     virtual void tick(double deltaTime);
 };
-#endif //PAWN_H
+#endif//PAWN_H

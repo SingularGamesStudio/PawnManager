@@ -3,11 +3,13 @@
 //
 
 #include "ResourceRenderer.h"
-#include "SFML/Window.hpp"
-#include "VertexArray.h"
-#include "../Entities/Pawns/WorkerPawn.h"
+
 #include <cmath>
 #include <numbers>
+
+#include "../Entities/Pawns/WorkerPawn.h"
+#include "SFML/Window.hpp"
+#include "VertexArray.h"
 
 void ResourceRenderer::drawResource(Resource r, Vec2f pos, float rotation) {
     std::vector<Vec2f> vertices;
@@ -24,7 +26,7 @@ void ResourceRenderer::drawResource(Resource r, Vec2f pos, float rotation) {
             cnt = 4;
             break;
     }
-    for(int i = 0; i < cnt; ++i) {
+    for (int i = 0; i < cnt; ++i) {
         float angle = static_cast<float>(i) * 2 * std::numbers::pi_v<float> / cnt + rotation;
         float x = std::cos(angle);
         float y = std::sin(angle);
@@ -33,7 +35,7 @@ void ResourceRenderer::drawResource(Resource r, Vec2f pos, float rotation) {
     }
     VertexArray arr;
     sf::Transform t;
-    for(int i = 0; i < vertices.size(); ++i) {
+    for (int i = 0; i < vertices.size(); ++i) {
         Color col = Color::Red;
         switch (r) {
 
@@ -48,9 +50,7 @@ void ResourceRenderer::drawResource(Resource r, Vec2f pos, float rotation) {
                 break;
         }
         int j = i + 1;
-        if(j == vertices.size()) {
-            j = 0;
-        }
+        if (j == vertices.size()) { j = 0; }
         arr.appendVertex(vertices[j], col);
         arr.appendVertex(vertices[i], col);
         arr.appendVertex(pos, col);
@@ -64,6 +64,4 @@ void ResourceRenderer::drawResource(Resource r, Vec2f pos, float rotation) {
     arr.draw(window);
 }
 
-ResourceRenderer::ResourceRenderer(sf::RenderWindow& window) : window(window) {
-
-}
+ResourceRenderer::ResourceRenderer(sf::RenderWindow& window) : window(window) {}

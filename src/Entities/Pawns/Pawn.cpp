@@ -1,7 +1,8 @@
+#include "Pawn.h"
+
 #include "../../Resource.h"
 #include "../Buildings/Building.h"
 #include "../ResourceEntity.h"
-#include "Pawn.h"
 
 void Pawn::drop(Building* in, std::pair<double, double> pos) {
     if (in != nullptr && holding != Resource::DummyNothing) {
@@ -9,20 +10,17 @@ void Pawn::drop(Building* in, std::pair<double, double> pos) {
         holding = Resource::DummyNothing;
         return;
     }
-    if (holding != Resource::DummyNothing)
-        ResourceEntity(holding, pos);
+    if (holding != Resource::DummyNothing) ResourceEntity(holding, pos);
 }
 
 void Pawn::destroy() {
     if (positionBuilding != nullptr && holding != Resource::DummyNothing) {
         drop(positionBuilding, position);
-    }
-    else if (holding != Resource::DummyNothing) {
+    } else if (holding != Resource::DummyNothing) {
         drop(positionBuilding, position);
     }
 
     ///TODO task not done... god object taskmanager not happy :(
-
 }
 
 void Pawn::GetOutOfBuilding() {
@@ -41,18 +39,10 @@ void Pawn::GetIntoBuilding(Building* to) {
     }
 }
 
-void Pawn::beIngridient() {
-    assignTask(Task(TaskID::BeProcessed, positionBuilding));
-}
+void Pawn::beIngridient() { assignTask(Task(TaskID::BeProcessed, positionBuilding)); }
 
-void Pawn::stopBeingIngridient() {
-    assignTask(Task(TaskID::Idle, positionBuilding));
-}
+void Pawn::stopBeingIngridient() { assignTask(Task(TaskID::Idle, positionBuilding)); }
 
-void Pawn::moveToBuilding(Building* toMove) {
-    throw("How did we get here?(moveToBuilding)");
-}
+void Pawn::moveToBuilding(Building* toMove) { throw("How did we get here?(moveToBuilding)"); }
 
-void Pawn::tick(double deltaTime) {
-    throw("How did we get here?(tick)");
-}
+void Pawn::tick(double deltaTime) { throw("How did we get here?(tick)"); }

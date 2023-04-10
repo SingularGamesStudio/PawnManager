@@ -1,8 +1,8 @@
 #ifndef RECIPE_H
 #define RECIPE_H
-#include <vector>
 #include <cassert>
-#include<set>
+#include <set>
+#include <vector>
 
 class CraftBuilding;
 class Pawn;
@@ -18,6 +18,7 @@ private:
     std::vector<Pawn*> procPawns;
     std::vector<Resource> procResources;
     double progress;
+
 public:
     static Recipe none();
 
@@ -43,6 +44,5 @@ public:
     std::vector<Resource> outResources;
 
     float duration;
-
 };
-#endif //RECIPE_H
+#endif//RECIPE_H

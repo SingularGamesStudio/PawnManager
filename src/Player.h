@@ -1,9 +1,10 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
+#include <vector>
+
 #include "Recipes/Recipe.h"
 #include "Task.h"
-#include <vector>
 
 class Building;
 class Pawn;
@@ -14,23 +15,21 @@ struct PendingTask {
 
     virtual bool checkPawn() = 0;
 
-    virtual bool execute()=0;
+    virtual bool execute() = 0;
 
     bool avaliable(Player* owner) {
-        if(!checkPawn())
-            return false;
-        if(task.id==TaskID::Transport){
+        if (!checkPawn()) return false;
+        if (task.id == TaskID::Transport) {
 
-        } else return task.avaliable(owner);
+        } else
+            return task.avaliable(owner);
     }
 };
 
-struct FighterPendingTask:public PendingTask {
+struct FighterPendingTask : public PendingTask {
     FighterPawnType pawnType;
 
-    FighterPendingTask(Task t, FighterPawnType type) : pawnType(type) {
-        task = t;
-    }
+    FighterPendingTask(Task t, FighterPawnType type) : pawnType(type) { task = t; }
 
     bool execute() override {
         ///TO DO
@@ -41,7 +40,7 @@ struct FighterPendingTask:public PendingTask {
 
 class Player {
 public:
-    Player(){}
+    Player() {}
     Building* hub;
     std::vector<Pawn*> pawns;
     std::vector<PendingTask> tasks;
@@ -50,4 +49,4 @@ public:
 
     bool checkRecipe(Recipe& recipe);
 };
-#endif //PLAYER_H
+#endif//PLAYER_H

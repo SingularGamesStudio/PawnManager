@@ -1,19 +1,18 @@
 #ifndef WORKERPAWN_H
 #define WORKERPAWN_H
 
-#include "Pawn.h"
-
 #include <cstddef>
 #include <queue>
 #include <set>
 #include <unordered_map>
 #include <vector>
 
-enum class expertisesID{DummySmeltery, DummyMetalworking, DummtTrainership};
+#include "Pawn.h"
 
-class WorkerPawn: public Pawn{
+enum class expertisesID { DummySmeltery, DummyMetalworking, DummtTrainership };
+
+class WorkerPawn : public Pawn {
 public:
-
     std::set<expertisesID> expertises;
     bool toDrop;
     bool toTake;
@@ -29,4 +28,4 @@ public:
     void tick(double deltaTime) override;
 };
 
-#endif //WORKERPAWN_H
+#endif//WORKERPAWN_H

@@ -5,13 +5,14 @@
 #ifndef PAWNMANAGER_VERTEXARRAY_H
 #define PAWNMANAGER_VERTEXARRAY_H
 
-#include "SFML/Graphics/VertexArray.hpp"
-#include "Vector.h"
 #include "Color.h"
 #include "SFML/Graphics/RenderWindow.hpp"
+#include "SFML/Graphics/VertexArray.hpp"
+#include "Vector.h"
 
 class VertexArray {
     sf::VertexArray arr;
+
 public:
     VertexArray();
     void appendVertex(Vec2f pos, Color col);
@@ -19,4 +20,4 @@ public:
 };
 
 
-#endif //PAWNMANAGER_VERTEXARRAY_H
+#endif//PAWNMANAGER_VERTEXARRAY_H
