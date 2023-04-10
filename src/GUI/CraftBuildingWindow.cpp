@@ -16,7 +16,7 @@ CraftBuildingWindow::CraftBuildingWindow(int id) : id(id) {
                                          [id=id](){
         ptr<CraftBuilding> p(id);
         Recipe* r = p->recipes[0];
-        PawnManagerClient::player->manager.startRecipe(r,p);
+        PawnManagerClient::player->manager.startRecipe(r,static_cast<ptr<Building>>(p));
         PawnManagerClient::winManager.popWindow();
     }));
 }

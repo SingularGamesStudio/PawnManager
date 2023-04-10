@@ -95,7 +95,7 @@ void FighterPawn::tick(double deltaTime) {
     double deltaY = fabs(position.second - dest.second);
     double wholeDelta = deltaX * deltaX + deltaY * deltaY;
     if(toAttack && wholeDelta <= currentTask.destination->radius){
-        attack(currentTask.destination);
+        attack(static_cast<ptr<Entity>>(currentTask.destination));
         if (currentTask.destination->hp <= 0){
             toAttack = false;
             currentTask = Task(TaskID::Move, owner->hub);

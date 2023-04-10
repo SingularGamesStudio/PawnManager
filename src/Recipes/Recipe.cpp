@@ -93,8 +93,8 @@ bool Recipe::checkRequirements(ptr<CraftBuilding> place, bool start){
         procPawns = usedPawns;
         workers = workingPawns;
 
-        for(ptr<Pawn> p:usedPawns){p->beIngridient();}
-        for(ptr<WorkerPawn> p:workingPawns){static_cast<ptr<Pawn>>(p)->beIngridient();}
+        //for(ptr<Pawn> p:usedPawns){p->beIngridient();}
+        //for(ptr<WorkerPawn> p:workingPawns){static_cast<ptr<Pawn>>(p)->beIngridient();}
     }
     return true;
 }

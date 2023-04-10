@@ -64,7 +64,7 @@ struct ptr{
     }
 
     template<typename Q>
-    operator ptr<Q>() const {
+    explicit operator ptr<Q>() const {
         return ptr<Q>(id);
     }
 };

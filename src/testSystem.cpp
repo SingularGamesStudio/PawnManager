@@ -25,6 +25,7 @@ ptr<Player> initTest() {
     for(int i = 0; i<5; i++){
         ptr<WorkerPawn> pawn = makeptr<WorkerPawn>();
         pawn->create(player->hub);
+        pawn->expertises.insert(expertisesID::DummySmeltery);
         player->pawns.push_back(static_cast<ptr<Pawn>>(pawn));
     }
     crafter = makeptr<CraftBuilding>(std::make_pair(100, 120), player, 100);
@@ -32,8 +33,10 @@ ptr<Player> initTest() {
     crafter->parent = player->hub;
     recipe = new CraftRecipe();
     recipe->inResources.push_back(Resource::DummyOre);
+    //recipe->inWorkers.push_back(expertisesID::DummySmeltery);
     recipe->outResources.push_back(Resource::DummyIngot);
     recipe->duration = 5;
+    crafter->recipes.push_back(recipe);
     return player;
 }
 
@@ -46,13 +49,8 @@ void tickBuildings(ptr<Building> place, double deltaTime) {
 std::mt19937 rnd(42);
 void tick(double deltaTime) {
     player->tick();
-    if(crafter->current== nullptr)
-        crafter->assignRecipe(dynamic_cast<Recipe*>(recipe));
     for(ptr<Pawn> p:player->pawns){
         p->tick(deltaTime);
-        if(p->currentTask.id==TaskID::Idle && rnd()%5000==0){
-            p->assignTask(Task(TaskID::Transport, player->hub, static_cast<ptr<Building>>(crafter), Resource::DummyOre));
-        }
     }
     tickBuildings(player->hub, deltaTime);
 }
