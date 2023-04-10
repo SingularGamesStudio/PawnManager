@@ -3,7 +3,7 @@
 //
 
 #include "BuildingRenderer.h"
-#include "SFML/Graphics/VertexArray.hpp"
+#include "VertexArray.h"
 #include "../Entities/Buildings/Building.h"
 #include "PawnManagerClient.h"
 #include <cmath>
@@ -25,29 +25,28 @@ void BuildingRenderer::drawBuilding(Building* b, Vec2f pos) {
         vertices.push_back(Vec2f(x * (radius - 2), y * (radius - 2)) + pos);
         outerVertices.push_back(Vec2f(x * radius, y * radius) + pos);
     }
-    sf::VertexArray arr;
+    VertexArray arr;
     sf::Transform t;
-    arr.setPrimitiveType(sf::PrimitiveType::Triangles);
     for(int i = 0; i < vertices.size(); ++i) {
-        sf::Color col = sf::Color::White;
+        Color col = Color::White;
         if(dynamic_cast<CraftBuilding*>(b) != nullptr) {
-            col = sf::Color::Green;
+            col = Color::Green;
         }
         int j = i + 1;
         if(j == vertices.size()) {
             j = 0;
         }
-        arr.append(sf::Vertex((sf::Vector2f)vertices[j], col));
-        arr.append(sf::Vertex((sf::Vector2f)vertices[i], col));
-        arr.append(sf::Vertex((sf::Vector2f)pos, col));
-        arr.append(sf::Vertex((sf::Vector2f)vertices[j], sf::Color::Black));
-        arr.append(sf::Vertex((sf::Vector2f)outerVertices[j], sf::Color::Black));
-        arr.append(sf::Vertex((sf::Vector2f)outerVertices[i], sf::Color::Black));
-        arr.append(sf::Vertex((sf::Vector2f)vertices[j], sf::Color::Black));
-        arr.append(sf::Vertex((sf::Vector2f)outerVertices[i], sf::Color::Black));
-        arr.append(sf::Vertex((sf::Vector2f)vertices[i], sf::Color::Black));
+        arr.appendVertex(vertices[j], col);
+        arr.appendVertex(vertices[i], col);
+        arr.appendVertex(pos, col);
+        arr.appendVertex(vertices[j], Color::Black);
+        arr.appendVertex(outerVertices[j], Color::Black);
+        arr.appendVertex(outerVertices[i], Color::Black);
+        arr.appendVertex(vertices[j], Color::Black);
+        arr.appendVertex(outerVertices[i], Color::Black);
+        arr.appendVertex(vertices[i], Color::Black);
     }
-    window.draw(arr);
+    arr.draw(window);
 }
 
 void BuildingRenderer::drawEdge(Building* a, Building* b, Vec2f center) {
@@ -57,14 +56,13 @@ void BuildingRenderer::drawEdge(Building* a, Building* b, Vec2f center) {
     Vec2f orth(delta.y, -delta.x);
     float l = abs(orth);
     orth *= (5.0f / l);
-    sf::VertexArray arr;
-    arr.setPrimitiveType(sf::Triangles);
-    sf::Color c(127, 127, 127);
-    arr.append(sf::Vertex((sf::Vector2f)(aPos + orth), c));
-    arr.append(sf::Vertex((sf::Vector2f)(bPos + orth), c));
-    arr.append(sf::Vertex((sf::Vector2f)(bPos - orth), c));
-    arr.append(sf::Vertex((sf::Vector2f)(aPos + orth), c));
-    arr.append(sf::Vertex((sf::Vector2f)(bPos - orth), c));
-    arr.append(sf::Vertex((sf::Vector2f)(aPos - orth), c));
-    window.draw(arr);
+    VertexArray arr;
+    Color c(127, 127, 127);
+    arr.appendVertex((aPos + orth), c);
+    arr.appendVertex((bPos + orth), c);
+    arr.appendVertex((bPos - orth), c);
+    arr.appendVertex((aPos + orth), c);
+    arr.appendVertex((bPos - orth), c);
+    arr.appendVertex((aPos - orth), c);
+    arr.draw(window);
 }

@@ -4,7 +4,7 @@
 
 #include "ResourceRenderer.h"
 #include "SFML/Window.hpp"
-#include "SFML/Graphics/VertexArray.hpp"
+#include "VertexArray.h"
 #include "../Entities/Pawns/WorkerPawn.h"
 #include <cmath>
 #include <numbers>
@@ -31,38 +31,37 @@ void ResourceRenderer::drawResource(Resource r, Vec2f pos, float rotation) {
         vertices.push_back(Vec2f(x * 5.0f, y * 5.0f) + pos);
         outerVertices.push_back(Vec2f(x * 7.0f, y * 7.0f) + pos);
     }
-    sf::VertexArray arr;
+    VertexArray arr;
     sf::Transform t;
-    arr.setPrimitiveType(sf::PrimitiveType::Triangles);
     for(int i = 0; i < vertices.size(); ++i) {
-        sf::Color col = sf::Color::Red;
+        Color col = Color::Red;
         switch (r) {
 
             case Resource::DummyOre:
-                col = sf::Color(192, 192, 192);
+                col = Color(192, 192, 192);
                 break;
             case Resource::DummyIngot:
-                col = sf::Color(255, 255, 255);
+                col = Color(255, 255, 255);
                 break;
             case Resource::DummyWeapon:
-                col = sf::Color::Red;
+                col = Color::Red;
                 break;
         }
         int j = i + 1;
         if(j == vertices.size()) {
             j = 0;
         }
-        arr.append(sf::Vertex((sf::Vector2f)vertices[j], col));
-        arr.append(sf::Vertex((sf::Vector2f)vertices[i], col));
-        arr.append(sf::Vertex((sf::Vector2f)pos, col));
-        arr.append(sf::Vertex((sf::Vector2f)vertices[j], sf::Color::Black));
-        arr.append(sf::Vertex((sf::Vector2f)outerVertices[j], sf::Color::Black));
-        arr.append(sf::Vertex((sf::Vector2f)outerVertices[i], sf::Color::Black));
-        arr.append(sf::Vertex((sf::Vector2f)vertices[j], sf::Color::Black));
-        arr.append(sf::Vertex((sf::Vector2f)outerVertices[i], sf::Color::Black));
-        arr.append(sf::Vertex((sf::Vector2f)vertices[i], sf::Color::Black));
+        arr.appendVertex(vertices[j], col);
+        arr.appendVertex(vertices[i], col);
+        arr.appendVertex(pos, col);
+        arr.appendVertex(vertices[j], Color::Black);
+        arr.appendVertex(outerVertices[j], Color::Black);
+        arr.appendVertex(outerVertices[i], Color::Black);
+        arr.appendVertex(vertices[j], Color::Black);
+        arr.appendVertex(outerVertices[i], Color::Black);
+        arr.appendVertex(vertices[i], Color::Black);
     }
-    window.draw(arr);
+    arr.draw(window);
 }
 
 ResourceRenderer::ResourceRenderer(sf::RenderWindow& window) : window(window) {
