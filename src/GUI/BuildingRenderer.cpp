@@ -46,8 +46,8 @@ void BuildingRenderer::drawBuilding(Building* b, Vec2f pos) {
 }
 
 void BuildingRenderer::drawEdge(Building* a, Building* b, Vec2f center) {
-    Vec2f aPos = Vec2f(a->position.first, a->position.second) * PawnManagerClient::renderScale + center;
-    Vec2f bPos = Vec2f(b->position.first, b->position.second) * PawnManagerClient::renderScale + center;
+    Vec2f aPos = Vec2f(a->position.x, a->position.y) * PawnManagerClient::renderScale + center;
+    Vec2f bPos = Vec2f(b->position.x, b->position.y) * PawnManagerClient::renderScale + center;
     Vec2f delta = bPos - aPos;
     Vec2f orth(delta.y, -delta.x);
     float l = abs(orth);

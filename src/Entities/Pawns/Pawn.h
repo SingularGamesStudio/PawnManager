@@ -3,8 +3,8 @@
 
 #include <utility>
 
-#include "../../Resource.h"
-#include "../../Task.h"
+#include "../../Core/Resource.h"
+#include "../../Core/Task.h"
 #include "../Entity.h"
 
 class Building;
@@ -19,7 +19,7 @@ public:
     bool travelling;
     double speed = 0.3;
 
-    void drop(Building* in, std::pair<double, double> pos = {0, 0});
+    void drop(Building* in, Position pos = {0, 0});
 
     void destroy();
 

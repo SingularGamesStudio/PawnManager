@@ -1,11 +1,10 @@
 #include "Player.h"
 
 #include <set>
-#include <vector>
 
-#include "Entities/Buildings/Building.h"
-#include "Entities/Pawns/FighterPawn.h"
-#include "Entities/Pawns/WorkerPawn.h"
+#include "../Entities/Buildings/Building.h"
+#include "../Entities/Pawns/FighterPawn.h"
+#include "../Entities/Pawns/WorkerPawn.h"
 
 void dfs(Building* vertex, std::multiset<Resource>& resources) {
     for (Resource r: vertex->resources) {
@@ -16,6 +15,14 @@ void dfs(Building* vertex, std::multiset<Resource>& resources) {
         if (resources.empty()) return;
         dfs(next, resources);
     }
+}
+
+bool PendingTask::avaliable(Player* owner) {
+    if (!checkPawn()) return false;
+    if (task.id == TaskID::Transport) {
+
+    } else
+        return task.avaliable(owner);
 }
 
 bool Player::checkRecipe(Recipe& recipe) {

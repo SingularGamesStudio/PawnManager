@@ -3,7 +3,7 @@
 
 #include <vector>
 
-#include "Recipes/Recipe.h"
+#include "../Recipes/Recipe.h"
 #include "Task.h"
 
 class Building;
@@ -17,13 +17,7 @@ struct PendingTask {
 
     virtual bool execute() = 0;
 
-    bool avaliable(Player* owner) {
-        if (!checkPawn()) return false;
-        if (task.id == TaskID::Transport) {
-
-        } else
-            return task.avaliable(owner);
-    }
+    bool avaliable(Player* owner);
 };
 
 struct FighterPendingTask : public PendingTask {
@@ -32,7 +26,7 @@ struct FighterPendingTask : public PendingTask {
     FighterPendingTask(Task t, FighterPawnType type) : pawnType(type) { task = t; }
 
     bool execute() override {
-        ///TO DO
+        ///TODO
         return false;
     }
 };

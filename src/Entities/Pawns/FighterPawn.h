@@ -16,7 +16,7 @@ class FighterPawn : public Pawn {
 public:
     double atk;
     double speed;
-    std::pair<double, double> destinationPosition;
+    Position destinationPosition;
 
     virtual void attack(Entity* attacked);
 
@@ -27,7 +27,7 @@ public:
     void moveToResource(ResourceEntity* toGet);
     void takePresentResource(ResourceEntity* toTake);
 
-    void moveToPosition(std::pair<double, double> pos);
+    void moveToPosition(Position pos);
     void moveToBuilding(Building* dest) override;
 
     void getResource(ResourceEntity* toGet);

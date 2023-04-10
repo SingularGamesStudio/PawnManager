@@ -5,7 +5,7 @@
 #ifndef PAWNMANAGER_PAWNMANAGERCLIENT_H
 #define PAWNMANAGER_PAWNMANAGERCLIENT_H
 
-#include "../Player.h"
+#include "../Core/Player.h"
 #include "BuildingRenderer.h"
 #include "GameWindowManager.h"
 #include "PawnRenderer.h"

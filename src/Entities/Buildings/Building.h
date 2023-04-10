@@ -3,7 +3,7 @@
 #include <set>
 #include <vector>
 
-#include "../../Resource.h"
+#include "../../Core/Resource.h"
 #include "../Entity.h"
 
 class Pawn;
@@ -14,7 +14,7 @@ private:
 
 public:
     constexpr static const double baseBuildingRadius = 30;
-    Building(std::pair<double, double> pos, Player* owner, unsigned int hp, double radius = baseBuildingRadius, Building* parent = nullptr)
+    Building(Position pos, Player* owner, unsigned int hp, double radius = baseBuildingRadius, Building* parent = nullptr)
         : Entity(pos, owner, hp, radius),
           children(),
           resources(),

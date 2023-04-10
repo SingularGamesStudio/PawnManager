@@ -1,6 +1,6 @@
 #include "FighterPawn.h"
 
-#include "../../Player.h"
+#include "../../Core/Player.h"
 #include "../Buildings/Building.h"
 #include "../Entity.h"
 #include "../ResourceEntity.h"
@@ -63,7 +63,7 @@ void FighterPawn::takePresentResource(ResourceEntity* toTake) {
     toTake->destroy();
 }
 
-void FighterPawn::moveToPosition(std::pair<double, double> pos) {
+void FighterPawn::moveToPosition(Position pos) {
     GetOutOfBuilding();
     destinationPosition = pos;
 }
@@ -74,9 +74,9 @@ void FighterPawn::moveToBuilding(Building* dest) {
 }
 
 void FighterPawn::tick(double deltaTime) {
-    if (fabs(position.first - destinationPosition.first) < 1e-6 && fabs(position.second - destinationPosition.second) > 1e-6) {
-        position.first += (destination->position.first - destination->position.first) * speed * deltaTime;
-        position.second += (destination->position.second - destination->position.second) * speed * deltaTime;
+    if (fabs(position.x - destinationPosition.x) < 1e-6 && fabs(position.y - destinationPosition.y) > 1e-6) {
+        position.x += (destination->position.x - destination->position.x) * speed * deltaTime;
+        position.y += (destination->position.y - destination->position.y) * speed * deltaTime;
 
     } else
         travelling = false;

@@ -1,10 +1,10 @@
 #include "Pawn.h"
 
-#include "../../Resource.h"
+#include "../../Core/Resource.h"
 #include "../Buildings/Building.h"
 #include "../ResourceEntity.h"
 
-void Pawn::drop(Building* in, std::pair<double, double> pos) {
+void Pawn::drop(Building* in, Position pos) {
     if (in != nullptr && holding != Resource::DummyNothing) {
         in->addResource(holding);
         holding = Resource::DummyNothing;

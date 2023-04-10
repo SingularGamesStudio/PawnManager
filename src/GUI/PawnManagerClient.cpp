@@ -7,10 +7,10 @@
 #include <ctime>
 #include <random>
 
+#include "../Core/testSystem.h"
 #include "../Entities/Buildings/Building.h"
 #include "../Entities/Pawns/Pawn.h"
 #include "../Entities/Pawns/WorkerPawn.h"
-#include "../testSystem.h"
 #include "MainMenuWindow.h"
 #include "SFML/Window.hpp"
 

@@ -1,14 +1,8 @@
 #include "Recipe.h"
 
-#include <cassert>
-#include <set>
-#include <vector>
-
 #include "../Entities/Buildings/CraftBuilding.h"
 #include "../Entities/Pawns/FighterPawn.h"
-#include "../Entities/Pawns/Pawn.h"
 #include "../Entities/Pawns/WorkerPawn.h"
-#include "../Resource.h"
 
 
 Recipe Recipe::none() { return Recipe(); }

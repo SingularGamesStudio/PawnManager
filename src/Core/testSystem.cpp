@@ -2,11 +2,11 @@
 
 #include <random>
 
-#include "Entities/Buildings/Building.h"
-#include "Entities/Buildings/CraftBuilding.h"
-#include "Entities/Pawns/WorkerPawn.h"
+#include "../Entities/Buildings/Building.h"
+#include "../Entities/Buildings/CraftBuilding.h"
+#include "../Entities/Pawns/WorkerPawn.h"
+#include "../Recipes/Recipe.h"
 #include "Player.h"
-#include "Recipes/Recipe.h"
 
 
 Recipe* recipe;
