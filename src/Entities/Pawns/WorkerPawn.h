@@ -21,6 +21,8 @@ public:
 
     void create(Building* placeOfCreation);
 
+    void assignTaskGet(const Task& toAssign);
+    void assignTaskTransport(const Task& toAssign);
     void assignTask(const Task& toAssign) override;
 
     void moveToBuilding(Building* dest) override;

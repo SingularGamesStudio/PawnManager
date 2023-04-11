@@ -14,18 +14,24 @@ void WorkerPawn::create(Building* placeOfCreation) {
     GetIntoBuilding(placeOfCreation);
 }
 
+void WorkerPawn::assignTaskGet(const Task& toAssign) {
+    moveToBuilding(toAssign.destination);
+    needed = toAssign.object;
+    toTake = true;
+}
+void WorkerPawn::assignTaskTransport(const Task& toAssign){
+    moveToBuilding(toAssign.destination);
+    toTake = true;
+    needed = toAssign.object;
+}
 void WorkerPawn::assignTask(const Task& toAssign) {
     currentTask = toAssign;
     switch (toAssign.id) {
         case TaskID::Get:
-            moveToBuilding(toAssign.destination);
-            needed = toAssign.object;
-            toTake = true;
+            assignTaskGet(toAssign);
             break;
         case TaskID::Transport:
-            moveToBuilding(toAssign.destination);
-            toTake = true;
-            needed = toAssign.object;
+            assignTaskTransport(toAssign);
             break;
         case TaskID::Move:
             moveToBuilding(toAssign.destination);
