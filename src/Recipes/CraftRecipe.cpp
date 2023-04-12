@@ -65,3 +65,10 @@ void CraftRecipe::deserialize(const std::vector<uint8_t>& data) {
     pos += unparseVector(ptr + pos, outFighters);
     pos += unparseVector(ptr + pos, outResources);
 }
+
+Recipe* CraftRecipe::cloneSelf() {
+    CraftRecipe* res = new CraftRecipe();
+    res->outResources = outResources;
+    res->outFighters = outFighters;
+    return res;
+}

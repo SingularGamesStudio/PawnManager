@@ -3,19 +3,21 @@
 #include <iostream>
 
 
-void CraftBuilding::destroy() {}
+void CraftBuilding::destroy() {
+    if (current) delete current;
+}
 
 void CraftBuilding::stopRecipe() {
     if (current == nullptr) return;
     current->cancel();
+    delete current;
     current = nullptr;
 }
 
 bool CraftBuilding::assignRecipe(Recipe* recipe) {
     stopRecipe();
     if (!recipe->checkRequirements(ptr<CraftBuilding>(id))) return false;
-    //std::cout << "recipe started\n";
-    current = recipe;
+    current = recipe->clone();
     current->start(ptr<CraftBuilding>(id));
     return true;
 }

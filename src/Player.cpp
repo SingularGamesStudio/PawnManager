@@ -72,7 +72,7 @@ bool Player::TaskManager::startRecipe(Recipe* recipe, ptr<Building> where) {
 }
 
 Player::TaskManager::PendingRecipe::PendingRecipe(Recipe* recipe, ptr<Building> place, int priority)
-    : recipe(recipe),
+    : recipe(recipe->clone()),
       place(place),
       priority(priority),
       ID(IDmanager::newID()) {

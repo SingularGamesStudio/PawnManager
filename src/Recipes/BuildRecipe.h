@@ -5,6 +5,9 @@
 #include "Recipe.h"
 
 class BuildRecipe : public Recipe {
+protected:
+    Recipe* cloneSelf() override;
+
 public:
     std::pair<double, double> pos;
     BuildingIdea toBuild;

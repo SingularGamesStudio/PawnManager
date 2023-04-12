@@ -11,12 +11,11 @@
 #include "Recipes/Recipe.h"
 
 
-CraftRecipe* recipe;
 ptr<Player> player;
-ptr<CraftBuilding> crafter;
 
 ptr<Player> initTest() {
-
+    CraftRecipe* recipe;
+    ptr<CraftBuilding> crafter;
     player = makeptr<Player>();
     player->manager.owner = player;
     BuildingRegisty::init();

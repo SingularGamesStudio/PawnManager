@@ -109,7 +109,16 @@ void Recipe::tick(double deltaTime) {
     if (progress >= duration) finish();
 }
 
-Recipe *Recipe::clone() { Recipe *res = cloneSelf(); }
+Recipe *Recipe::clone() {
+    Recipe *res = cloneSelf();
+    res->progress = 0;
+    res->inResources = inResources;
+    res->inWorkers = inWorkers;
+    res->inFighters = inFighters;
+    res->duration = duration;
+    res->reqWorkers = reqWorkers;
+    return res;
+}
 
 void Recipe::cleanup(ptr<Building> where) {
     if (!where) {

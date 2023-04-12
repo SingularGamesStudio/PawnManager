@@ -24,3 +24,8 @@ void BuildRecipe::finish() {
     res.id = newid;
     cleanup(res);
 }
+
+Recipe* BuildRecipe::cloneSelf() {
+    BuildRecipe* res = new BuildRecipe(pos, toBuild.index);
+    return res;
+}
