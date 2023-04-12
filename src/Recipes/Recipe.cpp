@@ -64,13 +64,7 @@ bool Recipe::checkRequirements(ptr<CraftBuilding> place, bool start) {
                 break;
             }
         }
-        if (!ok) {
-            for (auto p: place->owner->pawns) { std::cout << (int) p->currentTask.id << "_" << p->positionBuilding.id << " "; }
-            std::cout << std::endl;
-            for (auto p: place->pawns) { std::cout << (int) p->currentTask.id << "_" << p->positionBuilding.id << " "; }
-            std::cout << std::endl;
-            return false;
-        }
+        if (!ok) { return false; }
     }
 
     for (Resource t: inResources) {

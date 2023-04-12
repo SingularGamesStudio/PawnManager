@@ -17,7 +17,6 @@ void WorkerPawn::assignTask(const Task& toAssign) {
     currentTask = toAssign;
     toTake = false;
     toDrop = false;
-    //std::cout << "task " << (int)toAssign.id << "\n";
     switch (toAssign.id) {
         case TaskID::Get:
             moveToBuilding(toAssign.destination);
@@ -26,7 +25,6 @@ void WorkerPawn::assignTask(const Task& toAssign) {
             break;
         case TaskID::Transport:
             moveToBuilding(toAssign.destination);
-            //moveToBuilding(toAssign.destination2);
             toTake = true;
             needed = toAssign.object;
             break;

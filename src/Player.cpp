@@ -99,6 +99,8 @@ void Player::TaskManager::tick() {//TODO:rewrite to mincost
             for (Resource resource: rec->needResources) {
                 ptr<Building> where = findResource(owner->hub, resource);
                 if (!where) {
+                    std::cerr << "no resource found, cancelling recipe"
+                              << "\n";
                     toClose.push_back({rec, false});
                     break;
                 }
@@ -116,7 +118,7 @@ void Player::TaskManager::tick() {//TODO:rewrite to mincost
                 for (PawnReq* p: rec->needPawns) {
                     ptr<Pawn> pawn = p->find(owner);
                     if (!pawn) {
-                        std::cout << "no pawn found"
+                        std::cerr << "no pawn found, cancelling recipe"
                                   << "\n";
                         toClose.push_back({rec, false});
                         break;
@@ -214,7 +216,6 @@ void Player::TaskManager::finishTask(Task task, ptr<Pawn> pawn) {
             task.destination2->reservedResources.insert(task.object);
             break;
         case TaskID::BeProcessed:
-            std::cout << "pawn ready\n";
             pr->movedPawns.erase(pawn);
             pr->backupNeeds.erase(pawn);
             pr->donePawns.push_back(pawn);

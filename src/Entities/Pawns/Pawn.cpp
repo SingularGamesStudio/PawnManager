@@ -30,8 +30,9 @@ void Pawn::IMNotHere() {
 }
 void Pawn::IMHere(ptr<Building> to) {
     if (to) {
-        to->addPawn(ptr<Pawn>(id));
+
         IMNotHere();
+        to->addPawn(ptr<Pawn>(id));
         positionBuilding = to;
         position = positionBuilding->position;
     }
