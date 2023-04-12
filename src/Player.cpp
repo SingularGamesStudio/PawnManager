@@ -119,7 +119,7 @@ void Player::TaskManager::tick() {//TODO:rewrite to mincost
                         toClose.push_back({rec, false});
                         break;
                     }
-                    pawn->assignTask(Task(TaskID::BeProcessed, rec->place));
+                    pawn->assignTask(Task(TaskID::BeProcessed, rec->place, ptr<Building>(), Resource::DummyNothing, rec->ID));
                     rec->movedPawns.push_back(pawn);
                 }
                 rec->needPawns.clear();
