@@ -120,10 +120,12 @@ void Player::TaskManager::tick() {//TODO:rewrite to mincost
                         break;
                     }
                     pawn->assignTask(Task(TaskID::BeProcessed, rec->place, ptr<Building>(), Resource::DummyNothing, rec->ID));
-                    rec->movedPawns.push_back(pawn);
+                    rec->movedPawns.insert(pawn);
+                    rec->backupNeeds[pawn] = p;
                 }
                 rec->needPawns.clear();
             } else if (rec->movedPawns.empty()) {
+                std::cout << "starting recipe\n";
                 toClose.push_back({rec, true});
             }
         }
@@ -148,13 +150,18 @@ void Player::TaskManager::PendingRecipe::start() {
 }
 
 Player::TaskManager::PendingRecipe::~PendingRecipe() {
-    for (ptr<Pawn> p: movedPawns) { p->assignTask(Task(TaskID::Idle)); }
+    for (PawnReq* p: needPawns) { delete p; }
+    for (ptr<Pawn> p: movedPawns) {
+        p->assignTask(Task(TaskID::Idle));
+        delete backupNeeds[p];
+    }
     for (ptr<Pawn> p: donePawns) { p->assignTask(Task(TaskID::Idle)); }
     for (Resource r: doneResources) {
         if (place->reservedResources.contains(r)) place->reservedResources.erase(place->reservedResources.find(r));
         else
             std::cerr << "when deleting PendingRecipe, trying to unreserve resource, but it is not reserved";
     }
+    delete recipe;
 }
 
 void Player::TaskManager::cancelTask(Task task, ptr<Pawn> pawn) {
@@ -172,7 +179,9 @@ void Player::TaskManager::cancelTask(Task task, ptr<Pawn> pawn) {
             pr->needResources.insert(task.object);
             break;
         case TaskID::BeProcessed:
-
+            pr->needPawns.push_back(pr->backupNeeds[pawn]);
+            pr->movedPawns.erase(pawn);
+            pr->backupNeeds.erase(pawn);
             break;
         default:
             break;
@@ -192,12 +201,16 @@ void Player::TaskManager::finishTask(Task task, ptr<Pawn> pawn) {
     switch (task.id) {
         case TaskID::Transport:
             pr->movedResources.erase(pr->movedResources.find(task.object));
+            pr->doneResources.insert(task.object);
             break;
         case TaskID::BeProcessed:
-            std::cout << "pawn ready for processing\n";
+            std::cout << "pawn ready\n";
+            pr->movedPawns.erase(pawn);
+            pr->backupNeeds.erase(pawn);
+            pr->donePawns.push_back(pawn);
             break;
         default:
-            std::cout << "pawn is not ready :(\n";
+            std::cout << "pawn is not ready :(\n";//YOU ARE NOT PREPARED
             break;
     }
 }

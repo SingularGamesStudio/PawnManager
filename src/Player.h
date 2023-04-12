@@ -44,7 +44,8 @@ public:
             std::multiset<Resource> movedResources;
             std::multiset<Resource> doneResources;
             std::vector<PawnReq*> needPawns;
-            std::vector<ptr<Pawn>> movedPawns;
+            std::set<ptr<Pawn>> movedPawns;
+            std::unordered_map<ptr<Pawn>, PawnReq*> backupNeeds;
             std::vector<ptr<Pawn>> donePawns;
 
             int ID;
