@@ -113,11 +113,13 @@ void Player::TaskManager::tick() {//TODO:rewrite to mincost
             if (!rec->needPawns.empty()) {
                 for (PawnReq* p: rec->needPawns) {
                     ptr<Pawn> pawn = p->find(owner);
-                    if (pawn) {
+                    if (!pawn) {
+                        std::cout << "no pawn found"
+                                  << "\n";
                         toClose.push_back({rec, false});
                         break;
                     }
-                    pawn->moveToBuilding(rec->place);//TODO:remake this when the method is implemented
+                    pawn->assignTask(Task(TaskID::BeProcessed, rec->place));
                     rec->movedPawns.push_back(pawn);
                 }
                 rec->needPawns.clear();
@@ -170,7 +172,7 @@ void Player::TaskManager::cancelTask(Task task, ptr<Pawn> pawn) {
             pr->needResources.insert(task.object);
             break;
         case TaskID::BeProcessed:
-            //TODO
+
             break;
         default:
             break;
@@ -192,9 +194,23 @@ void Player::TaskManager::finishTask(Task task, ptr<Pawn> pawn) {
             pr->movedResources.erase(pr->movedResources.find(task.object));
             break;
         case TaskID::BeProcessed:
-            //TODO
+            std::cout << "pawn ready for processing\n";
             break;
         default:
             break;
+    }
+}
+
+ptr<Pawn> Player::TaskManager::FighterReq::find(ptr<Player> owner) {
+    for (auto p: owner->pawns) {
+        FighterPawn* f = p.dyn_cast<FighterPawn>();
+        if (f && f->getType() == type) { return p; }
+    }
+}
+
+ptr<Pawn> Player::TaskManager::WorkerReq::find(ptr<Player> owner) {
+    for (auto p: owner->pawns) {
+        WorkerPawn* w = p.dyn_cast<WorkerPawn>();
+        if (w && w->expertises.contains(expertise)) { return p; }
     }
 }

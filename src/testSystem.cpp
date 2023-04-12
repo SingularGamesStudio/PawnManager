@@ -32,7 +32,7 @@ ptr<Player> initTest() {
     crafter->parent = player->hub;
     recipe = new CraftRecipe();
     recipe->inResources.push_back(Resource::DummyOre);
-    //recipe->inWorkers.push_back(expertisesID::DummySmeltery);
+    recipe->inWorkers.push_back(expertisesID::DummySmeltery);
     recipe->outResources.push_back(Resource::DummyIngot);
     recipe->duration = 5;
     crafter->recipes.push_back(recipe);

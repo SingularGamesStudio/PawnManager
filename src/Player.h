@@ -29,14 +29,14 @@ public:
             FighterPawnType type;
             FighterReq(FighterPawnType type) : type(type) {}
 
-            ptr<Pawn> find(ptr<Player> owner) override{};
+            ptr<Pawn> find(ptr<Player> owner) override;
         };
 
         struct WorkerReq : public PawnReq {
             expertisesID expertise;
             WorkerReq(expertisesID expertise) : expertise(expertise) {}
 
-            ptr<Pawn> find(ptr<Player> owner) override{};
+            ptr<Pawn> find(ptr<Player> owner) override;
         };
 
         struct PendingRecipe {
