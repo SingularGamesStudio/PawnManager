@@ -8,7 +8,6 @@
 #include <numbers>
 
 #include "../Entities/Pawns/WorkerPawn.h"
-#include "SFML/Window.hpp"
 #include "VertexArray.h"
 
 void PawnRenderer::drawWorkerPawn(const std::set<expertisesID>& expertises, Vec2f pos) {
@@ -23,7 +22,6 @@ void PawnRenderer::drawWorkerPawn(const std::set<expertisesID>& expertises, Vec2
         outerVertices.push_back(Vec2f(x * 12.0f, y * 12.0f) + pos);
     }
     VertexArray arr;
-    sf::Transform t;
     std::vector<expertisesID> expertisesVec(expertises.begin(), expertises.end());
     for (int i = 0; i < vertices.size(); ++i) {
         Color col;
@@ -55,7 +53,7 @@ void PawnRenderer::drawWorkerPawn(const std::set<expertisesID>& expertises, Vec2
         arr.appendVertex(outerVertices[i], Color::Black);
         arr.appendVertex(vertices[i], Color::Black);
     }
-    arr.draw(window);
+    window.draw(arr);
 }
 
-PawnRenderer::PawnRenderer(sf::RenderWindow& window) : window(window) {}
+PawnRenderer::PawnRenderer(RenderTarget& window) : window(window) {}

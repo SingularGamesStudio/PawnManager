@@ -13,11 +13,15 @@
 #include "ResourceRenderer.h"
 #include "SFML/Graphics/RenderWindow.hpp"
 #include "Vector.h"
+#include "RenderTarget.h"
 
 class PawnManagerClient {
 private:
     sf::RenderWindow window;
     sf::View view;
+public:
+    RenderTarget renderTarget;
+private:
     PawnRenderer pawnRenderer;
     BuildingRenderer buildingRenderer;
     ResourceRenderer resourceRenderer;

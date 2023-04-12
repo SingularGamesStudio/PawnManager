@@ -9,7 +9,8 @@ FetchContent_Declare(SFML
 FetchContent_MakeAvailable(SFML)
 
 add_executable(PawnManagerGUI BuildingRenderer.cpp GameWindow.cpp GameWindowManager.cpp MainMenuWindow.cpp
-        PawnManagerClient.cpp PawnRenderer.cpp ResourceRenderer.cpp ClientMain.cpp VertexArray.cpp Color.cpp)
+        PawnManagerClient.cpp PawnRenderer.cpp ResourceRenderer.cpp ClientMain.cpp VertexArray.cpp Color.cpp
+        RenderTarget.cpp)
 
 target_link_libraries(PawnManagerGUI PRIVATE sfml-graphics PawnManager)
 target_compile_features(PawnManagerGUI PRIVATE cxx_std_20)

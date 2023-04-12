@@ -17,10 +17,12 @@
 PawnManagerClient::PawnManagerClient()
     : window(sf::VideoMode(800, 600), "Pawn Manager"),
       view(window.getDefaultView()),
+      renderTarget(window),
       winManager(),
-      pawnRenderer(window),
-      buildingRenderer(window),
-      resourceRenderer(window) {
+      pawnRenderer(renderTarget),
+      buildingRenderer(renderTarget),
+      resourceRenderer(renderTarget)
+      {
     winManager.pushWindow(new MainMenuWindow());
 }
 

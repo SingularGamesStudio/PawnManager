@@ -11,7 +11,7 @@
 #include "PawnManagerClient.h"
 #include "VertexArray.h"
 
-BuildingRenderer::BuildingRenderer(sf::RenderWindow& window) : window(window) {}
+BuildingRenderer::BuildingRenderer(RenderTarget& window) : window(window) {}
 
 void BuildingRenderer::drawBuilding(Building* b, Vec2f pos) {
     std::vector<Vec2f> vertices;
@@ -26,7 +26,6 @@ void BuildingRenderer::drawBuilding(Building* b, Vec2f pos) {
         outerVertices.push_back(Vec2f(x * radius, y * radius) + pos);
     }
     VertexArray arr;
-    sf::Transform t;
     for (int i = 0; i < vertices.size(); ++i) {
         Color col = Color::White;
         if (dynamic_cast<CraftBuilding*>(b) != nullptr) { col = Color::Green; }
@@ -42,7 +41,7 @@ void BuildingRenderer::drawBuilding(Building* b, Vec2f pos) {
         arr.appendVertex(outerVertices[i], Color::Black);
         arr.appendVertex(vertices[i], Color::Black);
     }
-    arr.draw(window);
+    window.draw(arr);
 }
 
 void BuildingRenderer::drawEdge(Building* a, Building* b, Vec2f center) {
@@ -60,5 +59,5 @@ void BuildingRenderer::drawEdge(Building* a, Building* b, Vec2f center) {
     arr.appendVertex((aPos + orth), c);
     arr.appendVertex((bPos - orth), c);
     arr.appendVertex((aPos - orth), c);
-    arr.draw(window);
+    window.draw(arr);
 }

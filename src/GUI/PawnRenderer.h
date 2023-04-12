@@ -7,17 +7,17 @@
 #include <set>
 
 #include "Rect.h"
-#include "SFML/Graphics/RenderWindow.hpp"
+#include "RenderTarget.h"
 #include "Vector.h"
 
 enum class expertisesID;
 
 class PawnRenderer {
 private:
-    sf::RenderWindow& window;
+    RenderTarget& window;
 
 public:
-    explicit PawnRenderer(sf::RenderWindow& window);
+    explicit PawnRenderer(RenderTarget& window);
     void drawWorkerPawn(const std::set<expertisesID>& expertises, Vec2f pos);
 };
 

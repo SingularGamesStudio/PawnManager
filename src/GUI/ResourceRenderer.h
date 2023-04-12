@@ -6,16 +6,16 @@
 #define PAWNMANAGER_RESOURCERENDERER_H
 #include "../Core/Resource.h"
 #include "Rect.h"
-#include "SFML/Graphics/RenderWindow.hpp"
+#include "RenderTarget.h"
 #include "Vector.h"
 
 
 class ResourceRenderer {
 private:
-    sf::RenderWindow& window;
+    RenderTarget& window;
 
 public:
-    explicit ResourceRenderer(sf::RenderWindow& window);
+    explicit ResourceRenderer(RenderTarget& window);
     void drawResource(Resource r, Vec2f pos, float rotation);
 };
 

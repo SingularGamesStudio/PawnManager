@@ -8,7 +8,6 @@
 #include <numbers>
 
 #include "../Entities/Pawns/WorkerPawn.h"
-#include "SFML/Window.hpp"
 #include "VertexArray.h"
 
 void ResourceRenderer::drawResource(Resource r, Vec2f pos, float rotation) {
@@ -34,7 +33,6 @@ void ResourceRenderer::drawResource(Resource r, Vec2f pos, float rotation) {
         outerVertices.push_back(Vec2f(x * 7.0f, y * 7.0f) + pos);
     }
     VertexArray arr;
-    sf::Transform t;
     for (int i = 0; i < vertices.size(); ++i) {
         Color col = Color::Red;
         switch (r) {
@@ -61,7 +59,7 @@ void ResourceRenderer::drawResource(Resource r, Vec2f pos, float rotation) {
         arr.appendVertex(outerVertices[i], Color::Black);
         arr.appendVertex(vertices[i], Color::Black);
     }
-    arr.draw(window);
+    window.draw(arr);
 }
 
-ResourceRenderer::ResourceRenderer(sf::RenderWindow& window) : window(window) {}
+ResourceRenderer::ResourceRenderer(RenderTarget& window) : window(window) {}
