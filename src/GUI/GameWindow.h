@@ -5,11 +5,12 @@
 #ifndef PAWNMANAGER_GAMEWINDOW_H
 #define PAWNMANAGER_GAMEWINDOW_H
 
-#include "SFML/System/Vector2.hpp"
-#include "SFML/Graphics/Rect.hpp"
-#include "SFML/Graphics/Color.hpp"
 #include <vector>
+
 #include "Control.h"
+#include "SFML/Graphics/Color.hpp"
+#include "SFML/Graphics/Rect.hpp"
+#include "SFML/System/Vector2.hpp"
 #include "SFML/Window/Mouse.hpp"
 
 class PawnManagerClient;
@@ -33,8 +34,10 @@ public:
     void drawRect(sf::FloatRect rect, sf::Color c);
     void drawBorderedRect(sf::FloatRect rect, float borderSize, sf::Color c, sf::Color border);
     void onMouseClick(int x, int y, sf::Mouse::Button b);
+
 protected:
     std::vector<Control*> controls;
+
 private:
     void drawBackground();
     void drawWindow();
@@ -42,4 +45,4 @@ private:
 };
 
 
-#endif //PAWNMANAGER_GAMEWINDOW_H
+#endif//PAWNMANAGER_GAMEWINDOW_H

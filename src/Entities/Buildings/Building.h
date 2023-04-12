@@ -1,21 +1,24 @@
 #ifndef BUILDING_H
 #define BUILDING_H
 ///misha does not believe in me  :(
+#include <iostream>
+#include <set>
+#include <vector>
+
 #include "../../Resource.h"
 #include "../Entity.h"
-#include <vector>
-#include<set>
-#include <iostream>
 
 class Pawn;
 
-class Building: public virtual Entity{
+class Building : public virtual Entity {
 private:
     void destroy() override;
+
 public:
     constexpr static const double baseBuildingRadius = 30;
-    Building(std::pair<double, double> pos, ptr<Player> owner, unsigned int hp, double radius = baseBuildingRadius, ptr<Building> parent = ptr<Building>()):
-        Entity(pos, owner, hp, radius){
+    Building(std::pair<double, double> pos, ptr<Player> owner, unsigned int hp, double radius = baseBuildingRadius,
+             ptr<Building> parent = ptr<Building>())
+        : Entity(pos, owner, hp, radius) {
         this->parent = parent;
     }
     ptr<Building> parent = ptr<Building>();
@@ -34,4 +37,4 @@ public:
 
     virtual void tick(double deltaTime){};
 };
-#endif //BUILDING_H
+#endif//BUILDING_H

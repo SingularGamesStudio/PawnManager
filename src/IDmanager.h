@@ -17,20 +17,19 @@ struct IDmanager {
     static void set(int id, void* data);
 };
 
-struct RequiresID{
+struct RequiresID {
     int id;
 };
 
 template<typename T>
-struct ptr{
+struct ptr {
     int id = -1;
-    ptr():id(-1){}
+    ptr() : id(-1) {}
 
-    ptr(int id):id(id){}
+    ptr(int id) : id(id) {}
 
     explicit operator bool() const {
-        if(id==-1 || IDmanager::get(id)== nullptr)
-            return false;
+        if (id == -1 || IDmanager::get(id) == nullptr) return false;
         return true;
     }
 
@@ -39,29 +38,19 @@ struct ptr{
         return dynamic_cast<Q*>(reinterpret_cast<T*>(IDmanager::get(id)));
     }
 
-    T operator*() const {
-        return *(reinterpret_cast<T*>(IDmanager::get(id)));
-    }
+    T operator*() const { return *(reinterpret_cast<T*>(IDmanager::get(id))); }
 
-    T* operator->() const {
-        return reinterpret_cast<T*>(IDmanager::get(id));
-    }
+    T* operator->() const { return reinterpret_cast<T*>(IDmanager::get(id)); }
 
-    bool operator<(const ptr& other) const {
-        return id<other.id;
-    }
-    bool operator==(const ptr& other) const {
-        return id==other.id;
-    }
+    bool operator<(const ptr& other) const { return id < other.id; }
+    bool operator==(const ptr& other) const { return id == other.id; }
 
     void del() const {
         delete reinterpret_cast<T*>(IDmanager::get(id));
         IDmanager::set(id, nullptr);
     }
 
-    T* pointer() const {
-        return reinterpret_cast<T*>(IDmanager::get(id));
-    }
+    T* pointer() const { return reinterpret_cast<T*>(IDmanager::get(id)); }
 
     template<typename Q>
     explicit operator ptr<Q>() const {
@@ -70,22 +59,18 @@ struct ptr{
 };
 
 namespace std {
-    template <typename T>
+    template<typename T>
     struct hash<ptr<T>> {
-        size_t operator()(const ptr<T>& p) const {
-            return p.id;
-        }
+        size_t operator()(const ptr<T>& p) const { return p.id; }
     };
-}
+}// namespace std
 
-template<typename T,  typename... Targs>
+template<typename T, typename... Targs>
 ptr<T> makeptr(Targs... args) {
     T* mem = reinterpret_cast<T*>(new char[sizeof(T)]);
     new (mem) T(args...);
     int id = IDmanager::newObject(mem);
-    if(dynamic_cast<RequiresID*>(mem)!= nullptr) {
-        dynamic_cast<RequiresID*>(mem)->id = id;
-    }
+    if (dynamic_cast<RequiresID*>(mem) != nullptr) { dynamic_cast<RequiresID*>(mem)->id = id; }
     return ptr<T>(id);
 }
 

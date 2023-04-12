@@ -3,26 +3,25 @@
 //
 
 #include "CraftBuildingWindow.h"
+
+#include "../Entities/Buildings/CraftBuilding.h"
 #include "../IDmanager.h"
+#include "ButtonControl.h"
 #include "PawnManagerClient.h"
 #include "SFML/Graphics/Text.hpp"
-#include "ButtonControl.h"
-#include "../Entities/Buildings/CraftBuilding.h"
 
 CraftBuildingWindow::CraftBuildingWindow(int id) : id(id) {
     slotCounts = sf::Vector2i(5, 5);
-    controls.push_back(new ButtonControl(*this, sf::IntRect(0, 4, 4, 0),
-                                         "Assign recipe",
-                                         [id=id](){
+    controls.push_back(new ButtonControl(*this, sf::IntRect(0, 4, 4, 0), "Assign recipe", [id = id]() {
         ptr<CraftBuilding> p(id);
         Recipe* r = p->recipes[0];
-        PawnManagerClient::player->manager.startRecipe(r,static_cast<ptr<Building>>(p));
+        PawnManagerClient::player->manager.startRecipe(r, static_cast<ptr<Building>>(p));
         PawnManagerClient::winManager.popWindow();
     }));
 }
 
 void CraftBuildingWindow::updateAndRender() {
-    if(IDmanager::get(id) == nullptr) {
+    if (IDmanager::get(id) == nullptr) {
         PawnManagerClient::winManager.popWindow();
         return;
     }
@@ -34,4 +33,3 @@ void CraftBuildingWindow::updateAndRender() {
     t.setPosition(fr.getPosition() + sf::Vector2f(10, 10));
     PawnManagerClient::window->draw(t);
 }
-

@@ -5,20 +5,21 @@
 #include "ButtonControl.h"
 
 #include <utility>
+
 #include "GameWindow.h"
-#include "SFML/Graphics/Text.hpp"
 #include "PawnManagerClient.h"
+#include "SFML/Graphics/Text.hpp"
 
-ButtonControl::ButtonControl(GameWindow& win, sf::IntRect rect, std::string label, std::function<void()> callback) :
-Control(win, rect), label(std::move(label)), callback(std::move(callback)) {
-
-}
+ButtonControl::ButtonControl(GameWindow& win, sf::IntRect rect, std::string label, std::function<void()> callback)
+    : Control(win, rect),
+      label(std::move(label)),
+      callback(std::move(callback)) {}
 
 void ButtonControl::updateAndRender() {
     Control::updateAndRender();
     sf::FloatRect r = win.getGridRectangle(rect);
     sf::Color c;
-    if(mouseOver()) {
+    if (mouseOver()) {
         c = sf::Color(255 - 20, 255 - 20, 255);
     } else {
         c = sf::Color(255, 255, 255);
@@ -30,7 +31,6 @@ void ButtonControl::updateAndRender() {
     sf::Vector2f delta = (r.getSize() - t.getLocalBounds().getSize()) * 0.5f;
     t.setPosition(r.getPosition() + delta - sf::Vector2f(0, 5));
     PawnManagerClient::window->draw(t);
-
 }
 
 bool ButtonControl::mouseOver() {
@@ -41,7 +41,5 @@ bool ButtonControl::mouseOver() {
 
 void ButtonControl::onMouseClick(int x, int y, sf::Mouse::Button b) {
     Control::onMouseClick(x, y, b);
-    if(mouseOver() && b == sf::Mouse::Button::Left) {
-        callback();
-    }
+    if (mouseOver() && b == sf::Mouse::Button::Left) { callback(); }
 }

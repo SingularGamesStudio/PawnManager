@@ -3,22 +3,22 @@
 //
 
 #include "BuildingRenderer.h"
-#include "SFML/Graphics/VertexArray.hpp"
-#include "../Entities/Buildings/Building.h"
-#include "PawnManagerClient.h"
+
 #include <cmath>
+
+#include "../Entities/Buildings/Building.h"
 #include "../Entities/Buildings/CraftBuilding.h"
+#include "PawnManagerClient.h"
+#include "SFML/Graphics/VertexArray.hpp"
 
-BuildingRenderer::BuildingRenderer(sf::RenderWindow& window) : window(window) {
-
-}
+BuildingRenderer::BuildingRenderer(sf::RenderWindow& window) : window(window) {}
 
 void BuildingRenderer::drawBuilding(ptr<Building> b, sf::Vector2f pos) {
     std::vector<sf::Vector2f> vertices;
     std::vector<sf::Vector2f> outerVertices;
     int cnt = 30;
     float radius = b->radius * PawnManagerClient::renderScale;
-    for(int i = 0; i < cnt; ++i) {
+    for (int i = 0; i < cnt; ++i) {
         float angle = static_cast<float>(i) * 2 * std::numbers::pi_v<float> / cnt;
         float x = std::cos(angle);
         float y = std::sin(angle);
@@ -28,15 +28,11 @@ void BuildingRenderer::drawBuilding(ptr<Building> b, sf::Vector2f pos) {
     sf::VertexArray arr;
     sf::Transform t;
     arr.setPrimitiveType(sf::PrimitiveType::Triangles);
-    for(int i = 0; i < vertices.size(); ++i) {
+    for (int i = 0; i < vertices.size(); ++i) {
         sf::Color col = sf::Color::White;
-        if(b.dyn_cast<CraftBuilding>()) {
-            col = sf::Color::Green;
-        }
+        if (b.dyn_cast<CraftBuilding>()) { col = sf::Color::Green; }
         int j = i + 1;
-        if(j == vertices.size()) {
-            j = 0;
-        }
+        if (j == vertices.size()) { j = 0; }
         arr.append(sf::Vertex(vertices[j], col));
         arr.append(sf::Vertex(vertices[i], col));
         arr.append(sf::Vertex(pos, col));

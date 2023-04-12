@@ -6,12 +6,14 @@
 #define PAWNMANAGER_GAMEWINDOWMANAGER_H
 #include <cstddef>
 #include <vector>
+
 #include "GameWindow.h"
 #include "SFML/Window.hpp"
 
 class GameWindowManager {
 private:
     std::vector<GameWindow*> windows;
+
 public:
     GameWindowManager();
     void pushWindow(GameWindow* win);
@@ -23,4 +25,4 @@ public:
 };
 
 
-#endif //PAWNMANAGER_GAMEWINDOWMANAGER_H
+#endif//PAWNMANAGER_GAMEWINDOWMANAGER_H

@@ -5,28 +5,32 @@
 #ifndef PAWNMANAGER_PAWNMANAGERCLIENT_H
 #define PAWNMANAGER_PAWNMANAGERCLIENT_H
 
-#include "SFML/Graphics/RenderWindow.hpp"
-#include "SFML/Window.hpp"
-#include "GameWindowManager.h"
-#include "PawnRenderer.h"
 #include "../Player.h"
 #include "BuildingRenderer.h"
-#include "ResourceRenderer.h"
 #include "FontManager.h"
+#include "GameWindowManager.h"
+#include "PawnRenderer.h"
+#include "ResourceRenderer.h"
+#include "SFML/Graphics/RenderWindow.hpp"
+#include "SFML/Window.hpp"
 
 class PawnManagerClient {
 public:
     static sf::RenderWindow* window;
     static sf::View view;
+
 private:
     static PawnRenderer* pawnRenderer;
     static BuildingRenderer* buildingRenderer;
     static ResourceRenderer* resourceRenderer;
+
 public:
     static ptr<Player> player;
+
 private:
     static double curTime;
     static int selectedBuilding;
+
 public:
     static constexpr float renderScale = 1.5f;
     static GameWindowManager winManager;
@@ -35,6 +39,7 @@ public:
     PawnManagerClient() = delete;
     PawnManagerClient(const PawnManagerClient& o) = delete;
     PawnManagerClient& operator=(const PawnManagerClient& other) = delete;
+
 private:
     static void init();
     static void updateAndRender();
@@ -45,4 +50,4 @@ private:
 };
 
 
-#endif //PAWNMANAGER_PAWNMANAGERCLIENT_H
+#endif//PAWNMANAGER_PAWNMANAGERCLIENT_H

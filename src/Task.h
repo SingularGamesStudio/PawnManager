@@ -1,25 +1,16 @@
 #ifndef TASK_H
 #define TASK_H
 ///misha does not believe in me  :(
-#include "Resource.h"
 #include "IDmanager.h"
+#include "Resource.h"
 
 class Player;
 
-enum class TaskID {
-    Build,
-    Craft,
-    Attack,
-    Move,
-    Get,
-    Idle,
-    Transport,
-    BeProcessed
-};
+enum class TaskID { Build, Craft, Attack, Move, Get, Idle, Transport, BeProcessed };
 
 class Building;
 
-class Task{
+class Task {
 public:
     TaskID id;
     ptr<Building> destination;
@@ -29,7 +20,8 @@ public:
 
     bool avaliable(ptr<Player> owner);
 
-    Task(TaskID taskid = TaskID::Idle, ptr<Building> building = ptr<Building>(), ptr<Building> building2 = ptr<Building>(), Resource resource = Resource::DummyNothing, int returnID = -1);
+    Task(TaskID taskid = TaskID::Idle, ptr<Building> building = ptr<Building>(), ptr<Building> building2 = ptr<Building>(),
+         Resource resource = Resource::DummyNothing, int returnID = -1);
     ///TASK_REFORM(player -> pawn commands)
 };
-#endif //TASK_H
+#endif//TASK_H

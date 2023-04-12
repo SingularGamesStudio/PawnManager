@@ -18,4 +18,4 @@ target_compile_features(PawnManagerGUI PRIVATE cxx_std_20)
 if (WIN32 AND BUILD_SHARED_LIBS)
     add_custom_command(TARGET PawnManagerGUI POST_BUILD
             COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_RUNTIME_DLLS:PawnManagerGUI> $<TARGET_FILE_DIR:PawnManagerGUI> COMMAND_EXPAND_LISTS)
-endif()
+endif ()

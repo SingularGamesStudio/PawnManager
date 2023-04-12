@@ -1,6 +1,6 @@
 #include "Recipe.h"
 
-class CraftRecipe: public Recipe {
+class CraftRecipe : public Recipe {
 public:
     std::vector<FighterPawnType> outFighters;
     std::vector<Resource> outResources;

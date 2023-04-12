@@ -1,12 +1,14 @@
-#include "Player.h"
+#include "testSystem.h"
+
+#include <random>
+
 #include "Entities/Buildings/Building.h"
+#include "Entities/Buildings/BuildingRegisty.h"
 #include "Entities/Buildings/CraftBuilding.h"
 #include "Entities/Pawns/WorkerPawn.h"
-#include "Recipes/Recipe.h"
-#include "testSystem.h"
+#include "Player.h"
 #include "Recipes/CraftRecipe.h"
-#include "Entities/Buildings/BuildingRegisty.h"
-#include <random>
+#include "Recipes/Recipe.h"
 
 
 CraftRecipe* recipe;
@@ -19,10 +21,8 @@ ptr<Player> initTest() {
     player->manager.owner = player;
     BuildingRegisty::init();
     player->hub = makeptr<Building>(std::make_pair(80, -120), player, 100);
-    for(int i = 0; i<30; i++){
-        player->hub->addResource(Resource::DummyOre);
-    }
-    for(int i = 0; i<5; i++){
+    for (int i = 0; i < 30; i++) { player->hub->addResource(Resource::DummyOre); }
+    for (int i = 0; i < 5; i++) {
         ptr<WorkerPawn> pawn = makeptr<WorkerPawn>();
         pawn->create(player->hub);
         pawn->expertises.insert(expertisesID::DummySmeltery);
@@ -42,16 +42,11 @@ ptr<Player> initTest() {
 
 void tickBuildings(ptr<Building> place, double deltaTime) {
     place->tick(deltaTime);
-    for(ptr<Building> ch:place->children){
-        tickBuildings(ch, deltaTime);
-    }
+    for (ptr<Building> ch: place->children) { tickBuildings(ch, deltaTime); }
 }
 std::mt19937 rnd(42);
 void tick(double deltaTime) {
     player->tick();
-    for(ptr<Pawn> p:player->pawns){
-        p->tick(deltaTime);
-    }
+    for (ptr<Pawn> p: player->pawns) { p->tick(deltaTime); }
     tickBuildings(player->hub, deltaTime);
 }
-

@@ -1,10 +1,11 @@
 #ifndef RECIPE_H
 #define RECIPE_H
 ///misha does not believe in me  :(
-#include <vector>
 #include <cassert>
-#include <string>
 #include <set>
+#include <string>
+#include <vector>
+
 #include "../IDmanager.h"
 
 class CraftBuilding;
@@ -23,8 +24,10 @@ protected:
     std::vector<ptr<Pawn>> procPawns;
     std::vector<Resource> procResources;
     double progress;
-public:
 
+    virtual Recipe* cloneSelf() = 0;
+
+public:
     bool checkRequirements(ptr<CraftBuilding> place, bool start = false);
 
     void start(ptr<CraftBuilding> place);
@@ -32,6 +35,8 @@ public:
     void cleanup(ptr<Building> where = ptr<Building>());
 
     void cancel();
+
+    Recipe* clone();
 
     virtual void finish() = 0;
 
@@ -48,6 +53,5 @@ public:
     std::vector<Resource> inResources;
 
     double duration;
-
 };
-#endif //RECIPE_H
+#endif//RECIPE_H

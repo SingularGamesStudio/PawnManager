@@ -16,9 +16,10 @@ public:
     Control(GameWindow& win, sf::IntRect rect);
     virtual void updateAndRender();
     virtual void onMouseClick(int x, int y, sf::Mouse::Button b);
+
 protected:
     GameWindow& win;
 };
 
 
-#endif //PAWNMANAGER_CONTROL_H
+#endif//PAWNMANAGER_CONTROL_H

@@ -1,5 +1,3 @@
 #include "Recipe.h"
 
-class WorkerRecipe: public Recipe {
-
-};
+class WorkerRecipe : public Recipe {};

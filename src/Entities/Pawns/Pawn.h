@@ -2,10 +2,11 @@
 #define PAWN_H
 ///misha does not believe in me  :(
 #include <utility>
+#include <vector>
+
 #include "../../Resource.h"
 #include "../../Task.h"
 #include "../Entity.h"
-#include <vector>
 class Building;
 class Pawn : public Entity {
 public:
@@ -18,7 +19,7 @@ public:
     double speed = 111;
     bool toDrop;
     bool toTake;
-    void drop(ptr<Building> in, std::pair<double, double> pos = { 0,0 });
+    void drop(ptr<Building> in, std::pair<double, double> pos = {0, 0});
     void destroy();
     void IMNotHere();
     void IMHere(ptr<Building> to);
@@ -30,4 +31,4 @@ public:
     virtual std::vector<uint8_t> serialize() const;
     virtual void deserialize(const std::vector<uint8_t>& data) const;
 };
-#endif //PAWN_H
+#endif//PAWN_H

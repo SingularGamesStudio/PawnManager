@@ -3,6 +3,7 @@
 //
 
 #include "GameWindow.h"
+
 #include "PawnManagerClient.h"
 #include "SFML/Graphics/VertexArray.hpp"
 
@@ -40,8 +41,7 @@ void GameWindow::drawWindow() {
 sf::Vector2f GameWindow::getMinGridCellPos() {
     auto [width, height] = PawnManagerClient::window->getSize();
     auto center = sf::Vector2f(width, height) * (1 / 2.0f);
-    auto gridSize = static_cast<sf::Vector2f>(slotCounts) * (gridCellSize + gridCellPadding) -
-                    sf::Vector2f(gridCellPadding, gridCellPadding);
+    auto gridSize = static_cast<sf::Vector2f>(slotCounts) * (gridCellSize + gridCellPadding) - sf::Vector2f(gridCellPadding, gridCellPadding);
     return center - gridSize * (1 / 2.0f);
 }
 
@@ -53,8 +53,7 @@ sf::FloatRect GameWindow::getGridCellRectangle(sf::Vector2i pos) {
 }
 
 sf::FloatRect GameWindow::getWindowRectangle() {
-    auto min = getGridCellRectangle(sf::Vector2i(0, 0)).getPosition() -
-               sf::Vector2f(windowSizeExtension, windowSizeExtension);
+    auto min = getGridCellRectangle(sf::Vector2i(0, 0)).getPosition() - sf::Vector2f(windowSizeExtension, windowSizeExtension);
     auto maxRect = getGridCellRectangle(slotCounts - sf::Vector2i(1, 1));
     auto max = maxRect.getPosition() + maxRect.getSize() + sf::Vector2f(windowSizeExtension, windowSizeExtension);
     return {min, max - min};
@@ -80,22 +79,16 @@ void GameWindow::drawBorderedRect(sf::FloatRect rect, float borderSize, sf::Colo
     drawRect(rect, c);
     drawRect(sf::FloatRect(rect.left, rect.top, rect.width, borderSize), border);
     drawRect(sf::FloatRect(rect.left, rect.top, borderSize, rect.height), border);
-    drawRect(sf::FloatRect(rect.left, rect.top + rect.height - borderSize, rect.width,
-                           borderSize),border);
-    drawRect(sf::FloatRect(rect.left + rect.width - borderSize, rect.top, borderSize,
-                           rect.height),border);
+    drawRect(sf::FloatRect(rect.left, rect.top + rect.height - borderSize, rect.width, borderSize), border);
+    drawRect(sf::FloatRect(rect.left + rect.width - borderSize, rect.top, borderSize, rect.height), border);
 }
 
 void GameWindow::updateAndRenderControls() {
-    for(Control* c : controls) {
-        c->updateAndRender();
-    }
+    for (Control* c: controls) { c->updateAndRender(); }
 }
 
 GameWindow::~GameWindow() {
-    for(Control* c : controls) {
-        delete c;
-    }
+    for (Control* c: controls) { delete c; }
 }
 
 sf::FloatRect GameWindow::getGridRectangle(sf::IntRect rect) {
@@ -107,7 +100,5 @@ sf::FloatRect GameWindow::getGridRectangle(sf::IntRect rect) {
 }
 
 void GameWindow::onMouseClick(int x, int y, sf::Mouse::Button b) {
-    for(Control* c : controls) {
-        c->onMouseClick(x, y, b);
-    }
+    for (Control* c: controls) { c->onMouseClick(x, y, b); }
 }

@@ -1,8 +1,10 @@
 #include "WorkerPawn.h"
-#include "../Buildings/Building.h"
-#include "../../Player.h"
+
 #include <cmath>
 #include <iostream>
+
+#include "../../Player.h"
+#include "../Buildings/Building.h"
 void WorkerPawn::create(ptr<Building> placeOfCreation) {
     currentTask = Task(TaskID::Idle, placeOfCreation);
     travelling = false;
@@ -15,46 +17,46 @@ void WorkerPawn::assignTask(const Task& toAssign) {
     currentTask = toAssign;
     //std::cout << "task " << (int)toAssign.id << "\n";
     switch (toAssign.id) {
-    case TaskID::Get:
-        moveToBuilding(toAssign.destination);
-        needed = toAssign.object;
-        toTake = true;
-        break;
-    case TaskID::Transport:
-        moveToBuilding(toAssign.destination);
-        //moveToBuilding(toAssign.destination2);
-        toTake = true;
-        needed = toAssign.object;
-        break;
-    case TaskID::Move:
-        moveToBuilding(toAssign.destination);
-        break;
-    case TaskID::BeProcessed:
-        moveToBuilding(toAssign.destination);
-        break;
-    case TaskID::Idle:
-        break;
-    default:
-        throw("Unexpected WorkerPawn TaskID: ", toAssign.id);
+        case TaskID::Get:
+            moveToBuilding(toAssign.destination);
+            needed = toAssign.object;
+            toTake = true;
+            break;
+        case TaskID::Transport:
+            moveToBuilding(toAssign.destination);
+            //moveToBuilding(toAssign.destination2);
+            toTake = true;
+            needed = toAssign.object;
+            break;
+        case TaskID::Move:
+            moveToBuilding(toAssign.destination);
+            break;
+        case TaskID::BeProcessed:
+            moveToBuilding(toAssign.destination);
+            break;
+        case TaskID::Idle:
+            break;
+        default:
+            throw("Unexpected WorkerPawn TaskID: ", toAssign.id);
     }
 }
 void WorkerPawn::tick(double deltaTime) {
-    if (currentInWay < onTheWay.size()){
+    if (currentInWay < onTheWay.size()) {
         ptr<Building> dest = onTheWay[currentInWay];
         double signX = position.first - dest->position.first;
         double deltaX = fabs(position.first - dest->position.first);
         double signY = position.second - dest->position.second;
         double deltaY = fabs(position.second - dest->position.second);
         double wholeDelta = deltaX * deltaX + deltaY * deltaY;
-        if (signX < -1e-2){
+        if (signX < -1e-2) {
             signX = -1;
-        } else if (signX > 1e-2){
+        } else if (signX > 1e-2) {
             signX = 1;
         } else
             signX = 0;
-        if (signY < -1e-2){
+        if (signY < -1e-2) {
             signY = -1;
-        } else if (signY > 1e-2){
+        } else if (signY > 1e-2) {
             signY = 1;
         } else
             signY = 0;
@@ -62,13 +64,12 @@ void WorkerPawn::tick(double deltaTime) {
             position.first += -signX * (deltaX / sqrt(wholeDelta)) * speed * deltaTime;
             position.second += -signY * (deltaY / sqrt(wholeDelta)) * speed * deltaTime;
         }
-        if (signX * (position.first - dest->position.first) <= 1 && signY * (position.second - dest->position.second) <= 1){
+        if (signX * (position.first - dest->position.first) <= 1 && signY * (position.second - dest->position.second) <= 1) {
             IMHere(dest);
 
             ++currentInWay;
         }
-    }
-    else {
+    } else {
         travelling = false;
         onTheWay.clear();
         currentInWay = 0;
@@ -78,19 +79,18 @@ void WorkerPawn::tick(double deltaTime) {
             drop(positionBuilding);
         }
         if (toTake) {
-            if(positionBuilding->removeResource(needed)) {
+            if (positionBuilding->removeResource(needed)) {
                 toTake = false;
                 holding = needed;
                 needed = Resource::DummyNothing;
-            }
-            else{
+            } else {
                 owner->manager.cancelTask(currentTask, ptr<Pawn>(id));
                 currentTask = TaskID::Idle;
             }
         }
         switch (currentTask.id) {
             case TaskID::Transport:
-                if(temp) {
+                if (temp) {
                     moveToBuilding(currentTask.destination2);
                     toDrop = true;
                 } else {
@@ -110,7 +110,7 @@ void WorkerPawn::tick(double deltaTime) {
 }
 void WorkerPawn::moveToBuilding(ptr<Building> dest) {
     travelling = true;
-    std::unordered_map<ptr<Building>, std::vector<ptr<Building>> > visited;
+    std::unordered_map<ptr<Building>, std::vector<ptr<Building>>> visited;
     std::queue<ptr<Building>> q;
     visited[positionBuilding] = std::vector<ptr<Building>>();
     visited[positionBuilding].push_back(positionBuilding);
@@ -119,22 +119,16 @@ void WorkerPawn::moveToBuilding(ptr<Building> dest) {
         ptr<Building> currentB = q.front();
         q.pop();
         std::vector<ptr<Building>> way = visited[currentB];
-        for (ptr<Building> toGo : currentB->children)
-        {
-            if (!visited[toGo].empty())
-                continue;
+        for (ptr<Building> toGo: currentB->children) {
+            if (!visited[toGo].empty()) continue;
             visited[toGo] = way;
             visited[toGo].push_back(toGo);
             q.push(toGo);
         }
-        if (!currentB->parent || !visited[currentB->parent].empty())
-            continue;
+        if (!currentB->parent || !visited[currentB->parent].empty()) continue;
         visited[currentB->parent] = way;
         visited[currentB->parent].push_back(currentB->parent);
         q.push(currentB->parent);
     }
-    for (ptr<Building> v : visited[dest])
-    {
-        onTheWay.push_back(v);
-    }
+    for (ptr<Building> v: visited[dest]) { onTheWay.push_back(v); }
 }

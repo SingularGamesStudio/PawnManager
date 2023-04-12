@@ -1,28 +1,26 @@
 #include "FighterPawn.h"
+
+#include "../../Player.h"
+#include "../Buildings/Building.h"
 #include "../Entity.h"
 #include "../ResourceEntity.h"
-#include "../Buildings/Building.h"
-#include "../../Player.h"
-FighterPawnType DummyMonk::getType()  {
-    return FighterPawnType::DummyMonk;
-}
-FighterPawnType DummySwordsman::getType()  {
-    return FighterPawnType::DummySwordsman;
-}
+FighterPawnType DummyMonk::getType() { return FighterPawnType::DummyMonk; }
+FighterPawnType DummySwordsman::getType() { return FighterPawnType::DummySwordsman; }
 ptr<FighterPawn> FighterPawn::createFighterPawn(FighterPawnType type, ptr<Building> placeOfCreation) {
     ptr<FighterPawn> newborn;
     switch (type) {
-    case FighterPawnType::DummyMonk:
-        newborn = static_cast<ptr<FighterPawn>>(makeptr<DummyMonk>(Task(TaskID::Idle, placeOfCreation), false, Resource::DummyNothing, placeOfCreation->owner, placeOfCreation, placeOfCreation));
-    case FighterPawnType::DummySwordsman:
-        newborn = static_cast<ptr<FighterPawn>>(makeptr<DummySwordsman>(Task(TaskID::Idle, placeOfCreation), false, Resource::DummyNothing, placeOfCreation->owner, placeOfCreation, placeOfCreation));
-    default:
-        throw("Type of FighterPawn not found");
+        case FighterPawnType::DummyMonk:
+            newborn = static_cast<ptr<FighterPawn>>(makeptr<DummyMonk>(Task(TaskID::Idle, placeOfCreation), false, Resource::DummyNothing,
+                                                                       placeOfCreation->owner, placeOfCreation, placeOfCreation));
+        case FighterPawnType::DummySwordsman:
+            newborn = static_cast<ptr<FighterPawn>>(makeptr<DummySwordsman>(Task(TaskID::Idle, placeOfCreation), false, Resource::DummyNothing,
+                                                                            placeOfCreation->owner, placeOfCreation, placeOfCreation));
+        default:
+            throw("Type of FighterPawn not found");
     }
 }
 void FighterPawn::getResource(ResourceEntity* toGet) {
-    if (positionBuilding)
-        IMNotHere();
+    if (positionBuilding) IMNotHere();
     moveToResource(toGet);
     takePresentResource(toGet);
     moveToBuilding(owner->hub);
@@ -74,9 +72,7 @@ DummySwordsman::DummySwordsman(Task task, bool BOOL, Resource resource, ptr<Play
     destination = dest;
     IMHere(in);
 }
-void FighterPawn::moveToResource(ResourceEntity* toGet) {
-    moveToPosition(toGet->position);
-}
+void FighterPawn::moveToResource(ResourceEntity* toGet) { moveToPosition(toGet->position); }
 void FighterPawn::takePresentResource(ResourceEntity* toTake) {
     holding = toTake->resource;
     toTake->destroy();
@@ -85,34 +81,34 @@ void FighterPawn::moveToPosition(std::pair<double, double> pos) {
     IMNotHere();
     destinationPosition = pos;
 }
-void FighterPawn::moveToBuilding(ptr<Building> dest)  {
+void FighterPawn::moveToBuilding(ptr<Building> dest) {
     moveToPosition(dest->position);
     IMHere(dest);
 }
 void FighterPawn::tick(double deltaTime) {
-    std::pair<double, double>  dest = destinationPosition;
+    std::pair<double, double> dest = destinationPosition;
     double deltaX = fabs(position.first - dest.first);
     double deltaY = fabs(position.second - dest.second);
     double wholeDelta = deltaX * deltaX + deltaY * deltaY;
-    if(toAttack && wholeDelta <= currentTask.destination->radius){
+    if (toAttack && wholeDelta <= currentTask.destination->radius) {
         attack(static_cast<ptr<Entity>>(currentTask.destination));
-        if (currentTask.destination->hp <= 0){
+        if (currentTask.destination->hp <= 0) {
             toAttack = false;
             currentTask = Task(TaskID::Move, owner->hub);
         }
     }
-    if (travelling){
+    if (travelling) {
         double signX = position.first - dest.first;
         double signY = position.second - dest.second;
-        if (signX < -1e-2){
+        if (signX < -1e-2) {
             signX = -1;
-        } else if (signX > 1e-2){
+        } else if (signX > 1e-2) {
             signX = 1;
         } else
             signX = 0;
-        if (signY < -1e-2){
+        if (signY < -1e-2) {
             signY = -1;
-        } else if (signY > 1e-2){
+        } else if (signY > 1e-2) {
             signY = 1;
         } else
             signY = 0;
@@ -122,12 +118,10 @@ void FighterPawn::tick(double deltaTime) {
         }
         //std::cerr<< position.first <<' '<< position.second <<'\n';
         //std::cerr<< dest->position.first <<' '<< dest->position.second <<'\n';
-        if (signX * (position.first - dest.first) <= 1 && signY * (position.second - dest.second) <= 1){
-            if(!destination)
-                IMHere(destination);
+        if (signX * (position.first - dest.first) <= 1 && signY * (position.second - dest.second) <= 1) {
+            if (!destination) IMHere(destination);
         }
-    }
-    else {
+    } else {
         travelling = false;
         if (toDrop) {
             toDrop = false;
@@ -138,8 +132,7 @@ void FighterPawn::tick(double deltaTime) {
             holding = needed;
             needed = Resource::DummyNothing;
             ///TO DO removeFromExistence needed
-            if(!toDrop)
-                currentTask = TaskID::Idle;
+            if (!toDrop) currentTask = TaskID::Idle;
         }
         switch (currentTask.id) {
             default:
@@ -147,9 +140,5 @@ void FighterPawn::tick(double deltaTime) {
         }
     }
 }
-void FighterPawn::attack(ptr<Entity> attacked) {
-    attacked->hp -= atk;
-};
-FighterPawnType FighterPawn::getType() {
-    return FighterPawnType::DummNotFound;
-};
+void FighterPawn::attack(ptr<Entity> attacked) { attacked->hp -= atk; };
+FighterPawnType FighterPawn::getType() { return FighterPawnType::DummNotFound; };

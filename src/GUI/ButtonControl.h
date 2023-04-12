@@ -5,9 +5,10 @@
 #ifndef PAWNMANAGER_BUTTONCONTROL_H
 #define PAWNMANAGER_BUTTONCONTROL_H
 
-#include "Control.h"
-#include <string>
 #include <functional>
+#include <string>
+
+#include "Control.h"
 
 class ButtonControl : public Control {
 public:
@@ -25,4 +26,4 @@ private:
 };
 
 
-#endif //PAWNMANAGER_BUTTONCONTROL_H
+#endif//PAWNMANAGER_BUTTONCONTROL_H

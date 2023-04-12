@@ -1,7 +1,8 @@
 #include "Pawn.h"
+
 #include "../../Resource.h"
-#include "../ResourceEntity.h"
 #include "../Buildings/Building.h"
+#include "../ResourceEntity.h"
 
 
 void Pawn::drop(ptr<Building> in, std::pair<double, double> pos) {
@@ -10,19 +11,17 @@ void Pawn::drop(ptr<Building> in, std::pair<double, double> pos) {
         holding = Resource::DummyNothing;
         return;
     }
-    if (holding != Resource::DummyNothing)
-        ResourceEntity(holding, pos);
+    if (holding != Resource::DummyNothing) ResourceEntity(holding, pos);
 }
 void Pawn::destroy() {
     if (positionBuilding && holding != Resource::DummyNothing) {
         drop(positionBuilding, position);
-    }
-    else if (holding != Resource::DummyNothing) {
+    } else if (holding != Resource::DummyNothing) {
         drop(positionBuilding, position);
     }
     ///TODO task not done... god object taskmanager not happy :(
     //~Pawn();
-    }
+}
 void Pawn::IMNotHere() {
     if (positionBuilding) {
         positionBuilding->removePawn(ptr<Pawn>(id));
@@ -37,22 +36,12 @@ void Pawn::IMHere(ptr<Building> to) {
         position = positionBuilding->position;
     }
 }
-void Pawn::stopBeingIngridient() {
-    assignTask(Task(TaskID::Idle,positionBuilding));
-}
-void Pawn::moveToBuilding(ptr<Building> toMove) {
-    throw("How did we get here?");
-}
+void Pawn::stopBeingIngridient() { assignTask(Task(TaskID::Idle, positionBuilding)); }
+void Pawn::moveToBuilding(ptr<Building> toMove) { throw("How did we get here?"); }
 //void Pawn::assignTask(const Task& toAssign) = 0;
 
-void Pawn::tick(double deltaTime) {
+void Pawn::tick(double deltaTime) {}
 
-}
+void Pawn::deserialize(const std::vector<uint8_t>& data) const {}
 
-void Pawn::deserialize(const std::vector<uint8_t>& data) const {
-
-}
-
-std::vector<uint8_t> Pawn::serialize() const {
-
-}
+std::vector<uint8_t> Pawn::serialize() const {}

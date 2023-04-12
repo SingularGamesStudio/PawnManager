@@ -1,21 +1,21 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
+#include <deque>
+#include <vector>
+
+#include "IDmanager.h"
 #include "Recipes/Recipe.h"
 #include "Task.h"
-#include "IDmanager.h"
-#include <vector>
-#include <deque>
 
 enum class expertisesID;
 class Building;
 class Pawn;
 class Player;
 
-class Player:public RequiresID {
+class Player : public RequiresID {
 public:
-
-    Player(){}
+    Player() {}
     ptr<Building> hub;
     std::vector<ptr<Pawn>> pawns;
 
@@ -25,18 +25,18 @@ public:
             virtual ptr<Pawn> find(ptr<Player> owner) = 0;
         };
 
-        struct FighterReq:public PawnReq {
+        struct FighterReq : public PawnReq {
             FighterPawnType type;
-            FighterReq(FighterPawnType type) : type(type){}
+            FighterReq(FighterPawnType type) : type(type) {}
 
-            ptr<Pawn> find(ptr<Player> owner) override {};
+            ptr<Pawn> find(ptr<Player> owner) override{};
         };
 
-        struct WorkerReq:public PawnReq {
+        struct WorkerReq : public PawnReq {
             expertisesID expertise;
-            WorkerReq(expertisesID expertise):expertise(expertise){}
+            WorkerReq(expertisesID expertise) : expertise(expertise) {}
 
-            ptr<Pawn> find(ptr<Player> owner) override {};
+            ptr<Pawn> find(ptr<Player> owner) override{};
         };
 
         struct PendingRecipe {
@@ -52,9 +52,7 @@ public:
             Recipe* recipe;
             ptr<Building> place;
 
-            bool operator<(const PendingRecipe& other) const {
-                return ID<other.ID;
-            }
+            bool operator<(const PendingRecipe& other) const { return ID < other.ID; }
 
             PendingRecipe(Recipe* recipe, ptr<Building> place, int priority);
 
@@ -84,4 +82,4 @@ public:
 
     void tick();
 };
-#endif //PLAYER_H
+#endif//PLAYER_H

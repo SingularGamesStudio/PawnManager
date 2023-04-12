@@ -14,4 +14,4 @@ public:
 };
 
 
-#endif //PAWNMANAGER_FONTMANAGER_H
+#endif//PAWNMANAGER_FONTMANAGER_H

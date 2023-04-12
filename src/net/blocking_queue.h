@@ -4,17 +4,16 @@
 namespace dlib {
 
     template<typename T>
-    class BlockingQueue { // queue, safe for multithread operations
+    class BlockingQueue {// queue, safe for multithread operations
     private:
         std::mutex mx;
         std::queue<T> c;
+
     public:
         BlockingQueue() = default;
         BlockingQueue& operator=(const BlockingQueue<T>& that) = delete;
         BlockingQueue(const BlockingQueue<T>& that) = delete;
-        ~BlockingQueue() {
-            clear();
-        }
+        ~BlockingQueue() { clear(); }
         T& front() {
             std::scoped_lock lock_guard(mx);
             return c.front();
@@ -39,10 +38,9 @@ namespace dlib {
             std::scoped_lock lock_guard(mx);
             return c.empty();
         }
-        void clear(){
+        void clear() {
             std::scoped_lock lock_guard(mx);
-            while(!c.empty())
-                c.pop();
+            while (!c.empty()) c.pop();
         }
     };
-}
+}// namespace dlib
