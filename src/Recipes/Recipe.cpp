@@ -18,7 +18,7 @@ bool Recipe::checkRequirements(ptr<CraftBuilding> place, bool start) {
     std::vector<ptr<Pawn>> usedPawns;
     std::vector<ptr<WorkerPawn>> workingPawns;
     std::vector<Resource> usedResources;
-    for (Resource r: place->resources) { resourcesInside.insert(r); }
+    for (Resource r: place->reservedResources) { resourcesInside.insert(r); }
     for (ptr<Pawn> p: place->pawns) {
         if (ptr<WorkerPawn> worker = static_cast<ptr<WorkerPawn>>(p); worker) {
             workersInside.insert(worker);
@@ -31,7 +31,7 @@ bool Recipe::checkRequirements(ptr<CraftBuilding> place, bool start) {
     for (FighterPawnType t: inFighters) {
         bool ok = false;
         for (auto it = fightersInside.begin(); it != fightersInside.end(); it++) {
-            if ((*it)->getType() == t) {
+            if ((*it)->currentTask.id == TaskID::Craft && (*it)->getType() == t) {
                 usedPawns.push_back(static_cast<ptr<Pawn>>(*it));
                 fightersInside.erase(it);
                 ok = true;
@@ -44,27 +44,33 @@ bool Recipe::checkRequirements(ptr<CraftBuilding> place, bool start) {
     for (expertisesID t: inWorkers) {// TODO:rewrite for many expertises
         bool ok = false;
         for (auto it = workersInside.begin(); it != workersInside.end(); it++) {
-            if ((*it)->expertises.contains(t)) {
+            if ((*it)->currentTask.id == TaskID::Craft && (*it)->expertises.contains(t)) {
                 usedPawns.push_back(static_cast<ptr<Pawn>>(*it));
                 workersInside.erase(it);
                 ok = true;
                 break;
             }
         }
-        if (!ok) return false;
+        if (!ok) { return false; }
     }
 
     for (expertisesID t: reqWorkers) {
         bool ok = false;
         for (auto it = workersInside.begin(); it != workersInside.end(); it++) {
-            if ((*it)->expertises.contains(t)) {
+            if ((*it)->currentTask.id == TaskID::Craft && (*it)->expertises.contains(t)) {
                 workingPawns.push_back(*it);
                 workersInside.erase(it);
                 ok = true;
                 break;
             }
         }
-        if (!ok) return false;
+        if (!ok) {
+            for (auto p: place->owner->pawns) { std::cout << (int) p->currentTask.id << "_" << p->positionBuilding.id << " "; }
+            std::cout << std::endl;
+            for (auto p: place->pawns) { std::cout << (int) p->currentTask.id << "_" << p->positionBuilding.id << " "; }
+            std::cout << std::endl;
+            return false;
+        }
     }
 
     for (Resource t: inResources) {
@@ -82,8 +88,8 @@ bool Recipe::checkRequirements(ptr<CraftBuilding> place, bool start) {
 
     if (start) {
         place->pawns.clear();
-        place->resources.clear();
-        for (Resource p: resourcesInside) { place->addResource(p); }
+        place->reservedResources.clear();
+        for (Resource p: resourcesInside) { place->reservedResources.insert(p); }
         for (ptr<WorkerPawn> p: workersInside) { place->addPawn(static_cast<ptr<Pawn>>(p)); }
         for (ptr<FighterPawn> p: fightersInside) { place->addPawn(static_cast<ptr<Pawn>>(p)); }
 
@@ -127,7 +133,7 @@ void Recipe::cleanup(ptr<Building> where) {
     }
     for (ptr<WorkerPawn> p: workers) {
         where->addPawn(static_cast<ptr<Pawn>>(p));
-        static_cast<ptr<Pawn>>(p)->stopBeingIngridient();
+        p->assignTask(Task(TaskID::Idle));
     }
     procPawns.clear();
     procResources.clear();
@@ -138,7 +144,7 @@ void Recipe::cleanup(ptr<Building> where) {
 void Recipe::cancel() {
     for (ptr<Pawn> p: procPawns) {
         place->addPawn(p);
-        p->stopBeingIngridient();
+        p->assignTask(Task(TaskID::Idle));
     }
     for (Resource p: procResources) { place->addResource(p); }
     cleanup();

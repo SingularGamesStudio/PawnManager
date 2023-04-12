@@ -106,9 +106,10 @@ void WorkerPawn::tick(double deltaTime) {
                 currentTask.id = TaskID::Craft;
                 break;
             case TaskID::Craft:
-
+                break;
             default:
                 currentTask.id = TaskID::Idle;
+                break;
         }
     }
 }

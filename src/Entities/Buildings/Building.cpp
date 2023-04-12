@@ -1,5 +1,6 @@
 #include "Building.h"
 
+#include <cassert>
 #include <set>
 #include <vector>
 
@@ -18,6 +19,9 @@ bool Building::removeResource(Resource resource) {
     return true;
 }
 
-void Building::addPawn(ptr<Pawn> pawn) { pawns.insert(pawn); }
+void Building::addPawn(ptr<Pawn> pawn) {
+    if (pawns.contains(pawn)) assert(0);
+    pawns.insert(pawn);
+}
 
 void Building::removePawn(ptr<Pawn> pawn) { pawns.erase(pawn); }

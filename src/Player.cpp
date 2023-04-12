@@ -1,6 +1,7 @@
 #include "Player.h"
 
 #include <set>
+#include <unordered_set>
 #include <vector>
 
 #include "Entities/Buildings/Building.h"
@@ -91,6 +92,7 @@ void Player::TaskManager::tick() {//TODO:rewrite to mincost
         if (worker && worker->currentTask.id == TaskID::Idle) { haulers.push_back(worker); }
     }
     std::vector<std::pair<PendingRecipe*, bool>> toClose;
+    std::unordered_set<ptr<CraftBuilding>> busy;
     for (PendingRecipe* rec: work) {
         if (!rec->needResources.empty()) {
             std::multiset<Resource> newNeed;
@@ -125,8 +127,12 @@ void Player::TaskManager::tick() {//TODO:rewrite to mincost
                 }
                 rec->needPawns.clear();
             } else if (rec->movedPawns.empty()) {
-                std::cout << "starting recipe" << std::endl;
-                toClose.push_back({rec, true});
+                ptr<CraftBuilding> crafter = static_cast<ptr<CraftBuilding>>(rec->place);
+                if (crafter->current == nullptr && !busy.contains(crafter)) {
+                    std::cout << "starting recipe" << std::endl;
+                    toClose.push_back({rec, true});
+                    busy.insert(crafter);
+                }
             }
         }
     }
@@ -143,7 +149,7 @@ void Player::TaskManager::PendingRecipe::start() {
     ptr<CraftBuilding> crafter = static_cast<ptr<CraftBuilding>>(place);
     if (!place.dyn_cast<CraftBuilding>()) throw std::logic_error("requested recipe for building which could not craft");
     if (!crafter->assignRecipe(recipe)) {
-        std::cerr << "requested recipe start in building by id " << place->id << ", but recipe requirements are not met\n";
+        std::cerr << "requested recipe start in building by id " << place->id << ", but recipe requirements are not met" << std::endl;
     }
     donePawns.clear();
     doneResources.clear();
@@ -157,8 +163,10 @@ Player::TaskManager::PendingRecipe::~PendingRecipe() {
     }
     for (ptr<Pawn> p: donePawns) { p->assignTask(Task(TaskID::Idle)); }
     for (Resource r: doneResources) {
-        if (place->reservedResources.contains(r)) place->reservedResources.erase(place->reservedResources.find(r));
-        else
+        if (place->reservedResources.contains(r)) {
+            place->reservedResources.erase(place->reservedResources.find(r));
+            place->resources.insert(r);
+        } else
             std::cerr << "when deleting PendingRecipe, trying to unreserve resource, but it is not reserved";
     }
     delete recipe;
@@ -202,6 +210,8 @@ void Player::TaskManager::finishTask(Task task, ptr<Pawn> pawn) {
         case TaskID::Transport:
             pr->movedResources.erase(pr->movedResources.find(task.object));
             pr->doneResources.insert(task.object);
+            task.destination2->resources.erase(task.destination2->resources.find(task.object));
+            task.destination2->reservedResources.insert(task.object);
             break;
         case TaskID::BeProcessed:
             std::cout << "pawn ready\n";
@@ -218,13 +228,13 @@ void Player::TaskManager::finishTask(Task task, ptr<Pawn> pawn) {
 ptr<Pawn> Player::TaskManager::FighterReq::find(ptr<Player> owner) {
     for (auto p: owner->pawns) {
         FighterPawn* f = p.dyn_cast<FighterPawn>();
-        if (f && f->getType() == type) { return p; }
+        if (f && f->getType() == type && f->currentTask.id == TaskID::Idle) { return p; }
     }
 }
 
 ptr<Pawn> Player::TaskManager::WorkerReq::find(ptr<Player> owner) {
     for (auto p: owner->pawns) {
         WorkerPawn* w = p.dyn_cast<WorkerPawn>();
-        if (w && w->expertises.contains(expertise)) { return p; }
+        if (w && w->expertises.contains(expertise) && w->currentTask.id == TaskID::Idle) { return p; }
     }
 }
