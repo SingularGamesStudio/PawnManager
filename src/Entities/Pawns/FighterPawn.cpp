@@ -131,7 +131,7 @@ void FighterPawn::tick(double deltaTime) {
             toTake = false;
             holding = needed;
             needed = Resource::DummyNothing;
-            ///TO DO removeFromExistence needed
+            ///TODO removeFromExistence needed
             if (!toDrop) currentTask = TaskID::Idle;
         }
         switch (currentTask.id) {

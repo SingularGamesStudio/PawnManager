@@ -197,6 +197,7 @@ void Player::TaskManager::finishTask(Task task, ptr<Pawn> pawn) {
             std::cout << "pawn ready for processing\n";
             break;
         default:
+            std::cout << "pawn is not ready :(\n";
             break;
     }
 }
