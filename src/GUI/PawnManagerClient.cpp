@@ -115,7 +115,7 @@ void PawnManagerClient::onMouseClick(int x, int y, sf::Mouse::Button b) {
     if (!onBuildingMouseClick(player->hub, pos, b)) {
         ptr<Building> building = ptr<Building>(selectedBuilding);
         if (building) {
-            player->manager.startRecipe(new BuildRecipe({pos.x, pos.y}, 0), b);
+            player->manager.startRecipe(new BuildRecipe({pos.x, pos.y}, 0), building);
             selectedBuilding = -1;
         }
     }
@@ -130,7 +130,7 @@ bool PawnManagerClient::onBuildingMouseClick(ptr<Building> b, sf::Vector2f pos, 
         } else if (button == sf::Mouse::Right) {
             ptr<CraftBuilding> c = static_cast<ptr<CraftBuilding>>(b);
             if (c) { winManager.pushWindow(new CraftBuildingWindow(c->id)); }
-        } else if(button == sf::Mouse::Middle) {
+        } else if (button == sf::Mouse::Middle) {
             std::cout << "Building with id " << b.id << " was middle clicked!" << std::endl;
         }
         return true;

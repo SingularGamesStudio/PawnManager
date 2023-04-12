@@ -76,10 +76,10 @@ Player::TaskManager::PendingRecipe::PendingRecipe(Recipe* recipe, ptr<Building> 
       place(place),
       priority(priority),
       ID(IDmanager::newID()) {
-    for (Resource r: recipe->inResources) { needResources.insert(r); }
-    for (expertisesID e: recipe->reqWorkers) { needPawns.push_back(dynamic_cast<PawnReq*>(new WorkerReq(e))); }
-    for (expertisesID e: recipe->inWorkers) { needPawns.push_back(dynamic_cast<PawnReq*>(new WorkerReq(e))); }
-    for (FighterPawnType e: recipe->inFighters) { needPawns.push_back(dynamic_cast<PawnReq*>(new FighterReq(e))); }
+    for (Resource r: this->recipe->inResources) { needResources.insert(r); }
+    for (expertisesID e: this->recipe->reqWorkers) { needPawns.push_back(dynamic_cast<PawnReq*>(new WorkerReq(e))); }
+    for (expertisesID e: this->recipe->inWorkers) { needPawns.push_back(dynamic_cast<PawnReq*>(new WorkerReq(e))); }
+    for (FighterPawnType e: this->recipe->inFighters) { needPawns.push_back(dynamic_cast<PawnReq*>(new FighterReq(e))); }
 }
 
 void Player::tick() { manager.tick(); }
@@ -125,7 +125,7 @@ void Player::TaskManager::tick() {//TODO:rewrite to mincost
                 }
                 rec->needPawns.clear();
             } else if (rec->movedPawns.empty()) {
-                std::cout << "starting recipe\n";
+                std::cout << "starting recipe" << std::endl;
                 toClose.push_back({rec, true});
             }
         }

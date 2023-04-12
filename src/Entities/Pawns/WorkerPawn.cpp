@@ -15,6 +15,8 @@ void WorkerPawn::create(ptr<Building> placeOfCreation) {
 }
 void WorkerPawn::assignTask(const Task& toAssign) {
     currentTask = toAssign;
+    toTake = false;
+    toDrop = false;
     //std::cout << "task " << (int)toAssign.id << "\n";
     switch (toAssign.id) {
         case TaskID::Get:
