@@ -136,6 +136,7 @@ void FighterPawn::tick(double deltaTime) {
         }
         switch (currentTask.id) {
             default:
+                owner->manager.finishTask(currentTask, ptr<Pawn>(id));
                 currentTask.id = TaskID::Idle;
         }
     }
