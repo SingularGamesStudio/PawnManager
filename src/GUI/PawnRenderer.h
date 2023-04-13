@@ -8,7 +8,8 @@
 
 #include "SFML/Graphics/RenderWindow.hpp"
 
-enum class expertisesID;
+enum class expertisesID : uint8_t;
+enum class FighterPawnType : uint8_t;
 
 class PawnRenderer {
 private:
@@ -16,7 +17,8 @@ private:
 
 public:
     explicit PawnRenderer(sf::RenderWindow& window);
-    void drawWorkerPawn(const std::set<expertisesID>& expertises, sf::Vector2f pos);
+    void drawWorkerPawn(const std::set<expertisesID>& expertises, sf::Vector2f pos, float size = 12);
+    void drawFighterPawn(FighterPawnType type, sf::Vector2f pos);
 };
 
 

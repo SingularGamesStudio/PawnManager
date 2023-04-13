@@ -26,9 +26,7 @@ unsigned int unparseVector(const uint8_t* v, std::vector<T>& result) {
 void CraftRecipe::finish() {
     for (ptr<Pawn> p: procPawns) { p.del(); }
 
-    for (FighterPawnType t: outFighters) {
-        place->addPawn(static_cast<ptr<Pawn>>(FighterPawn::createFighterPawn(t, static_cast<ptr<Building>>(place))));
-    }
+    for (FighterPawnType t: outFighters) { FighterPawn::createFighterPawn(t, place.dyn_cast<Building>()).dyn_cast<Pawn>(); }
     for (Resource t: outResources) { place->addResource(t); }
     cleanup();
 }

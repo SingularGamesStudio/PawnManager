@@ -20,3 +20,5 @@ bool CraftBuilding::assignRecipe(Recipe* recipe) {
 void CraftBuilding::tick(double deltaTime) {
     if (current != nullptr) { current->tick(deltaTime); }
 }
+
+CraftBuilding::~CraftBuilding() { stopRecipe(); }

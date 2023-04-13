@@ -5,4 +5,12 @@
 #include "../Resource.h"
 #include "Entity.h"
 
-ResourceEntity::ResourceEntity(Resource res, std::pair<double, double> pos) : resource(res) {}
+std::set<ptr<ResourceEntity>> ResourceEntity::danglingResources;
+
+ResourceEntity::ResourceEntity(int id, Resource res, std::pair<double, double> pos) : Entity(pos, ptr<Player>(), 1, 1) {
+    resource = res;
+    this->id = id;
+    danglingResources.insert(ptr<ResourceEntity>(id));
+}
+
+ResourceEntity::~ResourceEntity() { danglingResources.erase(ptr<ResourceEntity>(id)); }

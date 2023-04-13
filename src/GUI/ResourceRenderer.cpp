@@ -7,11 +7,13 @@
 #include <cmath>
 #include <numbers>
 
-#include "../Entities/Pawns/WorkerPawn.h"
 #include "SFML/Graphics/VertexArray.hpp"
 #include "SFML/Window.hpp"
 
-void ResourceRenderer::drawResource(Resource r, sf::Vector2f pos, float rotation) {
+void ResourceRenderer::drawResource(Resource r, sf::Vector2f pos, float rotation, float sz) {
+    if(r == Resource::DummyNothing) {
+        return;
+    }
     std::vector<sf::Vector2f> vertices;
     std::vector<sf::Vector2f> outerVertices;
     int cnt = 3;
@@ -30,8 +32,8 @@ void ResourceRenderer::drawResource(Resource r, sf::Vector2f pos, float rotation
         float angle = static_cast<float>(i) * 2 * std::numbers::pi_v<float> / cnt + rotation;
         float x = std::cos(angle);
         float y = std::sin(angle);
-        vertices.push_back(sf::Vector2f(x * 5.0f, y * 5.0f) + pos);
-        outerVertices.push_back(sf::Vector2f(x * 7.0f, y * 7.0f) + pos);
+        vertices.push_back(sf::Vector2f(x * (sz - 2), y * (sz - 2)) + pos);
+        outerVertices.push_back(sf::Vector2f(x * sz, y * sz) + pos);
     }
     sf::VertexArray arr;
     sf::Transform t;

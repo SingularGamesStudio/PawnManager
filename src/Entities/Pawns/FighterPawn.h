@@ -10,10 +10,11 @@ class Entity;
 class ResourceEntity;
 class FighterPawn : public Pawn {
 public:
-    double atk;
-    double speed;
+    double atk = 10;
+    double speed = 100;
     bool toAttack = false;
     std::pair<double, double> destinationPosition;
+    ptr<Building> destination;
     virtual void attack(ptr<Entity> attacked);
     virtual FighterPawnType getType() const;
     static ptr<FighterPawn> createFighterPawn(FighterPawnType type, ptr<Building> placeOfCreation);
@@ -24,22 +25,24 @@ public:
     void getResource(ResourceEntity* toGet);
     void assignTask(const Task& task) override;
     void tick(double deltaTime) override;
+    virtual ~FighterPawn();
     std::vector<uint8_t> serialize() const override;
     size_t deserialize(const std::vector<uint8_t>& data) override;
 protected:
     std::vector<uint8_t> serializeSelf() const;
     size_t deserializeSelf(const std::vector<uint8_t> &data);
 };
+
 class DummyMonk : public FighterPawn {
 public:
     //void attack(ptr<Entity> attacked) override;
-    FighterPawnType getType() override;
-    DummyMonk(Task task, bool BOOL, Resource resource, ptr<Player> Owner, ptr<Building> dest, ptr<Building> in);
+    FighterPawnType getType() const override;
+    DummyMonk(int id, Task task, bool BOOL, Resource resource, ptr<Player> Owner, ptr<Building> dest, ptr<Building> in);
 };
 class DummySwordsman : public FighterPawn {
 public:
     //void attack(ptr<Entity> attacked) override;
-    FighterPawnType getType() override;
-    DummySwordsman(Task task, bool BOOL, Resource resource, ptr<Player> Owner, ptr<Building> dest, ptr<Building> in);
+    FighterPawnType getType() const override;
+    DummySwordsman(int id, Task task, bool BOOL, Resource resource, ptr<Player> Owner, ptr<Building> dest, ptr<Building> in);
 };
 #endif//FIGHTERPAWN_H

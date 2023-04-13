@@ -5,6 +5,7 @@
 #include "Entities/Buildings/Building.h"
 #include "Entities/Buildings/BuildingRegisty.h"
 #include "Entities/Buildings/CraftBuilding.h"
+#include "Entities/Pawns/FighterPawn.h"
 #include "Entities/Pawns/WorkerPawn.h"
 #include "Player.h"
 #include "Recipes/CraftRecipe.h"
@@ -25,16 +26,21 @@ ptr<Player> initTest() {
         ptr<WorkerPawn> pawn = makeptr<WorkerPawn>();
         pawn->create(player->hub);
         pawn->expertises.insert(expertisesID::DummySmeltery);
-        player->pawns.push_back(static_cast<ptr<Pawn>>(pawn));
+        player->pawns.insert(pawn.dyn_cast<Pawn>());
     }
     crafter = makeptr<CraftBuilding>(std::make_pair(100, 120), player, 100);
-    player->hub->children.push_back(static_cast<ptr<Building>>(crafter));
+    player->hub->children.insert(crafter.dyn_cast<Building>());
     crafter->parent = player->hub;
     recipe = new CraftRecipe();
     recipe->inResources.push_back(Resource::DummyOre);
     recipe->reqWorkers.push_back(expertisesID::DummySmeltery);
     recipe->outResources.push_back(Resource::DummyIngot);
     recipe->duration = 5;
+    crafter->recipes.push_back(recipe);
+    recipe = new CraftRecipe();
+    recipe->inResources.push_back(Resource::DummyOre);
+    recipe->outFighters.push_back(FighterPawnType::DummySwordsman);
+    recipe->duration = 2;
     crafter->recipes.push_back(recipe);
     return player;
 }

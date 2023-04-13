@@ -4,24 +4,13 @@
 
 #include "../Player.h"
 
-template<typename T>
-size_t copyVariable(uint8_t* dst, T src) {
-    std::memcpy(dst, &src, sizeof(src));
-    return sizeof(src);
-}
 
-template<typename T>
-size_t initializeVariable(const uint8_t* src, T& dst) {
-    std::memcpy(&dst, src, sizeof(dst));
-    return sizeof(dst);
-}
 
-void Entity::changeHealth(int delta) {
+
+void Entity::changeHealth(double delta) {
     hp += delta;
     if (hp <= 0) { delete this; }
 }
-
-Entity::~Entity() {}
 
 std::vector<uint8_t> Entity::serialize() const { return serializeSelf(); }
 size_t Entity::deserialize(const std::vector<uint8_t> &data) { return deserializeSelf(data); }

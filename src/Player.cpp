@@ -41,14 +41,14 @@ bool Player::checkRecipe(Recipe* recipe) {
     dfs(hub, resources);
     if (!resources.empty()) return false;
     for (ptr<Pawn> pawn: pawns) {
-        if (ptr<WorkerPawn> worker = static_cast<ptr<WorkerPawn>>(pawn); worker) {
+        if (ptr<WorkerPawn> worker = pawn.dyn_cast<WorkerPawn>(); worker) {
             for (expertisesID e: worker->expertises) {//TODO:change to mincost
                 if (workers.contains(e)) {
                     workers.erase(workers.find(e));
                     break;
                 }
             }
-        } else if (ptr<FighterPawn> fighter = static_cast<ptr<FighterPawn>>(pawn); fighter) {
+        } else if (ptr<FighterPawn> fighter = pawn.dyn_cast<FighterPawn>(); fighter) {
             if (fighters.contains(fighter->getType())) fighters.erase(fighters.find(fighter->getType()));
         }
     }
@@ -58,7 +58,7 @@ bool Player::checkRecipe(Recipe* recipe) {
 
 ptr<CraftBuilding> Player::placeBlueprint(std::pair<double, double> pos, ptr<Building> parent, double r) {
     ptr<CraftBuilding> blueprint = makeptr<CraftBuilding>(pos, ptr<Player>(id), 100, r, parent);
-    parent->children.push_back(static_cast<ptr<Building>>(blueprint));
+    parent->children.insert(blueprint.dyn_cast<Building>());
     return blueprint;
 }
 
@@ -66,7 +66,7 @@ bool Player::TaskManager::startRecipe(Recipe* recipe, ptr<Building> where) {
     if (!owner->checkRecipe(recipe)) return false;
     if (dynamic_cast<BuildRecipe*>(recipe) != nullptr) {
         BuildRecipe* brecipe = dynamic_cast<BuildRecipe*>(recipe);
-        where = static_cast<ptr<Building>>(owner->placeBlueprint(brecipe->pos, where, brecipe->toBuild.radius));
+        where = (owner->placeBlueprint(brecipe->pos, where, brecipe->toBuild.radius)).dyn_cast<Building>();
     }
     work.insert(new PendingRecipe(recipe, where, 0));
     return true;
@@ -88,13 +88,17 @@ void Player::tick() { manager.tick(); }
 void Player::TaskManager::tick() {//TODO:rewrite to mincost
     std::vector<ptr<WorkerPawn>> haulers;
     for (ptr<Pawn> p: owner->pawns) {
-        ptr<WorkerPawn> worker = static_cast<ptr<WorkerPawn>>(p);
+        ptr<WorkerPawn> worker = p.dyn_cast<WorkerPawn>();
         if (worker && worker->currentTask.id == TaskID::Idle) { haulers.push_back(worker); }
     }
     std::vector<std::pair<PendingRecipe*, bool>> toClose;
     std::unordered_set<ptr<CraftBuilding>> busy;
     for (PendingRecipe* rec: work) {
-        if (!rec->needResources.empty()) {
+        if (!rec->place) {
+            std::cerr << "building destroyed, cancelling recipe"
+                      << "\n";
+            toClose.push_back({rec, false});
+        } else if (!rec->needResources.empty()) {
             std::multiset<Resource> newNeed;
             for (Resource resource: rec->needResources) {
                 ptr<Building> where = findResource(owner->hub, resource);
@@ -129,7 +133,7 @@ void Player::TaskManager::tick() {//TODO:rewrite to mincost
                 }
                 rec->needPawns.clear();
             } else if (rec->movedPawns.empty()) {
-                ptr<CraftBuilding> crafter = static_cast<ptr<CraftBuilding>>(rec->place);
+                ptr<CraftBuilding> crafter = rec->place.dyn_cast<CraftBuilding>();
                 if (crafter->current == nullptr && !busy.contains(crafter)) {
                     std::cout << "starting recipe" << std::endl;
                     toClose.push_back({rec, true});
@@ -148,7 +152,7 @@ void Player::TaskManager::tick() {//TODO:rewrite to mincost
 }
 
 void Player::TaskManager::PendingRecipe::start() {
-    ptr<CraftBuilding> crafter = static_cast<ptr<CraftBuilding>>(place);
+    ptr<CraftBuilding> crafter = place.dyn_cast<CraftBuilding>();
     if (!place.dyn_cast<CraftBuilding>()) throw std::logic_error("requested recipe for building which could not craft");
     if (!crafter->assignRecipe(recipe)) {
         std::cerr << "requested recipe start in building by id " << place->id << ", but recipe requirements are not met" << std::endl;
@@ -160,16 +164,20 @@ void Player::TaskManager::PendingRecipe::start() {
 Player::TaskManager::PendingRecipe::~PendingRecipe() {
     for (PawnReq* p: needPawns) { delete p; }
     for (ptr<Pawn> p: movedPawns) {
-        p->assignTask(Task(TaskID::Idle));
+        if (p) p->assignTask(Task(TaskID::Idle));
         delete backupNeeds[p];
     }
-    for (ptr<Pawn> p: donePawns) { p->assignTask(Task(TaskID::Idle)); }
-    for (Resource r: doneResources) {
-        if (place->reservedResources.contains(r)) {
-            place->reservedResources.erase(place->reservedResources.find(r));
-            place->resources.insert(r);
-        } else
-            std::cerr << "when deleting PendingRecipe, trying to unreserve resource, but it is not reserved";
+    for (ptr<Pawn> p: donePawns) {
+        if (p) p->assignTask(Task(TaskID::Idle));
+    }
+    if (place) {
+        for (Resource r: doneResources) {
+            if (place->reservedResources.contains(r)) {
+                place->reservedResources.erase(place->reservedResources.find(r));
+                place->resources.insert(r);
+            } else
+                std::cerr << "when deleting PendingRecipe, trying to unreserve resource, but it is not reserved";
+        }
     }
     delete recipe;
 }
@@ -231,11 +239,22 @@ ptr<Pawn> Player::TaskManager::FighterReq::find(ptr<Player> owner) {
         ptr<FighterPawn> f = p.dyn_cast<FighterPawn>();
         if (f && f->getType() == type && f->currentTask.id == TaskID::Idle) { return p; }
     }
+    return ptr<Pawn>();
 }
 
 ptr<Pawn> Player::TaskManager::WorkerReq::find(ptr<Player> owner) {
     for (auto p: owner->pawns) {
         ptr<WorkerPawn> w = p.dyn_cast<WorkerPawn>();
         if (w && w->expertises.contains(expertise) && w->currentTask.id == TaskID::Idle) { return p; }
+    }
+    return ptr<Pawn>();
+}
+
+void Player::attack(ptr<Building> what) {
+    for (ptr<Pawn> p: pawns) {
+        if (p.dyn_cast<FighterPawn>()) {
+            ptr<FighterPawn> f = p.dyn_cast<FighterPawn>();
+            f->assignTask(Task(TaskID::Attack, what));
+        }
     }
 }

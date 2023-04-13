@@ -14,19 +14,19 @@ class Building : public virtual Entity {
 
 public:
     constexpr static const double baseBuildingRadius = 30;
-    Building(std::pair<double, double> pos, ptr<Player> owner, unsigned int hp, double radius = baseBuildingRadius,
+    Building(int id, std::pair<double, double> pos, ptr<Player> owner, double hp, double radius = baseBuildingRadius,
              ptr<Building> parent = ptr<Building>())
         : Entity(pos, owner, hp, radius) {
         this->parent = parent;
+        this->id = id;
     }
     ptr<Building> parent = ptr<Building>();
-    std::vector<ptr<Building>> children;
+    std::set<ptr<Building>> children;
     std::multiset<Resource> resources;
     std::multiset<Resource> reservedResources;
     std::set<ptr<Pawn>> pawns;
 
     void addResource(Resource resource);
-
 
     bool removeResource(Resource resource);
 
@@ -36,5 +36,7 @@ public:
     void removePawn(ptr<Pawn> pawn);
 
     virtual void tick(double deltaTime){};
+
+    virtual ~Building();
 };
 #endif//BUILDING_H

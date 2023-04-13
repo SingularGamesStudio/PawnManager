@@ -1,5 +1,6 @@
 #include "Pawn.h"
 
+#include "../../Player.h"
 #include "../../Resource.h"
 #include "../Buildings/Building.h"
 #include "../ResourceEntity.h"
@@ -12,16 +13,7 @@ void Pawn::drop(ptr<Building> in, std::pair<double, double> pos) {
         holding = Resource::DummyNothing;
         return;
     }
-    if (holding != Resource::DummyNothing) ResourceEntity(holding, pos);
-}
-void Pawn::destroy() {
-    if (positionBuilding && holding != Resource::DummyNothing) {
-        drop(positionBuilding, position);
-    } else if (holding != Resource::DummyNothing) {
-        drop(positionBuilding, position);
-    }
-    ///TODO task not done... god object taskmanager not happy :(
-    //~Pawn();
+    if (holding != Resource::DummyNothing) makeptr<ResourceEntity>(holding, pos);
 }
 void Pawn::IMNotHere() {
     if (positionBuilding) {
@@ -82,3 +74,5 @@ size_t Pawn::deserializeSelf(const std::vector<uint8_t> &data) {
     curr += initializeVariable(curr, toTake);
     return curr - data.data();
 }
+
+Pawn::~Pawn() { owner->pawns.erase(ptr<Pawn>(id)); }

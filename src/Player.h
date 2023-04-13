@@ -8,16 +8,16 @@
 #include "Recipes/Recipe.h"
 #include "Task.h"
 
-enum class expertisesID;
+enum class expertisesID : uint8_t ;
 class Building;
 class Pawn;
 class Player;
 
 class Player : public RequiresID {
 public:
-    Player() {}
+    Player(int id) { id = id; }
     ptr<Building> hub;
-    std::vector<ptr<Pawn>> pawns;
+    std::set<ptr<Pawn>> pawns;
 
     struct TaskManager {
 
@@ -82,5 +82,6 @@ public:
     ptr<CraftBuilding> placeBlueprint(std::pair<double, double> pos, ptr<Building> parent, double r);
 
     void tick();
+    void attack(ptr<Building> what);
 };
 #endif//PLAYER_H

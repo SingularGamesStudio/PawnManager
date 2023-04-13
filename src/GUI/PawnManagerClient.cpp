@@ -6,14 +6,17 @@
 
 #include <ctime>
 #include <iostream>
+#include <numbers>
 #include <random>
 
 #include "../Entities/Buildings/Building.h"
 #include "../Entities/Buildings/CraftBuilding.h"
-#include "../Entities/Pawns/Pawn.h"
+#include "../Entities/Pawns/FighterPawn.h"
 #include "../Entities/Pawns/WorkerPawn.h"
+#include "../Entities/ResourceEntity.h"
 #include "../Recipes/BuildRecipe.h"
 #include "../testSystem.h"
+#include "BuildBuildingWindow.h"
 #include "CraftBuildingWindow.h"
 #include "MainMenuWindow.h"
 #include "SFML/Graphics/Text.hpp"
@@ -69,14 +72,21 @@ void PawnManagerClient::updateAndRender() {
     std::uniform_real_distribution<float> dist2(0, std::numbers::pi_v<float>);
     for (ptr<Pawn> p: player->pawns) {
         auto [x, y] = p->position;
-        ptr<WorkerPawn> wp = static_cast<ptr<WorkerPawn>>(p);
+        ptr<WorkerPawn> wp = p.dyn_cast<WorkerPawn>();
+        ptr<FighterPawn> fp = p.dyn_cast<FighterPawn>();
         if (wp) {
             pawnRenderer->drawWorkerPawn(wp->expertises, sf::Vector2f(x, y) * renderScale + center);
             if (wp->holding != Resource::DummyNothing) {
                 float rotation = dist2(rng);
                 resourceRenderer->drawResource(wp->holding, sf::Vector2f(x, y) * renderScale + center, rotation);
             }
+        } else if (fp) {
+            pawnRenderer->drawFighterPawn(fp->getType(), sf::Vector2f(x, y) * renderScale + center);
         }
+    }
+    for (ptr<ResourceEntity> res: ResourceEntity::danglingResources) {
+        resourceRenderer->drawResource(res->resource, sf::Vector2f(res->position.first, res->position.second) * renderScale + center,
+                                       std::numbers::pi_v<float> / 4.0f);
     }
     winManager.updateAndRender();
 }
@@ -126,7 +136,7 @@ void PawnManagerClient::onMouseClick(int x, int y, sf::Mouse::Button b) {
     if (!onBuildingMouseClick(player->hub, pos, b)) {
         ptr<Building> building = ptr<Building>(selectedBuilding);
         if (building) {
-            player->manager.startRecipe(new BuildRecipe({pos.x, pos.y}, 0), building);
+            winManager.pushWindow(new BuildBuildingWindow(selectedBuilding, pos));
             selectedBuilding = -1;
         }
     }
@@ -139,11 +149,12 @@ bool PawnManagerClient::onBuildingMouseClick(ptr<Building> b, sf::Vector2f pos, 
         if (button == sf::Mouse::Left) {
             selectedBuilding = b->id;
         } else if (button == sf::Mouse::Right) {
-            ptr<Building> c = static_cast<ptr<Building>>(b);
-            CraftBuilding* cb = c.dyn_cast<CraftBuilding>();
+            ptr<Building> c = b.dyn_cast<Building>();
+            ptr<CraftBuilding> cb = c.dyn_cast<CraftBuilding>();
             if (cb && !cb->recipes.empty()) { winManager.pushWindow(new CraftBuildingWindow(c->id)); }
         } else if (button == sf::Mouse::Middle) {
-            std::cout << "Building with id " << b.id << " was middle clicked!" << std::endl;
+            //b.del();
+            player->attack(b);
         }
         return true;
     }

@@ -4,20 +4,30 @@
 #include "../Buildings/Building.h"
 #include "../Entity.h"
 #include "../ResourceEntity.h"
-FighterPawnType DummyMonk::getType() { return FighterPawnType::DummyMonk; }
-FighterPawnType DummySwordsman::getType() { return FighterPawnType::DummySwordsman; }
+FighterPawnType DummyMonk::getType() const { return FighterPawnType::DummyMonk; }
+FighterPawnType DummySwordsman::getType() const { return FighterPawnType::DummySwordsman; }
+FighterPawnType FighterPawn::getType() const { return FighterPawnType::DummNotFound; };
+
+void FighterPawn::attack(ptr<Entity> attacked) { attacked->changeHealth(-atk * 1e-7); std::cout<<"Genuinly attacking\n"; };
+
 ptr<FighterPawn> FighterPawn::createFighterPawn(FighterPawnType type, ptr<Building> placeOfCreation) {
     ptr<FighterPawn> newborn;
     switch (type) {
         case FighterPawnType::DummyMonk:
-            newborn = static_cast<ptr<FighterPawn>>(makeptr<DummyMonk>(Task(TaskID::Idle, placeOfCreation), false, Resource::DummyNothing,
-                                                                       placeOfCreation->owner, placeOfCreation, placeOfCreation));
+            newborn = (makeptr<DummyMonk>(Task(TaskID::Idle, placeOfCreation), false, Resource::DummyNothing, placeOfCreation->owner, placeOfCreation,
+                                          placeOfCreation))
+                              .dyn_cast<FighterPawn>();
+            break;
         case FighterPawnType::DummySwordsman:
-            newborn = static_cast<ptr<FighterPawn>>(makeptr<DummySwordsman>(Task(TaskID::Idle, placeOfCreation), false, Resource::DummyNothing,
-                                                                            placeOfCreation->owner, placeOfCreation, placeOfCreation));
+            newborn = (makeptr<DummySwordsman>(Task(TaskID::Idle, placeOfCreation), false, Resource::DummyNothing, placeOfCreation->owner,
+                                               placeOfCreation, placeOfCreation))
+                              .dyn_cast<FighterPawn>();
+            break;
         default:
             throw("Type of FighterPawn not found");
     }
+    placeOfCreation->owner->pawns.insert(newborn->id);
+    newborn->IMHere(placeOfCreation);
 }
 void FighterPawn::getResource(ResourceEntity* toGet) {
     if (positionBuilding) IMNotHere();
@@ -52,11 +62,14 @@ void FighterPawn::assignTask(const Task& toAssign) {
         case TaskID::Attack:
             toAttack = true;
             moveToBuilding(toAssign.destination);
+            std::cout<<"Attacking\n";
+            break;
         default:
             throw("Unexpected FighterPawn TaskID: ", toAssign.id);
     }
 }
-DummyMonk::DummyMonk(Task task, bool BOOL, Resource resource, ptr<Player> Owner, ptr<Building> dest, ptr<Building> in) {
+DummyMonk::DummyMonk(int id, Task task, bool BOOL, Resource resource, ptr<Player> Owner, ptr<Building> dest, ptr<Building> in) {
+    this->id = id;
     currentTask = task;
     travelling = BOOL;
     holding = resource;
@@ -64,7 +77,8 @@ DummyMonk::DummyMonk(Task task, bool BOOL, Resource resource, ptr<Player> Owner,
     destination = dest;
     IMHere(in);
 }
-DummySwordsman::DummySwordsman(Task task, bool BOOL, Resource resource, ptr<Player> Owner, ptr<Building> dest, ptr<Building> in) {
+DummySwordsman::DummySwordsman(int id, Task task, bool BOOL, Resource resource, ptr<Player> Owner, ptr<Building> dest, ptr<Building> in) {
+    this->id = id;
     currentTask = task;
     travelling = BOOL;
     holding = resource;
@@ -79,23 +93,25 @@ void FighterPawn::takePresentResource(ResourceEntity* toTake) {
 }
 void FighterPawn::moveToPosition(std::pair<double, double> pos) {
     IMNotHere();
+    travelling = true;
     destinationPosition = pos;
 }
 void FighterPawn::moveToBuilding(ptr<Building> dest) {
     moveToPosition(dest->position);
-    IMHere(dest);
 }
 void FighterPawn::tick(double deltaTime) {
+    if (!currentTask.destination) {
+        toAttack = false;
+        currentTask = Task(TaskID::Move, owner->hub);
+        return;
+    }
     std::pair<double, double> dest = destinationPosition;
     double deltaX = fabs(position.first - dest.first);
     double deltaY = fabs(position.second - dest.second);
     double wholeDelta = deltaX * deltaX + deltaY * deltaY;
     if (toAttack && wholeDelta <= currentTask.destination->radius) {
-        attack(static_cast<ptr<Entity>>(currentTask.destination));
-        if (currentTask.destination->hp <= 0) {
-            toAttack = false;
-            currentTask = Task(TaskID::Move, owner->hub);
-        }
+        attack(currentTask.destination.dyn_cast<Entity>());
+        return;
     }
     if (travelling) {
         double signX = position.first - dest.first;
@@ -119,7 +135,8 @@ void FighterPawn::tick(double deltaTime) {
         //std::cerr<< position.first <<' '<< position.second <<'\n';
         //std::cerr<< dest->position.first <<' '<< dest->position.second <<'\n';
         if (signX * (position.first - dest.first) <= 1 && signY * (position.second - dest.second) <= 1) {
-            if (!destination) IMHere(destination);
+            travelling = false;
+            position = dest;
         }
     } else {
         travelling = false;
@@ -141,8 +158,6 @@ void FighterPawn::tick(double deltaTime) {
         }
     }
 }
-void FighterPawn::attack(ptr<Entity> attacked) { attacked->hp -= atk; };
-FighterPawnType FighterPawn::getType() const { return FighterPawnType::DummNotFound; };
 
 std::vector<uint8_t> FighterPawn::serialize() const {
     return serializeSelf();
@@ -151,13 +166,6 @@ std::vector<uint8_t> FighterPawn::serialize() const {
 size_t FighterPawn::deserialize(const std::vector<uint8_t>& data) {
     return deserializeSelf(data);
 }
-
-/*
-    double atk;
-    double speed;
-    bool toAttack = false;
-    std::pair<double, double> destinationPosition;
-*/
 
 std::vector<uint8_t> FighterPawn::serializeSelf() const {
     std::vector<uint8_t> result = Pawn::serializeSelf();
@@ -174,10 +182,20 @@ std::vector<uint8_t> FighterPawn::serializeSelf() const {
 
 size_t FighterPawn::deserializeSelf(const std::vector<uint8_t> &data) {
     size_t shift = Pawn::deserializeSelf(data);
-    const uint8_t* curr = data.data() + shift;
+    const uint8_t *curr = data.data() + shift;
     curr += initializeVariable(curr, atk);
     curr += initializeVariable(curr, speed);
     curr += initializeVariable(curr, toAttack);
     curr += initializeVariable(curr, destinationPosition);
     return curr - data.data();
+}
+
+FighterPawn::~FighterPawn() {
+    owner->manager.cancelTask(currentTask, ptr<Pawn>(id));
+    if (holding != Resource::DummyNothing)
+        if (positionBuilding)
+            positionBuilding->addResource(holding);
+        else
+            makeptr<ResourceEntity>(holding, position);
+    IMNotHere();
 }

@@ -12,9 +12,9 @@ class CraftBuilding;
 class Building;
 class Pawn;
 class WorkerPawn;
-enum class Resource;
-enum class expertisesID;
-enum class FighterPawnType;
+enum class Resource : uint8_t;
+enum class expertisesID : uint8_t ;
+enum class FighterPawnType : uint8_t ;
 enum class RecipeType : uint8_t { BASIC_RECIPE, CRAFT_RECIPE, BUILD_RECIPE, SHOOT_RECIPE };
 
 class Recipe {

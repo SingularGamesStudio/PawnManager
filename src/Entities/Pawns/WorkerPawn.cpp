@@ -6,6 +6,7 @@
 
 #include "../../Player.h"
 #include "../Buildings/Building.h"
+#include "../ResourceEntity.h"
 void WorkerPawn::create(ptr<Building> placeOfCreation) {
     currentTask = Task(TaskID::Idle, placeOfCreation);
     travelling = false;
@@ -18,6 +19,8 @@ void WorkerPawn::assignTask(const Task& toAssign) {
     currentTask = toAssign;
     toTake = false;
     toDrop = false;
+    onTheWay.clear();
+    currentInWay = 0;
     switch (toAssign.id) {
         case TaskID::Get:
             moveToBuilding(toAssign.destination);
@@ -37,6 +40,10 @@ void WorkerPawn::assignTask(const Task& toAssign) {
             break;
         case TaskID::Idle:
             break;
+        case TaskID::DropResource:
+            toDrop = true;
+            onTheWay.push_back(positionBuilding);
+            break;
         default:
             throw("Unexpected WorkerPawn TaskID: ", toAssign.id);
     }
@@ -44,6 +51,10 @@ void WorkerPawn::assignTask(const Task& toAssign) {
 void WorkerPawn::tick(double deltaTime) {
     if (currentInWay < onTheWay.size()) {
         ptr<Building> dest = onTheWay[currentInWay];
+        if (!dest) {
+            assignTask(Task(TaskID::DropResource));
+            return;
+        }
         double signX = position.first - dest->position.first;
         double deltaX = fabs(position.first - dest->position.first);
         double signY = position.second - dest->position.second;
@@ -78,6 +89,7 @@ void WorkerPawn::tick(double deltaTime) {
         if (toDrop) {
             toDrop = false;
             drop(positionBuilding);
+            return;
         }
         if (toTake) {
             if (positionBuilding->removeResource(needed)) {
@@ -169,20 +181,29 @@ std::vector<uint8_t> WorkerPawn::serializeSelf() const {
 
 size_t WorkerPawn::deserializeSelf(const std::vector<uint8_t> &data) {
     size_t shift = Pawn::deserializeSelf(data);
-    const uint8_t* curr = data.data() + shift;
+    const uint8_t *curr = data.data() + shift;
     curr += initializeVariable(curr, currentInWay);
 
     size_t size;
     curr += initializeVariable(curr, size);
-    for(size_t i = 0; i < size; ++i){
+    for (size_t i = 0; i < size; ++i) {
         expertisesID tmp;
         curr += initializeVariable(curr, tmp);
     }
 
     curr += initializeVariable(curr, size);
     onTheWay.resize(size);
-    for(size_t i = 0; i < size; ++i){
+    for (size_t i = 0; i < size; ++i) {
         curr += initializeVariable(curr, onTheWay[i]);
     }
     return curr - data.data();
+}
+
+WorkerPawn::~WorkerPawn() {
+    owner->manager.cancelTask(currentTask, ptr<Pawn>(id));
+    if (holding != Resource::DummyNothing)
+        if (positionBuilding) positionBuilding->addResource(holding);
+        else
+            makeptr<ResourceEntity>(holding, position);
+    IMNotHere();
 }
