@@ -19,7 +19,7 @@ public:
     bool toDrop;
     bool toTake;
     void drop(ptr<Building> in, std::pair<double, double> pos = {0, 0});
-    ~Pawn() = default;
+    virtual ~Pawn();
     void IMNotHere();
     void IMHere(ptr<Building> to);
     virtual void moveToBuilding(ptr<Building> toMove) = 0;

@@ -58,7 +58,7 @@ bool Player::checkRecipe(Recipe* recipe) {
 
 ptr<CraftBuilding> Player::placeBlueprint(std::pair<double, double> pos, ptr<Building> parent, double r) {
     ptr<CraftBuilding> blueprint = makeptr<CraftBuilding>(pos, ptr<Player>(id), 100, r, parent);
-    parent->children.push_back(static_cast<ptr<Building>>(blueprint));
+    parent->children.insert(static_cast<ptr<Building>>(blueprint));
     return blueprint;
 }
 
@@ -231,6 +231,7 @@ ptr<Pawn> Player::TaskManager::FighterReq::find(ptr<Player> owner) {
         ptr<FighterPawn> f = p.dyn_cast<FighterPawn>();
         if (f && f->getType() == type && f->currentTask.id == TaskID::Idle) { return p; }
     }
+    return ptr<Pawn>();
 }
 
 ptr<Pawn> Player::TaskManager::WorkerReq::find(ptr<Player> owner) {
@@ -238,4 +239,5 @@ ptr<Pawn> Player::TaskManager::WorkerReq::find(ptr<Player> owner) {
         ptr<WorkerPawn> w = p.dyn_cast<WorkerPawn>();
         if (w && w->expertises.contains(expertise) && w->currentTask.id == TaskID::Idle) { return p; }
     }
+    return ptr<Pawn>();
 }

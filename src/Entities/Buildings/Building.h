@@ -20,7 +20,7 @@ public:
         this->parent = parent;
     }
     ptr<Building> parent = ptr<Building>();
-    std::vector<ptr<Building>> children;
+    std::set<ptr<Building>> children;
     std::multiset<Resource> resources;
     std::multiset<Resource> reservedResources;
     std::set<ptr<Pawn>> pawns;

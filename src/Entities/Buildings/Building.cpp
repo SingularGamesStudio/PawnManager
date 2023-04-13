@@ -30,9 +30,10 @@ Building::~Building(){
     for(ptr<Building> b : children){
         b.del();
     }
-    for(ptr<Pawn> p : pawns) {
-        p.del();
-    }
+    if(parent)
+        parent->children.erase(ptr<Building>(id));
+    while(!pawns.empty())
+        (*pawns.begin()).del();
     for(Resource r: reservedResources){
         resources.insert(r);
     }

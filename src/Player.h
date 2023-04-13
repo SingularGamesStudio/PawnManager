@@ -17,7 +17,7 @@ class Player : public RequiresID {
 public:
     Player() {}
     ptr<Building> hub;
-    std::vector<ptr<Pawn>> pawns;
+    std::set<ptr<Pawn>> pawns;
 
     struct TaskManager {
 

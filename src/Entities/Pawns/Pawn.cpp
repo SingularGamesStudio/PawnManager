@@ -3,6 +3,7 @@
 #include "../../Resource.h"
 #include "../Buildings/Building.h"
 #include "../ResourceEntity.h"
+#include "../../Player.h"
 
 
 void Pawn::drop(ptr<Building> in, std::pair<double, double> pos) {
@@ -37,3 +38,7 @@ void Pawn::tick(double deltaTime) {}
 void Pawn::deserialize(const std::vector<uint8_t>& data) const {}
 
 std::vector<uint8_t> Pawn::serialize() const {}
+
+Pawn::~Pawn() {
+    owner->pawns.erase(ptr<Pawn>(id));
+}
