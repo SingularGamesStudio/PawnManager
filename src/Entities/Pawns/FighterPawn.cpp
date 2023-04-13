@@ -142,4 +142,42 @@ void FighterPawn::tick(double deltaTime) {
     }
 }
 void FighterPawn::attack(ptr<Entity> attacked) { attacked->hp -= atk; };
-FighterPawnType FighterPawn::getType() { return FighterPawnType::DummNotFound; };
+FighterPawnType FighterPawn::getType() const { return FighterPawnType::DummNotFound; };
+
+std::vector<uint8_t> FighterPawn::serialize() const {
+    return serializeSelf();
+}
+
+size_t FighterPawn::deserialize(const std::vector<uint8_t>& data) {
+    return deserializeSelf(data);
+}
+
+/*
+    double atk;
+    double speed;
+    bool toAttack = false;
+    std::pair<double, double> destinationPosition;
+*/
+
+std::vector<uint8_t> FighterPawn::serializeSelf() const {
+    std::vector<uint8_t> result = Pawn::serializeSelf();
+    result.insert(result.begin(), static_cast<uint8_t>(getType()));
+    size_t size = sizeof(double) * 2 + sizeof(bool) + sizeof(std::pair<double, double>);
+    result.resize(result.size() + size);
+    uint8_t* curr = result.data() + result.size();
+    curr += copyVariable(curr, atk);
+    curr += copyVariable(curr, speed);
+    curr += copyVariable(curr, toAttack);
+    curr += copyVariable(curr, destinationPosition);
+    return result;
+}
+
+size_t FighterPawn::deserializeSelf(const std::vector<uint8_t> &data) {
+    size_t shift = Pawn::deserializeSelf(data);
+    const uint8_t* curr = data.data() + shift;
+    curr += initializeVariable(curr, atk);
+    curr += initializeVariable(curr, speed);
+    curr += initializeVariable(curr, toAttack);
+    curr += initializeVariable(curr, destinationPosition);
+    return curr - data.data();
+}

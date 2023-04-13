@@ -7,20 +7,29 @@
 
 #include "../IDmanager.h"
 
+template<typename T>
+size_t copyVariable(uint8_t* dst, T src);
+
+template<typename T>
+size_t initializeVariable(const uint8_t* src, T& dst);
+
 class Player;
 
 class Entity : public RequiresID {
 public:
     Entity() {}
-    Entity(std::pair<double, double> pos, ptr<Player> owner, unsigned int hp, double radius) : position(pos), owner(owner), hp(hp), radius(radius) {}
-    int hp;
+    Entity(std::pair<double, double> pos, ptr<Player> owner, double hp, double radius) : position(pos), owner(owner), hp(hp), radius(radius) {}
+    double hp;
     ptr<Player> owner;
-    void changeHealth(int delta);
-
     std::pair<double, double> position;
     double radius;
-    virtual std::vector<uint8_t> serialize() const;
-    virtual void deserialize(const std::vector<uint8_t> &data);
+
+    void changeHealth(int delta);
     virtual ~Entity();
+    virtual std::vector<uint8_t> serialize() const;
+    virtual size_t deserialize(const std::vector<uint8_t> &data);
+protected:
+    std::vector<uint8_t> serializeSelf() const;
+    size_t deserializeSelf(const std::vector<uint8_t> &data);
 };
 #endif// ENTITY_H

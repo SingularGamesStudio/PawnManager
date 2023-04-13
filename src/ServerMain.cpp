@@ -37,7 +37,7 @@ int main(int argc, char** argv) {
     while (1) {
         auto dTime = chrono::steady_clock::now() - currTime;
         currTime += dTime;
-        // TODO: Logic
+        /// TODO: Logic
         server.respond();
     }
     server.stop();

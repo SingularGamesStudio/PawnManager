@@ -2,6 +2,7 @@
 
 #include <cmath>
 #include <iostream>
+#include <cstring>
 
 #include "../../Player.h"
 #include "../Buildings/Building.h"
@@ -134,4 +135,54 @@ void WorkerPawn::moveToBuilding(ptr<Building> dest) {
         q.push(currentB->parent);
     }
     for (ptr<Building> v: visited[dest]) { onTheWay.push_back(v); }
+}
+
+std::vector<uint8_t> WorkerPawn::serialize() const {
+    return serializeSelf();
+}
+
+size_t WorkerPawn::deserialize(const std::vector<uint8_t>& data) {
+    return deserializeSelf(data);
+}
+
+std::vector<uint8_t> WorkerPawn::serializeSelf() const {
+    std::vector<uint8_t> result = Pawn::serializeSelf();
+    result.insert(result.begin(), DummyWorker);
+    size_t size = sizeof(size_t) * 3 + sizeof(expertisesID) * expertises.size()
+            + sizeof(ptr<Building>) * onTheWay.size();
+    result.resize(result.size() + size);
+    uint8_t* curr = result.data() + result.size();
+    curr += copyVariable(curr, currentInWay);
+
+    curr += copyVariable(curr, expertises.size());
+    for(const auto& i : expertises) {
+        curr += copyVariable(curr, i);
+    }
+
+    curr += copyVariable(curr, onTheWay.size());
+    for(const auto& i : onTheWay) {
+        curr += copyVariable(curr, i);
+    }
+    return result;
+}
+
+
+size_t WorkerPawn::deserializeSelf(const std::vector<uint8_t> &data) {
+    size_t shift = Pawn::deserializeSelf(data);
+    const uint8_t* curr = data.data() + shift;
+    curr += initializeVariable(curr, currentInWay);
+
+    size_t size;
+    curr += initializeVariable(curr, size);
+    for(size_t i = 0; i < size; ++i){
+        expertisesID tmp;
+        curr += initializeVariable(curr, tmp);
+    }
+
+    curr += initializeVariable(curr, size);
+    onTheWay.resize(size);
+    for(size_t i = 0; i < size; ++i){
+        curr += initializeVariable(curr, onTheWay[i]);
+    }
+    return curr - data.data();
 }
