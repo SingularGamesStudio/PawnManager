@@ -94,7 +94,11 @@ void Player::TaskManager::tick() {//TODO:rewrite to mincost
     std::vector<std::pair<PendingRecipe*, bool>> toClose;
     std::unordered_set<ptr<CraftBuilding>> busy;
     for (PendingRecipe* rec: work) {
-        if (!rec->needResources.empty()) {
+        if (!rec->place) {
+            std::cerr << "building destroyed, cancelling recipe"
+                      << "\n";
+            toClose.push_back({rec, false});
+        } else if (!rec->needResources.empty()) {
             std::multiset<Resource> newNeed;
             for (Resource resource: rec->needResources) {
                 ptr<Building> where = findResource(owner->hub, resource);
@@ -160,16 +164,20 @@ void Player::TaskManager::PendingRecipe::start() {
 Player::TaskManager::PendingRecipe::~PendingRecipe() {
     for (PawnReq* p: needPawns) { delete p; }
     for (ptr<Pawn> p: movedPawns) {
-        p->assignTask(Task(TaskID::Idle));
+        if (p) p->assignTask(Task(TaskID::Idle));
         delete backupNeeds[p];
     }
-    for (ptr<Pawn> p: donePawns) { p->assignTask(Task(TaskID::Idle)); }
-    for (Resource r: doneResources) {
-        if (place->reservedResources.contains(r)) {
-            place->reservedResources.erase(place->reservedResources.find(r));
-            place->resources.insert(r);
-        } else
-            std::cerr << "when deleting PendingRecipe, trying to unreserve resource, but it is not reserved";
+    for (ptr<Pawn> p: donePawns) {
+        if (p) p->assignTask(Task(TaskID::Idle));
+    }
+    if (place) {
+        for (Resource r: doneResources) {
+            if (place->reservedResources.contains(r)) {
+                place->reservedResources.erase(place->reservedResources.find(r));
+                place->resources.insert(r);
+            } else
+                std::cerr << "when deleting PendingRecipe, trying to unreserve resource, but it is not reserved";
+        }
     }
     delete recipe;
 }

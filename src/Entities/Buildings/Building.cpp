@@ -1,14 +1,14 @@
 #include "Building.h"
-#include "../ResourceEntity.h"
 
 #include <cassert>
+#include <random>
 #include <set>
 #include <vector>
-#include <random>
 
 #include "../../Resource.h"
 #include "../Entity.h"
 #include "../Pawns/Pawn.h"
+#include "../ResourceEntity.h"
 
 void Building::addResource(Resource resource) { resources.insert(resource); }
 
@@ -26,21 +26,15 @@ void Building::addPawn(ptr<Pawn> pawn) {
 
 void Building::removePawn(ptr<Pawn> pawn) { pawns.erase(pawn); }
 
-Building::~Building(){
-    for(ptr<Building> b : children){
-        b.del();
-    }
-    if(parent)
-        parent->children.erase(ptr<Building>(id));
-    while(!pawns.empty())
-        (*pawns.begin()).del();
-    for(Resource r: reservedResources){
-        resources.insert(r);
-    }
+Building::~Building() {
+    while (!children.empty()) (*children.begin()).del();
+    if (parent) parent->children.erase(ptr<Building>(id));
+    while (!pawns.empty()) (*pawns.begin()).del();
+    for (Resource r: reservedResources) { resources.insert(r); }
     std::default_random_engine rng;
     std::uniform_real_distribution<float> dist(-1, 1);
     std::uniform_real_distribution<float> dist2(0, std::numbers::pi_v<float>);
-    for(Resource r:resources) {
+    for (Resource r: resources) {
         float x = 2;
         float y = 2;
         while (x * x + y * y >= 1) {
@@ -48,8 +42,8 @@ Building::~Building(){
             y = dist(rng);
         }
         std::pair<double, double> pos = position;
-        pos.first += x*radius;
-        pos.second += x*radius;
+        pos.first += x * radius;
+        pos.second += x * radius;
         makeptr<ResourceEntity>(r, pos);
     }
 }
