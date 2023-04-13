@@ -103,6 +103,17 @@ void PawnManagerClient::buildingRenderDfs(ptr<Building> b, sf::Vector2f center) 
         sf::Vector2f pos = (sf::Vector2f(x, y) * (float) (b->radius - 7 / renderScale) + p) * renderScale + center;
         resourceRenderer->drawResource(res, pos, rotation);
     }
+    for (Resource res: b->reservedResources) {
+        float x = 2;
+        float y = 2;
+        while (x * x + y * y >= 1) {
+            x = dist(rng);
+            y = dist(rng);
+        }
+        float rotation = dist2(rng);
+        sf::Vector2f pos = (sf::Vector2f(x, y) * (float) (b->radius - 7 / renderScale) + p) * renderScale + center;
+        resourceRenderer->drawResource(res, pos, rotation);
+    }
 }
 
 void PawnManagerClient::onMouseClick(int x, int y, sf::Mouse::Button b) {
