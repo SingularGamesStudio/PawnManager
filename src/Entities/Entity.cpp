@@ -9,8 +9,6 @@ void Entity::changeHealth(int delta) {
     if (hp <= 0) { delete this; }
 }
 
-Entity::~Entity() {}
-
 std::vector<uint8_t> Entity::serialize() const {
     std::vector<uint8_t> result(sizeof(Entity));
     std::memcpy(result.data(), this, sizeof(Entity));

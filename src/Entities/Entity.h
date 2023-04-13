@@ -21,6 +21,6 @@ public:
     double radius;
     virtual std::vector<uint8_t> serialize() const;
     virtual void deserialize(const std::vector<uint8_t> &data);
-    virtual ~Entity();
+    virtual ~Entity() = default;
 };
 #endif// ENTITY_H

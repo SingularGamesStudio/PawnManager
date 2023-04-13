@@ -13,15 +13,6 @@ void Pawn::drop(ptr<Building> in, std::pair<double, double> pos) {
     }
     if (holding != Resource::DummyNothing) ResourceEntity(holding, pos);
 }
-void Pawn::destroy() {
-    if (positionBuilding && holding != Resource::DummyNothing) {
-        drop(positionBuilding, position);
-    } else if (holding != Resource::DummyNothing) {
-        drop(positionBuilding, position);
-    }
-    ///TODO task not done... god object taskmanager not happy :(
-    //~Pawn();
-}
 void Pawn::IMNotHere() {
     if (positionBuilding) {
         positionBuilding->removePawn(ptr<Pawn>(id));

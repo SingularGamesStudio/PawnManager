@@ -3,6 +3,7 @@
 #include <cmath>
 #include <iostream>
 
+#include "../ResourceEntity.h"
 #include "../../Player.h"
 #include "../Buildings/Building.h"
 void WorkerPawn::create(ptr<Building> placeOfCreation) {

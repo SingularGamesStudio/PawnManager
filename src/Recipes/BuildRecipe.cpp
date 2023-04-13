@@ -17,6 +17,10 @@ void BuildRecipe::finish() {
     res->pawns = place->pawns;
     res->resources = place->resources;
     res->reservedResources = place->reservedResources;
+    place->pawns.clear();
+    place->resources.clear();
+    place->reservedResources.clear();
+    place->children.clear();
     int newid = place.id;
     place.del();
     IDmanager::set(newid, res.pointer());

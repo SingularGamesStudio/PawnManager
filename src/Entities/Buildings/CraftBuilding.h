@@ -23,5 +23,7 @@ public:
     bool assignRecipe(Recipe* recipe);
 
     void tick(double deltaTime) override;
+
+    virtual ~CraftBuilding();
 };
 #endif//CRAFTBUILDING_H
