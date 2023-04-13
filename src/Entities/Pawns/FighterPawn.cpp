@@ -23,6 +23,7 @@ ptr<FighterPawn> FighterPawn::createFighterPawn(FighterPawnType type, ptr<Buildi
             throw("Type of FighterPawn not found");
     }
     placeOfCreation->owner->pawns.insert(newborn->id);
+    newborn->IMHere(placeOfCreation);
 }
 void FighterPawn::getResource(ResourceEntity* toGet) {
     if (positionBuilding) IMNotHere();
@@ -57,6 +58,7 @@ void FighterPawn::assignTask(const Task& toAssign) {
         case TaskID::Attack:
             toAttack = true;
             moveToBuilding(toAssign.destination);
+            std::cout<<"Attacking\n";
             break;
         default:
             throw("Unexpected FighterPawn TaskID: ", toAssign.id);
@@ -87,11 +89,11 @@ void FighterPawn::takePresentResource(ResourceEntity* toTake) {
 }
 void FighterPawn::moveToPosition(std::pair<double, double> pos) {
     IMNotHere();
+    travelling = true;
     destinationPosition = pos;
 }
 void FighterPawn::moveToBuilding(ptr<Building> dest) {
     moveToPosition(dest->position);
-    IMHere(dest);
 }
 void FighterPawn::tick(double deltaTime) {
     std::pair<double, double> dest = destinationPosition;
@@ -100,10 +102,11 @@ void FighterPawn::tick(double deltaTime) {
     double wholeDelta = deltaX * deltaX + deltaY * deltaY;
     if (toAttack && wholeDelta <= currentTask.destination->radius) {
         attack(currentTask.destination.dyn_cast<Entity>());
-        if (currentTask.destination->hp <= 0) {
+        if (!currentTask.destination) {
             toAttack = false;
             currentTask = Task(TaskID::Move, owner->hub);
         }
+        return;
     }
     if (travelling) {
         double signX = position.first - dest.first;
@@ -127,7 +130,8 @@ void FighterPawn::tick(double deltaTime) {
         //std::cerr<< position.first <<' '<< position.second <<'\n';
         //std::cerr<< dest->position.first <<' '<< dest->position.second <<'\n';
         if (signX * (position.first - dest.first) <= 1 && signY * (position.second - dest.second) <= 1) {
-            if (!destination) IMHere(destination);
+            travelling = false;
+            position = dest;
         }
     } else {
         travelling = false;
@@ -149,13 +153,14 @@ void FighterPawn::tick(double deltaTime) {
         }
     }
 }
-void FighterPawn::attack(ptr<Entity> attacked) { attacked->hp -= atk; };
+void FighterPawn::attack(ptr<Entity> attacked) { attacked->changeHealth(-atk * 1e-7); std::cout<<"Genuinly attacking\n"; };
 FighterPawnType FighterPawn::getType() { return FighterPawnType::DummNotFound; };
 
 FighterPawn::~FighterPawn() {
     owner->manager.cancelTask(currentTask, ptr<Pawn>(id));
     if (holding != Resource::DummyNothing)
-        if (positionBuilding) positionBuilding->addResource(holding);
+        if (positionBuilding)
+            positionBuilding->addResource(holding);
         else
             makeptr<ResourceEntity>(holding, position);
     IMNotHere();
