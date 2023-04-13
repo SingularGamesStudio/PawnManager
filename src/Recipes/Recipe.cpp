@@ -20,9 +20,9 @@ bool Recipe::checkRequirements(ptr<CraftBuilding> place, bool start) {
     std::vector<Resource> usedResources;
     for (Resource r: place->reservedResources) { resourcesInside.insert(r); }
     for (ptr<Pawn> p: place->pawns) {
-        if (ptr<WorkerPawn> worker = static_cast<ptr<WorkerPawn>>(p); worker) {
+        if (ptr<WorkerPawn> worker = p.dyn_cast<WorkerPawn>(); worker) {
             workersInside.insert(worker);
-        } else if (ptr<FighterPawn> fighter = static_cast<ptr<FighterPawn>>(p); fighter) {
+        } else if (ptr<FighterPawn> fighter = p.dyn_cast<FighterPawn>(); fighter) {
             fightersInside.insert(fighter);
         } else
             assert(0);
@@ -32,7 +32,7 @@ bool Recipe::checkRequirements(ptr<CraftBuilding> place, bool start) {
         bool ok = false;
         for (auto it = fightersInside.begin(); it != fightersInside.end(); it++) {
             if ((*it)->currentTask.id == TaskID::Craft && (*it)->getType() == t) {
-                usedPawns.push_back(static_cast<ptr<Pawn>>(*it));
+                usedPawns.push_back((*it).dyn_cast<Pawn>());
                 fightersInside.erase(it);
                 ok = true;
                 break;
@@ -45,7 +45,7 @@ bool Recipe::checkRequirements(ptr<CraftBuilding> place, bool start) {
         bool ok = false;
         for (auto it = workersInside.begin(); it != workersInside.end(); it++) {
             if ((*it)->currentTask.id == TaskID::Craft && (*it)->expertises.contains(t)) {
-                usedPawns.push_back(static_cast<ptr<Pawn>>(*it));
+                usedPawns.push_back((*it).dyn_cast<Pawn>());
                 workersInside.erase(it);
                 ok = true;
                 break;
@@ -84,8 +84,8 @@ bool Recipe::checkRequirements(ptr<CraftBuilding> place, bool start) {
         place->pawns.clear();
         place->reservedResources.clear();
         for (Resource p: resourcesInside) { place->reservedResources.insert(p); }
-        for (ptr<WorkerPawn> p: workersInside) { place->addPawn(static_cast<ptr<Pawn>>(p)); }
-        for (ptr<FighterPawn> p: fightersInside) { place->addPawn(static_cast<ptr<Pawn>>(p)); }
+        for (ptr<WorkerPawn> p: workersInside) { place->addPawn(p.dyn_cast<Pawn>()); }
+        for (ptr<FighterPawn> p: fightersInside) { place->addPawn(p.dyn_cast<Pawn>()); }
 
         procResources = usedResources;
         procPawns = usedPawns;
@@ -122,11 +122,11 @@ Recipe *Recipe::clone() {
 
 void Recipe::cleanup(ptr<Building> where) {
     if (!where) {
-        where = static_cast<ptr<Building>>(place);
+        where = place.dyn_cast<Building>();
         place->current = nullptr;
     }
     for (ptr<WorkerPawn> p: workers) {
-        where->addPawn(static_cast<ptr<Pawn>>(p));
+        where->addPawn(p.dyn_cast<Pawn>());
         p->assignTask(Task(TaskID::Idle));
     }
     procPawns.clear();

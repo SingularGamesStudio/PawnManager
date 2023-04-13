@@ -149,7 +149,7 @@ bool PawnManagerClient::onBuildingMouseClick(ptr<Building> b, sf::Vector2f pos, 
         if (button == sf::Mouse::Left) {
             selectedBuilding = b->id;
         } else if (button == sf::Mouse::Right) {
-            ptr<Building> c = static_cast<ptr<Building>>(b);
+            ptr<Building> c = b.dyn_cast<Building>();
             ptr<CraftBuilding> cb = c.dyn_cast<CraftBuilding>();
             if (cb && !cb->recipes.empty()) { winManager.pushWindow(new CraftBuildingWindow(c->id)); }
         } else if (button == sf::Mouse::Middle) {

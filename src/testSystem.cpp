@@ -26,10 +26,10 @@ ptr<Player> initTest() {
         ptr<WorkerPawn> pawn = makeptr<WorkerPawn>();
         pawn->create(player->hub);
         pawn->expertises.insert(expertisesID::DummySmeltery);
-        player->pawns.insert(static_cast<ptr<Pawn>>(pawn));
+        player->pawns.insert(pawn.dyn_cast<Pawn>());
     }
     crafter = makeptr<CraftBuilding>(std::make_pair(100, 120), player, 100);
-    player->hub->children.insert(static_cast<ptr<Building>>(crafter));
+    player->hub->children.insert(crafter.dyn_cast<Building>());
     crafter->parent = player->hub;
     recipe = new CraftRecipe();
     recipe->inResources.push_back(Resource::DummyOre);
