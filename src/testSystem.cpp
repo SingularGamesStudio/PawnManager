@@ -52,6 +52,6 @@ void tickBuildings(ptr<Building> place, double deltaTime) {
 std::mt19937 rnd(42);
 void tick(double deltaTime) {
     player->tick();
-    for (ptr<Pawn> p: player->pawns) { p->tick(deltaTime); if(p->id > 6) std::cout<<p->id<<'\n'; }
+    for (ptr<Pawn> p: player->pawns) { p->tick(deltaTime); }
     tickBuildings(player->hub, deltaTime);
 }

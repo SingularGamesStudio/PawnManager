@@ -11,7 +11,7 @@ class ResourceEntity;
 class FighterPawn : public Pawn {
 public:
     double atk;
-    double speed;
+    double speed = 100;
     bool toAttack = false;
     std::pair<double, double> destinationPosition;
     ptr<Building> destination;
