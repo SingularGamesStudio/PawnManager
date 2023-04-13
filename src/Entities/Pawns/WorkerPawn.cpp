@@ -3,9 +3,9 @@
 #include <cmath>
 #include <iostream>
 
-#include "../ResourceEntity.h"
 #include "../../Player.h"
 #include "../Buildings/Building.h"
+#include "../ResourceEntity.h"
 void WorkerPawn::create(ptr<Building> placeOfCreation) {
     currentTask = Task(TaskID::Idle, placeOfCreation);
     travelling = false;
@@ -50,7 +50,7 @@ void WorkerPawn::assignTask(const Task& toAssign) {
 void WorkerPawn::tick(double deltaTime) {
     if (currentInWay < onTheWay.size()) {
         ptr<Building> dest = onTheWay[currentInWay];
-        if(!dest){
+        if (!dest) {
             assignTask(Task(TaskID::DropResource));
             return;
         }
@@ -148,11 +148,10 @@ void WorkerPawn::moveToBuilding(ptr<Building> dest) {
     for (ptr<Building> v: visited[dest]) { onTheWay.push_back(v); }
 }
 
-WorkerPawn::~WorkerPawn(){
+WorkerPawn::~WorkerPawn() {
     owner->manager.cancelTask(currentTask, ptr<Pawn>(id));
     if (holding != Resource::DummyNothing)
-        if (positionBuilding)
-            positionBuilding->addResource(holding);
+        if (positionBuilding) positionBuilding->addResource(holding);
         else
             makeptr<ResourceEntity>(holding, position);
     IMNotHere();

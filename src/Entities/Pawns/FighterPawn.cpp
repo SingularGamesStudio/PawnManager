@@ -56,7 +56,8 @@ void FighterPawn::assignTask(const Task& toAssign) {
             throw("Unexpected FighterPawn TaskID: ", toAssign.id);
     }
 }
-DummyMonk::DummyMonk(Task task, bool BOOL, Resource resource, ptr<Player> Owner, ptr<Building> dest, ptr<Building> in) {
+DummyMonk::DummyMonk(int id, Task task, bool BOOL, Resource resource, ptr<Player> Owner, ptr<Building> dest, ptr<Building> in) {
+    this->id = id;
     currentTask = task;
     travelling = BOOL;
     holding = resource;
@@ -64,7 +65,8 @@ DummyMonk::DummyMonk(Task task, bool BOOL, Resource resource, ptr<Player> Owner,
     destination = dest;
     IMHere(in);
 }
-DummySwordsman::DummySwordsman(Task task, bool BOOL, Resource resource, ptr<Player> Owner, ptr<Building> dest, ptr<Building> in) {
+DummySwordsman::DummySwordsman(int id, Task task, bool BOOL, Resource resource, ptr<Player> Owner, ptr<Building> dest, ptr<Building> in) {
+    this->id = id;
     currentTask = task;
     travelling = BOOL;
     holding = resource;
@@ -147,8 +149,7 @@ FighterPawnType FighterPawn::getType() { return FighterPawnType::DummNotFound; }
 FighterPawn::~FighterPawn() {
     owner->manager.cancelTask(currentTask, ptr<Pawn>(id));
     if (holding != Resource::DummyNothing)
-        if (positionBuilding)
-            positionBuilding->addResource(holding);
+        if (positionBuilding) positionBuilding->addResource(holding);
         else
             makeptr<ResourceEntity>(holding, position);
     IMNotHere();

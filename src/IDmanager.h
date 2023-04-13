@@ -1,6 +1,7 @@
 #ifndef PAWNMANAGER_IDMANAGER_H
 #define PAWNMANAGER_IDMANAGER_H
 
+#include <iostream>
 #include <unordered_map>
 
 class Entity;
@@ -20,9 +21,7 @@ struct IDmanager {
 struct RequiresID {
     int id;
 
-    virtual ~RequiresID(){
-        IDmanager::set(id, nullptr);
-    }
+    virtual ~RequiresID() { IDmanager::set(id, nullptr); }
 };
 
 template<typename T>
@@ -39,9 +38,10 @@ struct ptr {
 
     template<typename Q>
     ptr<Q> dyn_cast() const {
-        if(dynamic_cast<Q*>(reinterpret_cast<T*>(IDmanager::get(id)))){
+        if (dynamic_cast<Q*>(reinterpret_cast<T*>(IDmanager::get(id)))) {
             return ptr<Q>(id);
-        } else return ptr<Q>();
+        } else
+            return ptr<Q>();
     }
 
     T operator*() const { return *(reinterpret_cast<T*>(IDmanager::get(id))); }
@@ -52,8 +52,9 @@ struct ptr {
     bool operator==(const ptr& other) const { return id == other.id; }
 
     void del() const {
+        int id0 = id;
         delete reinterpret_cast<T*>(IDmanager::get(id));
-        IDmanager::set(id, nullptr);
+        IDmanager::set(id0, nullptr);
     }
 
     T* pointer() const { return reinterpret_cast<T*>(IDmanager::get(id)); }
@@ -74,9 +75,8 @@ namespace std {
 template<typename T, typename... Targs>
 ptr<T> makeptr(Targs... args) {
     T* mem = reinterpret_cast<T*>(new char[sizeof(T)]);
-    new (mem) T(args...);
     int id = IDmanager::newObject(mem);
-    if (dynamic_cast<RequiresID*>(mem) != nullptr) { dynamic_cast<RequiresID*>(mem)->id = id; }
+    new (mem) T(id, args...);
     return ptr<T>(id);
 }
 

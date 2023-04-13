@@ -12,9 +12,9 @@ class CraftBuilding : public Building {
     void stopRecipe();
 
 public:
-    CraftBuilding(std::pair<double, double> pos, ptr<Player> owner, unsigned int hp, double radius = baseBuildingRadius,
+    CraftBuilding(int id, std::pair<double, double> pos, ptr<Player> owner, unsigned int hp, double radius = baseBuildingRadius,
                   ptr<Building> parent = ptr<Building>())
-        : Building(pos, owner, hp, radius, parent),
+        : Building(id, pos, owner, hp, radius, parent),
           Entity(pos, owner, hp, radius),
           current(nullptr) {}
     std::vector<Recipe*> recipes;

@@ -15,7 +15,7 @@ class Player;
 
 class Player : public RequiresID {
 public:
-    Player() {}
+    Player(int id) { id = id; }
     ptr<Building> hub;
     std::set<ptr<Pawn>> pawns;
 

@@ -1,9 +1,9 @@
 #include "Pawn.h"
 
+#include "../../Player.h"
 #include "../../Resource.h"
 #include "../Buildings/Building.h"
 #include "../ResourceEntity.h"
-#include "../../Player.h"
 
 
 void Pawn::drop(ptr<Building> in, std::pair<double, double> pos) {
@@ -12,7 +12,7 @@ void Pawn::drop(ptr<Building> in, std::pair<double, double> pos) {
         holding = Resource::DummyNothing;
         return;
     }
-    if (holding != Resource::DummyNothing) ResourceEntity(holding, pos);
+    if (holding != Resource::DummyNothing) makeptr<ResourceEntity>(holding, pos);
 }
 void Pawn::IMNotHere() {
     if (positionBuilding) {
@@ -39,6 +39,4 @@ void Pawn::deserialize(const std::vector<uint8_t>& data) const {}
 
 std::vector<uint8_t> Pawn::serialize() const {}
 
-Pawn::~Pawn() {
-    owner->pawns.erase(ptr<Pawn>(id));
-}
+Pawn::~Pawn() { owner->pawns.erase(ptr<Pawn>(id)); }

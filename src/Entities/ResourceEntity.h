@@ -9,7 +9,7 @@
 class ResourceEntity : public Entity {
 public:
     Resource resource;
-    ResourceEntity(Resource res, std::pair<double, double> pos);
+    ResourceEntity(int id, Resource res, std::pair<double, double> pos);
     virtual ~ResourceEntity() = default;
 };
 #endif//RESOURCEENTITY_H

@@ -31,12 +31,12 @@ class DummyMonk : public FighterPawn {
 public:
     //void attack(ptr<Entity> attacked) override;
     FighterPawnType getType() override;
-    DummyMonk(Task task, bool BOOL, Resource resource, ptr<Player> Owner, ptr<Building> dest, ptr<Building> in);
+    DummyMonk(int id, Task task, bool BOOL, Resource resource, ptr<Player> Owner, ptr<Building> dest, ptr<Building> in);
 };
 class DummySwordsman : public FighterPawn {
 public:
     //void attack(ptr<Entity> attacked) override;
     FighterPawnType getType() override;
-    DummySwordsman(Task task, bool BOOL, Resource resource, ptr<Player> Owner, ptr<Building> dest, ptr<Building> in);
+    DummySwordsman(int id, Task task, bool BOOL, Resource resource, ptr<Player> Owner, ptr<Building> dest, ptr<Building> in);
 };
 #endif//FIGHTERPAWN_H

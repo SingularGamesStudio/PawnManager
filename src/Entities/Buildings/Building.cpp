@@ -27,7 +27,10 @@ void Building::addPawn(ptr<Pawn> pawn) {
 void Building::removePawn(ptr<Pawn> pawn) { pawns.erase(pawn); }
 
 Building::~Building() {
-    while (!children.empty()) (*children.begin()).del();
+    zerocatcher();
+    int t = children.size();
+    ptr<Building> ff = (*children.begin());
+    while (!children.empty()) { (*children.begin()).del(); }
     if (parent) parent->children.erase(ptr<Building>(id));
     while (!pawns.empty()) (*pawns.begin()).del();
     for (Resource r: reservedResources) { resources.insert(r); }

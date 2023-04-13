@@ -11,7 +11,7 @@
 enum class expertisesID { DummySmeltery, DummyMetalworking, DummyTrainership };
 class WorkerPawn : public Pawn {
 public:
-    WorkerPawn() {}
+    WorkerPawn(int id) { this->id = id; }
     void create(ptr<Building> placeOfCreation);
 
     void assignTask(const Task& toAssign) override;

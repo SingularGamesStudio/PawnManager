@@ -14,10 +14,12 @@ class Building : public virtual Entity {
 
 public:
     constexpr static const double baseBuildingRadius = 30;
-    Building(std::pair<double, double> pos, ptr<Player> owner, unsigned int hp, double radius = baseBuildingRadius,
+    Building(int id, std::pair<double, double> pos, ptr<Player> owner, unsigned int hp, double radius = baseBuildingRadius,
              ptr<Building> parent = ptr<Building>())
         : Entity(pos, owner, hp, radius) {
         this->parent = parent;
+        this->id = id;
+        zerocatcher();
     }
     ptr<Building> parent = ptr<Building>();
     std::set<ptr<Building>> children;
@@ -27,6 +29,18 @@ public:
 
     void addResource(Resource resource);
 
+    void zerocatcher() {
+        if (id == 0) {
+            throw 1;
+            5 + 5;
+        }
+        for (auto z: children) {
+            if (z.id == 0) {
+                throw 2;
+                5 + 5;
+            }
+        }
+    }
 
     bool removeResource(Resource resource);
 
