@@ -11,7 +11,7 @@
 #include "SFML/Graphics/VertexArray.hpp"
 #include "SFML/Window.hpp"
 
-void PawnRenderer::drawWorkerPawn(const std::set<expertisesID>& expertises, sf::Vector2f pos) {
+void PawnRenderer::drawWorkerPawn(const std::set<expertisesID>& expertises, sf::Vector2f pos, float size) {
     std::vector<sf::Vector2f> vertices;
     std::vector<sf::Vector2f> outerVertices;
     int cnt = 30;
@@ -19,8 +19,8 @@ void PawnRenderer::drawWorkerPawn(const std::set<expertisesID>& expertises, sf::
         float angle = static_cast<float>(i) * 2 * std::numbers::pi_v<float> / cnt;
         float x = std::cos(angle);
         float y = std::sin(angle);
-        vertices.push_back(sf::Vector2f(x * 10.0f, y * 10.0f) + pos);
-        outerVertices.push_back(sf::Vector2f(x * 12.0f, y * 12.0f) + pos);
+        vertices.push_back(sf::Vector2f(x * (size - 2), y * (size - 2)) + pos);
+        outerVertices.push_back(sf::Vector2f(x * size, y * size) + pos);
     }
     sf::VertexArray arr;
     sf::Transform t;

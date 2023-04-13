@@ -14,6 +14,7 @@
 #include "../Entities/Pawns/WorkerPawn.h"
 #include "../Recipes/BuildRecipe.h"
 #include "../testSystem.h"
+#include "BuildBuildingWindow.h"
 #include "CraftBuildingWindow.h"
 #include "MainMenuWindow.h"
 #include "SFML/Graphics/Text.hpp"
@@ -126,7 +127,7 @@ void PawnManagerClient::onMouseClick(int x, int y, sf::Mouse::Button b) {
     if (!onBuildingMouseClick(player->hub, pos, b)) {
         ptr<Building> building = ptr<Building>(selectedBuilding);
         if (building) {
-            player->manager.startRecipe(new BuildRecipe({pos.x, pos.y}, 0), building);
+            winManager.pushWindow(new BuildBuildingWindow(selectedBuilding, pos));
             selectedBuilding = -1;
         }
     }

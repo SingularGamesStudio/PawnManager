@@ -36,6 +36,14 @@ ptr<Player> initTest() {
     recipe->outResources.push_back(Resource::DummyIngot);
     recipe->duration = 5;
     crafter->recipes.push_back(recipe);
+    recipe = new CraftRecipe();
+    recipe->inResources.push_back(Resource::DummyIngot);
+    recipe->reqWorkers.push_back(expertisesID::DummySmeltery);
+    recipe->reqWorkers.push_back(expertisesID::DummyMetalworking);
+    recipe->outResources.push_back(Resource::DummyIngot);
+    recipe->outResources.push_back(Resource::DummyIngot);
+    recipe->duration = 5;
+    crafter->recipes.push_back(recipe);
     return player;
 }
 
