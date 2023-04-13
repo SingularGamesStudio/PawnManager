@@ -20,6 +20,7 @@ bool Building::removeResource(Resource resource) {
 }
 
 void Building::addPawn(ptr<Pawn> pawn) {
+    //std::cout<<pawn->id;
     if (pawns.contains(pawn)) assert(0);
     pawns.insert(pawn);
 }
