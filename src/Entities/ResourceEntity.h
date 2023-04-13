@@ -1,6 +1,7 @@
 #ifndef RESOURCEENTITY_H
 #define RESOURCEENTITY_H
 ///misha does not believe in me  :(
+#include <set>
 #include <utility>
 
 #include "../Resource.h"
@@ -8,8 +9,11 @@
 
 class ResourceEntity : public Entity {
 public:
+    static std::set<ptr<ResourceEntity>> danglingResources;
     Resource resource;
     ResourceEntity(int id, Resource res, std::pair<double, double> pos);
-    virtual ~ResourceEntity() = default;
+    virtual ~ResourceEntity();
 };
+
+
 #endif//RESOURCEENTITY_H

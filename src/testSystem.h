@@ -5,6 +5,8 @@
 #ifndef PAWNMANAGER_TESTSYSTEM_H
 #define PAWNMANAGER_TESTSYSTEM_H
 
+#include <set>
+
 #include "Player.h"
 
 ptr<Player> initTest();
