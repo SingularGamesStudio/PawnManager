@@ -10,6 +10,7 @@
 
 #include "../Entities/Buildings/Building.h"
 #include "../Entities/Buildings/CraftBuilding.h"
+#include "../Entities/Pawns/FighterPawn.h"
 #include "../Entities/Pawns/Pawn.h"
 #include "../Entities/Pawns/WorkerPawn.h"
 #include "../Recipes/BuildRecipe.h"
@@ -71,12 +72,15 @@ void PawnManagerClient::updateAndRender() {
     for (ptr<Pawn> p: player->pawns) {
         auto [x, y] = p->position;
         ptr<WorkerPawn> wp = p.dyn_cast<WorkerPawn>();
+        ptr<FighterPawn> fp = p.dyn_cast<FighterPawn>();
         if (wp) {
             pawnRenderer->drawWorkerPawn(wp->expertises, sf::Vector2f(x, y) * renderScale + center);
             if (wp->holding != Resource::DummyNothing) {
                 float rotation = dist2(rng);
                 resourceRenderer->drawResource(wp->holding, sf::Vector2f(x, y) * renderScale + center, rotation);
             }
+        } else if (fp) {
+            pawnRenderer->drawFighterPawn(fp->getType(), sf::Vector2f(x, y) * renderScale + center);
         }
     }
     winManager.updateAndRender();
