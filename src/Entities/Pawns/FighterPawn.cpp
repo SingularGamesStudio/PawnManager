@@ -13,13 +13,16 @@ ptr<FighterPawn> FighterPawn::createFighterPawn(FighterPawnType type, ptr<Buildi
             newborn = (makeptr<DummyMonk>(Task(TaskID::Idle, placeOfCreation), false, Resource::DummyNothing, placeOfCreation->owner, placeOfCreation,
                                           placeOfCreation))
                               .dyn_cast<FighterPawn>();
+            break;
         case FighterPawnType::DummySwordsman:
             newborn = (makeptr<DummySwordsman>(Task(TaskID::Idle, placeOfCreation), false, Resource::DummyNothing, placeOfCreation->owner,
                                                placeOfCreation, placeOfCreation))
                               .dyn_cast<FighterPawn>();
+            break;
         default:
             throw("Type of FighterPawn not found");
     }
+    placeOfCreation->owner->pawns.insert(newborn->id);
 }
 void FighterPawn::getResource(ResourceEntity* toGet) {
     if (positionBuilding) IMNotHere();
@@ -54,6 +57,7 @@ void FighterPawn::assignTask(const Task& toAssign) {
         case TaskID::Attack:
             toAttack = true;
             moveToBuilding(toAssign.destination);
+            break;
         default:
             throw("Unexpected FighterPawn TaskID: ", toAssign.id);
     }
