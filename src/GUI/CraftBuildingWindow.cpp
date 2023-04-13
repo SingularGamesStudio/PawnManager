@@ -5,7 +5,6 @@
 #include "CraftBuildingWindow.h"
 
 #include "../Entities/Buildings/CraftBuilding.h"
-#include "../IDmanager.h"
 #include "../Recipes/CraftRecipe.h"
 #include "ArrowControl.h"
 #include "ButtonControl.h"
