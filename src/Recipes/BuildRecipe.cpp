@@ -22,6 +22,7 @@ void BuildRecipe::finish() {
     place->reservedResources.clear();
     place->children.clear();
     place->parent = ptr<Building>();
+    place->current = nullptr;
     int newid = place.id;
     place.del();
     IDmanager::set(newid, res.pointer());

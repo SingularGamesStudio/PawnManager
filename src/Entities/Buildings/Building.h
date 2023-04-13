@@ -19,7 +19,6 @@ public:
         : Entity(pos, owner, hp, radius) {
         this->parent = parent;
         this->id = id;
-        zerocatcher();
     }
     ptr<Building> parent = ptr<Building>();
     std::set<ptr<Building>> children;
@@ -28,19 +27,6 @@ public:
     std::set<ptr<Pawn>> pawns;
 
     void addResource(Resource resource);
-
-    void zerocatcher() {
-        if (id == 0) {
-            throw 1;
-            5 + 5;
-        }
-        for (auto z: children) {
-            if (z.id == 0) {
-                throw 2;
-                5 + 5;
-            }
-        }
-    }
 
     bool removeResource(Resource resource);
 
