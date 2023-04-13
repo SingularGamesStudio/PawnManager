@@ -22,6 +22,7 @@ void BuildRecipe::finish() {
     IDmanager::set(newid, res.pointer());
     IDmanager::set(res.id, nullptr);
     res.id = newid;
+    res->id = newid;
     cleanup(res);
 }
 
