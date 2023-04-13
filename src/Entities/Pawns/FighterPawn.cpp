@@ -143,3 +143,13 @@ void FighterPawn::tick(double deltaTime) {
 }
 void FighterPawn::attack(ptr<Entity> attacked) { attacked->hp -= atk; };
 FighterPawnType FighterPawn::getType() { return FighterPawnType::DummNotFound; };
+
+FighterPawn::~FighterPawn() {
+    owner->manager.cancelTask(currentTask, ptr<Pawn>(id));
+    if (holding != Resource::DummyNothing)
+        if (positionBuilding)
+            positionBuilding->addResource(holding);
+        else
+            makeptr<ResourceEntity>(holding, position);
+    IMNotHere();
+}

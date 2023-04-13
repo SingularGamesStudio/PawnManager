@@ -135,3 +135,13 @@ void WorkerPawn::moveToBuilding(ptr<Building> dest) {
     }
     for (ptr<Building> v: visited[dest]) { onTheWay.push_back(v); }
 }
+
+WorkerPawn::~WorkerPawn(){
+    owner->manager.cancelTask(currentTask, ptr<Pawn>(id));
+    if (holding != Resource::DummyNothing)
+        if (positionBuilding)
+            positionBuilding->addResource(holding);
+        else
+            makeptr<ResourceEntity>(holding, position);
+    IMNotHere();
+}

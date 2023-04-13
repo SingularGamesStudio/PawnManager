@@ -21,5 +21,6 @@ public:
     std::vector<ptr<Building>> onTheWay;
     size_t currentInWay;
     void tick(double deltaTime) override;
+    virtual ~WorkerPawn();
 };
 #endif//WORKERPAWN_H

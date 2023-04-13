@@ -14,6 +14,7 @@ public:
     double speed;
     bool toAttack = false;
     std::pair<double, double> destinationPosition;
+    ptr<Building> destination;
     virtual void attack(ptr<Entity> attacked);
     virtual FighterPawnType getType();
     static ptr<FighterPawn> createFighterPawn(FighterPawnType type, ptr<Building> placeOfCreation);
@@ -24,6 +25,7 @@ public:
     void getResource(ResourceEntity* toGet);
     void assignTask(const Task& task) override;
     void tick(double deltaTime) override;
+    virtual ~FighterPawn();
 };
 class DummyMonk : public FighterPawn {
 public:
