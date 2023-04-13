@@ -4,7 +4,7 @@
 
 #include "../Player.h"
 
-void Entity::changeHealth(int delta) {
+void Entity::changeHealth(double delta) {
     hp += delta;
     if (hp <= 0) { delete this; }
 }

@@ -14,7 +14,7 @@ class Building : public virtual Entity {
 
 public:
     constexpr static const double baseBuildingRadius = 30;
-    Building(int id, std::pair<double, double> pos, ptr<Player> owner, unsigned int hp, double radius = baseBuildingRadius,
+    Building(int id, std::pair<double, double> pos, ptr<Player> owner, double hp, double radius = baseBuildingRadius,
              ptr<Building> parent = ptr<Building>())
         : Entity(pos, owner, hp, radius) {
         this->parent = parent;

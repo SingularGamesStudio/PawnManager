@@ -12,10 +12,10 @@ class Player;
 class Entity : public RequiresID {
 public:
     Entity() {}
-    Entity(std::pair<double, double> pos, ptr<Player> owner, unsigned int hp, double radius) : position(pos), owner(owner), hp(hp), radius(radius) {}
-    int hp;
+    Entity(std::pair<double, double> pos, ptr<Player> owner, double hp, double radius) : position(pos), owner(owner), hp(hp), radius(radius) {}
+    double hp;
     ptr<Player> owner;
-    void changeHealth(int delta);
+    void changeHealth(double delta);
 
     std::pair<double, double> position;
     double radius;
