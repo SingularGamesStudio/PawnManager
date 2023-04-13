@@ -8,14 +8,14 @@
 #include "Recipes/Recipe.h"
 #include "Task.h"
 
-enum class expertisesID : uint8_t ;
+enum class expertisesID : uint8_t;
 class Building;
 class Pawn;
 class Player;
 
 class Player : public RequiresID {
 public:
-    Player(int id) { id = id; }
+    Player(int id) { this->id = id; }
     ptr<Building> hub;
     std::set<ptr<Pawn>> pawns;
 

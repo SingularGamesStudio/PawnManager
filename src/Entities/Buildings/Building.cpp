@@ -5,6 +5,7 @@
 #include <set>
 #include <vector>
 
+#include "../../Player.h"
 #include "../../Resource.h"
 #include "../Entity.h"
 #include "../Pawns/Pawn.h"
@@ -20,7 +21,6 @@ bool Building::removeResource(Resource resource) {
 }
 
 void Building::addPawn(ptr<Pawn> pawn) {
-    //std::cout<<pawn->id;
     if (pawns.contains(pawn)) assert(0);
     pawns.insert(pawn);
 }
@@ -28,6 +28,10 @@ void Building::addPawn(ptr<Pawn> pawn) {
 void Building::removePawn(ptr<Pawn> pawn) { pawns.erase(pawn); }
 
 Building::~Building() {
+    if (owner->hub.id == id) {
+        std::cerr << "YOU DIED" << std::endl;
+        exit(0);
+    }
     while (!children.empty()) { (*children.begin()).del(); }
     if (parent) parent->children.erase(ptr<Building>(id));
     while (!pawns.empty()) (*pawns.begin()).del();
