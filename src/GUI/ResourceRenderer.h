@@ -14,7 +14,7 @@ private:
 
 public:
     explicit ResourceRenderer(sf::RenderWindow& window);
-    void drawResource(Resource r, sf::Vector2f pos, float rotation);
+    void drawResource(Resource r, sf::Vector2f pos, float rotation, float sz = 7);
 };
 
 

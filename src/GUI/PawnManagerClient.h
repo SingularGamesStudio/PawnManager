@@ -18,11 +18,11 @@ class PawnManagerClient {
 public:
     static sf::RenderWindow* window;
     static sf::View view;
+    static ResourceRenderer* resourceRenderer;
+    static PawnRenderer* pawnRenderer;
 
 private:
-    static PawnRenderer* pawnRenderer;
     static BuildingRenderer* buildingRenderer;
-    static ResourceRenderer* resourceRenderer;
 
 public:
     static ptr<Player> player;

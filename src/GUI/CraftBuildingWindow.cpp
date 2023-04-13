@@ -6,30 +6,74 @@
 
 #include "../Entities/Buildings/CraftBuilding.h"
 #include "../IDmanager.h"
+#include "../Recipes/CraftRecipe.h"
+#include "ArrowControl.h"
 #include "ButtonControl.h"
 #include "PawnManagerClient.h"
 #include "SFML/Graphics/Text.hpp"
 
-CraftBuildingWindow::CraftBuildingWindow(int id) : id(id) {
+CraftBuildingWindow::CraftBuildingWindow(int id) : id(id), selectedRecipe(0), shouldClose(false) {
     slotCounts = sf::Vector2i(5, 5);
-    controls.push_back(new ButtonControl(*this, sf::IntRect(0, 4, 4, 0), "Assign recipe", [id = id]() {
-        ptr<CraftBuilding> p(id);
-        Recipe* r = p->recipes[0];
+    controls.push_back(new ButtonControl(*this, sf::IntRect(1, 4, 2, 0), "Assign recipe", [w = this]() {
+        ptr<CraftBuilding> p(w->id);
+        Recipe* r = p->recipes[w->selectedRecipe];
         PawnManagerClient::player->manager.startRecipe(r, static_cast<ptr<Building>>(p));
-        PawnManagerClient::winManager.popWindow();
+        w->shouldClose = true;
+        //        PawnManagerClient::winManager.popWindow();
     }));
+    controls.push_back(new ButtonControl(*this, sf::IntRect(0, 4, 0, 0), "<", [id = id, &selectedRecipe = selectedRecipe]() {
+        ptr<CraftBuilding> p(id);
+        if (selectedRecipe == 0) {
+            selectedRecipe = p->recipes.size() - 1;
+        } else {
+            --selectedRecipe;
+        }
+    }));
+    controls.push_back(new ButtonControl(*this, sf::IntRect(4, 4, 0, 0), ">", [id = id, &selectedRecipe = selectedRecipe]() {
+        ptr<CraftBuilding> p(id);
+        if (selectedRecipe == p->recipes.size() - 1) {
+            selectedRecipe = 0;
+        } else {
+            ++selectedRecipe;
+        }
+    }));
+    for (int j = 0; j < 3; ++j) {
+        SlotControl* sc = new SlotControl(*this, sf::IntRect(0, 1 + j, 0, 0));
+        controls.push_back(sc);
+        inputSlots.push_back(sc);
+        SlotControl* sc2 = new SlotControl(*this, sf::IntRect(4, 1 + j, 0, 0));
+        controls.push_back(sc2);
+        outputSlots.push_back(sc2);
+    }
+    controls.push_back(arrow = new ArrowControl(*this, sf::IntRect(1, 2, 2, 0)));
 }
 
 void CraftBuildingWindow::updateAndRender() {
+    if (shouldClose) {
+        PawnManagerClient::winManager.popWindow();
+        return;
+    }
     if (IDmanager::get(id) == nullptr) {
         PawnManagerClient::winManager.popWindow();
         return;
     }
     GameWindow::updateAndRender();
     sf::FloatRect fr = getWindowRectangle();
-    sf::Text t("Craft Building", PawnManagerClient::fontManager.f);
+    sf::Text t(std::string("Craft Building ") + std::to_string(selectedRecipe), PawnManagerClient::fontManager.f);
     t.setCharacterSize(20);
     t.setFillColor(sf::Color(0, 0, 0));
     t.setPosition(fr.getPosition() + sf::Vector2f(10, 10));
     PawnManagerClient::window->draw(t);
+    ptr<CraftBuilding> cb(id);
+    Recipe* r = cb->recipes[selectedRecipe];
+    int cInputPos = 0;
+    int cOutputPos = 0;
+    CraftRecipe* cr = dynamic_cast<CraftRecipe*>(r);
+    if (cr) {
+        for (Resource res: cr->inResources) { inputSlots[cInputPos++]->res = res; }
+        for (Resource res: cr->outResources) { outputSlots[cOutputPos++]->res = res; }
+    }
+    for (; cInputPos < inputSlots.size(); ++cInputPos) { inputSlots[cInputPos]->res = Resource::DummyNothing; }
+    for (; cOutputPos < outputSlots.size(); ++cOutputPos) { outputSlots[cOutputPos]->res = Resource::DummyNothing; }
+    arrow->pawnExpertises = r->reqWorkers;
 }
