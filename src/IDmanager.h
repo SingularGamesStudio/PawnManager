@@ -19,6 +19,10 @@ struct IDmanager {
 
 struct RequiresID {
     int id;
+
+    virtual ~RequiresID(){
+        IDmanager::set(id, nullptr);
+    }
 };
 
 template<typename T>
@@ -34,8 +38,10 @@ struct ptr {
     }
 
     template<typename Q>
-    Q* dyn_cast() const {
-        return dynamic_cast<Q*>(reinterpret_cast<T*>(IDmanager::get(id)));
+    ptr<Q> dyn_cast() const {
+        if(dynamic_cast<Q*>(reinterpret_cast<T*>(IDmanager::get(id)))){
+            return ptr<Q>(id);
+        } else return ptr<Q>();
     }
 
     T operator*() const { return *(reinterpret_cast<T*>(IDmanager::get(id))); }

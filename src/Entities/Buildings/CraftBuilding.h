@@ -8,8 +8,6 @@
 #include "Building.h"
 
 class CraftBuilding : public Building {
-private:
-    void destroy() override;
 
     void stopRecipe();
 

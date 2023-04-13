@@ -8,8 +8,6 @@
 #include "../Entity.h"
 #include "../Pawns/Pawn.h"
 
-void Building::destroy() {}
-
 void Building::addResource(Resource resource) { resources.insert(resource); }
 
 bool Building::removeResource(Resource resource) {

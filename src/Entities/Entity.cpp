@@ -4,13 +4,12 @@
 
 #include "../Player.h"
 
-void Entity::destroy() {}
 void Entity::changeHealth(int delta) {
     hp += delta;
-    if (hp <= 0) { destroy(); }
+    if (hp <= 0) { delete this; }
 }
 
-Entity::~Entity() { destroy(); }
+Entity::~Entity() {}
 
 std::vector<uint8_t> Entity::serialize() const {
     std::vector<uint8_t> result(sizeof(Entity));

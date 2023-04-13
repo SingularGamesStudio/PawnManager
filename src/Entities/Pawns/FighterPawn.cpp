@@ -75,7 +75,7 @@ DummySwordsman::DummySwordsman(Task task, bool BOOL, Resource resource, ptr<Play
 void FighterPawn::moveToResource(ResourceEntity* toGet) { moveToPosition(toGet->position); }
 void FighterPawn::takePresentResource(ResourceEntity* toTake) {
     holding = toTake->resource;
-    toTake->destroy();
+    //toTake->destroy();
 }
 void FighterPawn::moveToPosition(std::pair<double, double> pos) {
     IMNotHere();

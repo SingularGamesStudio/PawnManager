@@ -228,14 +228,14 @@ void Player::TaskManager::finishTask(Task task, ptr<Pawn> pawn) {
 
 ptr<Pawn> Player::TaskManager::FighterReq::find(ptr<Player> owner) {
     for (auto p: owner->pawns) {
-        FighterPawn* f = p.dyn_cast<FighterPawn>();
+        ptr<FighterPawn> f = p.dyn_cast<FighterPawn>();
         if (f && f->getType() == type && f->currentTask.id == TaskID::Idle) { return p; }
     }
 }
 
 ptr<Pawn> Player::TaskManager::WorkerReq::find(ptr<Player> owner) {
     for (auto p: owner->pawns) {
-        WorkerPawn* w = p.dyn_cast<WorkerPawn>();
+        ptr<WorkerPawn> w = p.dyn_cast<WorkerPawn>();
         if (w && w->expertises.contains(expertise) && w->currentTask.id == TaskID::Idle) { return p; }
     }
 }

@@ -2,11 +2,6 @@
 
 #include <iostream>
 
-
-void CraftBuilding::destroy() {
-    if (current) delete current;
-}
-
 void CraftBuilding::stopRecipe() {
     if (current == nullptr) return;
     current->cancel();

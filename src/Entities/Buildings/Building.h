@@ -11,8 +11,6 @@
 class Pawn;
 
 class Building : public virtual Entity {
-private:
-    void destroy() override;
 
 public:
     constexpr static const double baseBuildingRadius = 30;
