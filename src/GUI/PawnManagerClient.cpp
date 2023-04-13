@@ -70,7 +70,7 @@ void PawnManagerClient::updateAndRender() {
     std::uniform_real_distribution<float> dist2(0, std::numbers::pi_v<float>);
     for (ptr<Pawn> p: player->pawns) {
         auto [x, y] = p->position;
-        ptr<WorkerPawn> wp = static_cast<ptr<WorkerPawn>>(p);
+        ptr<WorkerPawn> wp = p.dyn_cast<WorkerPawn>();
         if (wp) {
             pawnRenderer->drawWorkerPawn(wp->expertises, sf::Vector2f(x, y) * renderScale + center);
             if (wp->holding != Resource::DummyNothing) {
@@ -144,7 +144,8 @@ bool PawnManagerClient::onBuildingMouseClick(ptr<Building> b, sf::Vector2f pos, 
             ptr<CraftBuilding> cb = c.dyn_cast<CraftBuilding>();
             if (cb && !cb->recipes.empty()) { winManager.pushWindow(new CraftBuildingWindow(c->id)); }
         } else if (button == sf::Mouse::Middle) {
-            b.del();
+            //b.del();
+            player->attack(b);
         }
         return true;
     }

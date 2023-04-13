@@ -249,3 +249,12 @@ ptr<Pawn> Player::TaskManager::WorkerReq::find(ptr<Player> owner) {
     }
     return ptr<Pawn>();
 }
+
+void Player::attack(ptr<Building> what) {
+    for (ptr<Pawn> p: pawns) {
+        if (p.dyn_cast<FighterPawn>()) {
+            ptr<FighterPawn> f = p.dyn_cast<FighterPawn>();
+            f->assignTask(Task(TaskID::Attack, what));
+        }
+    }
+}

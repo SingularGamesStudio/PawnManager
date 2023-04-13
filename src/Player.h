@@ -82,5 +82,6 @@ public:
     ptr<CraftBuilding> placeBlueprint(std::pair<double, double> pos, ptr<Building> parent, double r);
 
     void tick();
+    void attack(ptr<Building> what);
 };
 #endif//PLAYER_H

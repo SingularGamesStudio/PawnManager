@@ -5,6 +5,7 @@
 #include "Entities/Buildings/Building.h"
 #include "Entities/Buildings/BuildingRegisty.h"
 #include "Entities/Buildings/CraftBuilding.h"
+#include "Entities/Pawns/FighterPawn.h"
 #include "Entities/Pawns/WorkerPawn.h"
 #include "Player.h"
 #include "Recipes/CraftRecipe.h"
@@ -37,12 +38,9 @@ ptr<Player> initTest() {
     recipe->duration = 5;
     crafter->recipes.push_back(recipe);
     recipe = new CraftRecipe();
-    recipe->inResources.push_back(Resource::DummyIngot);
-    recipe->reqWorkers.push_back(expertisesID::DummySmeltery);
-    recipe->reqWorkers.push_back(expertisesID::DummyMetalworking);
-    recipe->outResources.push_back(Resource::DummyIngot);
-    recipe->outResources.push_back(Resource::DummyIngot);
-    recipe->duration = 5;
+    recipe->inResources.push_back(Resource::DummyOre);
+    recipe->outFighters.push_back(FighterPawnType::DummySwordsman);
+    recipe->duration = 2;
     crafter->recipes.push_back(recipe);
     return player;
 }

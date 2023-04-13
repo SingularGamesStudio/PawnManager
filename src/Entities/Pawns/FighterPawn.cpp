@@ -10,11 +10,13 @@ ptr<FighterPawn> FighterPawn::createFighterPawn(FighterPawnType type, ptr<Buildi
     ptr<FighterPawn> newborn;
     switch (type) {
         case FighterPawnType::DummyMonk:
-            newborn = static_cast<ptr<FighterPawn>>(makeptr<DummyMonk>(Task(TaskID::Idle, placeOfCreation), false, Resource::DummyNothing,
-                                                                       placeOfCreation->owner, placeOfCreation, placeOfCreation));
+            newborn = (makeptr<DummyMonk>(Task(TaskID::Idle, placeOfCreation), false, Resource::DummyNothing, placeOfCreation->owner, placeOfCreation,
+                                          placeOfCreation))
+                              .dyn_cast<FighterPawn>();
         case FighterPawnType::DummySwordsman:
-            newborn = static_cast<ptr<FighterPawn>>(makeptr<DummySwordsman>(Task(TaskID::Idle, placeOfCreation), false, Resource::DummyNothing,
-                                                                            placeOfCreation->owner, placeOfCreation, placeOfCreation));
+            newborn = (makeptr<DummySwordsman>(Task(TaskID::Idle, placeOfCreation), false, Resource::DummyNothing, placeOfCreation->owner,
+                                               placeOfCreation, placeOfCreation))
+                              .dyn_cast<FighterPawn>();
         default:
             throw("Type of FighterPawn not found");
     }
@@ -93,7 +95,7 @@ void FighterPawn::tick(double deltaTime) {
     double deltaY = fabs(position.second - dest.second);
     double wholeDelta = deltaX * deltaX + deltaY * deltaY;
     if (toAttack && wholeDelta <= currentTask.destination->radius) {
-        attack(static_cast<ptr<Entity>>(currentTask.destination));
+        attack(currentTask.destination.dyn_cast<Entity>());
         if (currentTask.destination->hp <= 0) {
             toAttack = false;
             currentTask = Task(TaskID::Move, owner->hub);
