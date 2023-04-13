@@ -18,6 +18,8 @@ void WorkerPawn::assignTask(const Task& toAssign) {
     currentTask = toAssign;
     toTake = false;
     toDrop = false;
+    onTheWay.clear();
+    currentInWay = 0;
     switch (toAssign.id) {
         case TaskID::Get:
             moveToBuilding(toAssign.destination);
@@ -37,6 +39,10 @@ void WorkerPawn::assignTask(const Task& toAssign) {
             break;
         case TaskID::Idle:
             break;
+        case TaskID::DropResource:
+            toDrop = true;
+            onTheWay.push_back(positionBuilding);
+            break;
         default:
             throw("Unexpected WorkerPawn TaskID: ", toAssign.id);
     }
@@ -44,6 +50,10 @@ void WorkerPawn::assignTask(const Task& toAssign) {
 void WorkerPawn::tick(double deltaTime) {
     if (currentInWay < onTheWay.size()) {
         ptr<Building> dest = onTheWay[currentInWay];
+        if(!dest){
+            assignTask(Task(TaskID::DropResource));
+            return;
+        }
         double signX = position.first - dest->position.first;
         double deltaX = fabs(position.first - dest->position.first);
         double signY = position.second - dest->position.second;
@@ -78,6 +88,7 @@ void WorkerPawn::tick(double deltaTime) {
         if (toDrop) {
             toDrop = false;
             drop(positionBuilding);
+            return;
         }
         if (toTake) {
             if (positionBuilding->removeResource(needed)) {
