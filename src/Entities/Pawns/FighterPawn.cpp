@@ -96,16 +96,17 @@ void FighterPawn::moveToBuilding(ptr<Building> dest) {
     moveToPosition(dest->position);
 }
 void FighterPawn::tick(double deltaTime) {
+    if (!currentTask.destination) {
+        toAttack = false;
+        currentTask = Task(TaskID::Move, owner->hub);
+        return;
+    }
     std::pair<double, double> dest = destinationPosition;
     double deltaX = fabs(position.first - dest.first);
     double deltaY = fabs(position.second - dest.second);
     double wholeDelta = deltaX * deltaX + deltaY * deltaY;
     if (toAttack && wholeDelta <= currentTask.destination->radius) {
         attack(currentTask.destination.dyn_cast<Entity>());
-        if (!currentTask.destination) {
-            toAttack = false;
-            currentTask = Task(TaskID::Move, owner->hub);
-        }
         return;
     }
     if (travelling) {
