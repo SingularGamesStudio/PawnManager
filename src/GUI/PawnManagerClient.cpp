@@ -6,13 +6,14 @@
 
 #include <ctime>
 #include <iostream>
+#include <numbers>
 #include <random>
 
 #include "../Entities/Buildings/Building.h"
 #include "../Entities/Buildings/CraftBuilding.h"
 #include "../Entities/Pawns/FighterPawn.h"
-#include "../Entities/Pawns/Pawn.h"
 #include "../Entities/Pawns/WorkerPawn.h"
+#include "../Entities/ResourceEntity.h"
 #include "../Recipes/BuildRecipe.h"
 #include "../testSystem.h"
 #include "BuildBuildingWindow.h"
@@ -82,6 +83,10 @@ void PawnManagerClient::updateAndRender() {
         } else if (fp) {
             pawnRenderer->drawFighterPawn(fp->getType(), sf::Vector2f(x, y) * renderScale + center);
         }
+    }
+    for (ptr<ResourceEntity> res: ResourceEntity::danglingResources) {
+        resourceRenderer->drawResource(res->resource, sf::Vector2f(res->position.first, res->position.second) * renderScale + center,
+                                       std::numbers::pi_v<float> / 4.0f);
     }
     winManager.updateAndRender();
 }
