@@ -12,7 +12,8 @@ add_compile_definitions(SERVER_SIDE CLIENT_SIDE)
 
 add_executable(PawnManagerGUI BuildingRenderer.cpp CraftBuildingWindow.cpp FontManager.cpp GameWindow.cpp
         GameWindowManager.cpp MainMenuWindow.cpp PawnManagerClient.cpp PawnRenderer.cpp ResourceRenderer.cpp
-        ClientMain.cpp Control.cpp ButtonControl.cpp SlotControl.cpp ArrowControl.cpp BuildBuildingWindow.cpp)
+        ClientMain.cpp Control.cpp ButtonControl.cpp SlotControl.cpp ArrowControl.cpp BuildBuildingWindow.cpp
+        BuildingResultControl.cpp)
 
 target_link_libraries(PawnManagerGUI PRIVATE sfml-graphics PawnManager)
 target_compile_features(PawnManagerGUI PRIVATE cxx_std_20)

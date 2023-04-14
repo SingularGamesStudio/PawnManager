@@ -30,7 +30,14 @@ void BuildingRenderer::drawBuilding(ptr<Building> b, sf::Vector2f pos) {
     arr.setPrimitiveType(sf::PrimitiveType::Triangles);
     for (int i = 0; i < vertices.size(); ++i) {
         sf::Color col = sf::Color::White;
-        if (b.dyn_cast<CraftBuilding>()) { col = sf::Color::Green; }
+        ptr<CraftBuilding> cb = b.dyn_cast<CraftBuilding>();
+        if (cb) {
+            if(cb->recipes.empty()) {
+                col = sf::Color::Blue;
+            } else {
+                col = sf::Color::Green;
+            }
+        }
         int j = i + 1;
         if (j == vertices.size()) { j = 0; }
         arr.append(sf::Vertex(vertices[j], col));
