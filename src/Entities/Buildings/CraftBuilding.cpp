@@ -1,7 +1,7 @@
 #include "CraftBuilding.h"
 
 #include <iostream>
-
+#ifdef SERVER_SIDE
 void CraftBuilding::stopRecipe() {
     if (current == nullptr) return;
     current->cancel();
@@ -20,5 +20,9 @@ bool CraftBuilding::assignRecipe(Recipe* recipe) {
 void CraftBuilding::tick(double deltaTime) {
     if (current != nullptr) { current->tick(deltaTime); }
 }
-
-CraftBuilding::~CraftBuilding() { stopRecipe(); }
+#endif
+CraftBuilding::~CraftBuilding() {
+#ifdef SERVER_SIDE
+    stopRecipe();
+#endif
+}

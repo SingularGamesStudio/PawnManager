@@ -19,8 +19,8 @@ public:
     bool toDrop;
     bool toTake;
 
+#ifdef SERVER_SIDE
     void drop(ptr<Building> in, std::pair<double, double> pos = {0, 0});
-    virtual ~Pawn();
     void IMNotHere();
     void IMHere(ptr<Building> to);
     virtual void moveToBuilding(ptr<Building> toMove) = 0;
@@ -28,11 +28,14 @@ public:
     virtual void assignTask(const Task& toAssign) = 0;
     void stopBeingIngridient();
     virtual void tick(double deltaTime);
+#endif
+    virtual ~Pawn();
     std::vector<uint8_t> serialize() const override;
+
     size_t deserialize(const std::vector<uint8_t>& data) override;
 
 protected:
     std::vector<uint8_t> serializeSelf() const;
-    size_t deserializeSelf(const std::vector<uint8_t> &data);
+    size_t deserializeSelf(const std::vector<uint8_t>& data);
 };
 #endif//PAWN_H

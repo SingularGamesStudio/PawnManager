@@ -1,11 +1,13 @@
 #include "Pawn.h"
 
+#include <cstring>
+
 #include "../../Player.h"
 #include "../../Resource.h"
 #include "../Buildings/Building.h"
 #include "../ResourceEntity.h"
-#include <cstring>
 
+#ifdef SERVER_SIDE
 
 void Pawn::drop(ptr<Building> in, std::pair<double, double> pos) {
     if (in && holding != Resource::DummyNothing) {
@@ -35,14 +37,10 @@ void Pawn::moveToBuilding(ptr<Building> toMove) { throw("How did we get here?");
 //void Pawn::assignTask(const Task& toAssign) = 0;
 
 void Pawn::tick(double deltaTime) {}
+#endif
+std::vector<uint8_t> Pawn::serialize() const { return serializeSelf(); }
 
-std::vector<uint8_t> Pawn::serialize() const {
-    return serializeSelf();
-}
-
-size_t Pawn::deserialize(const std::vector<uint8_t>& data) {
-    return deserializeSelf(data);
-}
+size_t Pawn::deserialize(const std::vector<uint8_t>& data) { return deserializeSelf(data); }
 
 std::vector<uint8_t> Pawn::serializeSelf() const {
     std::vector<uint8_t> result = Entity::serializeSelf();
@@ -61,7 +59,7 @@ std::vector<uint8_t> Pawn::serializeSelf() const {
 }
 
 
-size_t Pawn::deserializeSelf(const std::vector<uint8_t> &data) {
+size_t Pawn::deserializeSelf(const std::vector<uint8_t>& data) {
     size_t shift = Entity::deserializeSelf(data);
     const uint8_t* curr = data.data() + shift;
     curr += initializeVariable(curr, holding);
