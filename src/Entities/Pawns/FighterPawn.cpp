@@ -194,7 +194,7 @@ std::vector<uint8_t> FighterPawn::serializeSelf() const {
     result.insert(result.begin(), static_cast<uint8_t>(getType()));
     size_t size = sizeof(double) * 2 + sizeof(bool) + sizeof(std::pair<double, double>);
     result.resize(result.size() + size);
-    uint8_t* curr = result.data() + result.size();
+    uint8_t* curr = result.data() + result.size() - size;
     curr += copyVariable(curr, atk);
     curr += copyVariable(curr, speed);
     curr += copyVariable(curr, toAttack);

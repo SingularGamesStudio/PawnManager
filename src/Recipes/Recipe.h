@@ -44,10 +44,6 @@ public:
 #endif
     Recipe* clone();
 
-    virtual std::vector<uint8_t> serialize() const = 0;
-
-    virtual void deserialize(const std::vector<uint8_t>& data) = 0;
-
     std::vector<expertisesID> reqWorkers;
 
     std::vector<FighterPawnType> inFighters;
@@ -55,5 +51,11 @@ public:
     std::vector<Resource> inResources;
 
     double duration;
+    virtual std::vector<uint8_t> serialize() const;
+    virtual size_t deserialize(const std::vector<uint8_t>& data);
+
+protected:
+    std::vector<uint8_t> serializeSelf() const;
+    size_t deserializeSelf(const std::vector<uint8_t>& data);
 };
 #endif//RECIPE_H

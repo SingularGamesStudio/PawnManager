@@ -261,10 +261,14 @@ void Player::attack(ptr<Building> what) {
 }
 #endif
 
-std::vector<uint8_t> Player::serialize() const {
+std::vector<uint8_t> Player::serialize() const { return serializeSelf(); }
+size_t Player::deserialize(const std::vector<uint8_t>& data) { return deserializeSelf(data); }
+
+std::vector<uint8_t> Player::serializeSelf() const {
+    std::vector<uint8_t> result = RequiresID::serializeSelf();
     size_t size = sizeof(int) + sizeof(ptr<Building>) + sizeof(size_t) + sizeof(ptr<Pawn>) * pawns.size();
-    std::vector<uint8_t> result(size);
-    uint8_t* curr = result.data();
+    result.resize(result.size() + size);
+    uint8_t* curr = result.data() + result.size() - size;
     curr += copyVariable(curr, id);
     curr += copyVariable(curr, hub);
     size = pawns.size();
@@ -275,8 +279,9 @@ std::vector<uint8_t> Player::serialize() const {
     return result;
 }
 
-size_t Player::deserialize(const std::vector<uint8_t>& data) {
-    const uint8_t* curr = data.data();
+size_t Player::deserializeSelf(const std::vector<uint8_t>& data) {
+    size_t shift = RequiresID::deserializeSelf(data);
+    const uint8_t* curr = data.data() + shift;
     curr += initializeVariable(curr, id);
     curr += initializeVariable(curr, hub);
     size_t size;

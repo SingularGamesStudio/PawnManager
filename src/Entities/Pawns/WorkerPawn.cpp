@@ -167,7 +167,7 @@ std::vector<uint8_t> WorkerPawn::serializeSelf() const {
     result.insert(result.begin(), DummyWorker);
     size_t size = sizeof(size_t) * 3 + sizeof(expertisesID) * expertises.size() + sizeof(ptr<Building>) * onTheWay.size();
     result.resize(result.size() + size);
-    uint8_t* curr = result.data() + result.size();
+    uint8_t* curr = result.data() + result.size() - size;
     curr += copyVariable(curr, currentInWay);
 
     curr += copyVariable(curr, expertises.size());

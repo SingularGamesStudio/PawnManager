@@ -52,7 +52,7 @@ std::vector<uint8_t> Pawn::serializeSelf() const {
     std::vector<uint8_t> result = Entity::serializeSelf();
     size_t size = sizeof(Resource) * 2 + sizeof(ptr<Building>) + sizeof(Task) + sizeof(bool) * 3 + sizeof(double);
     result.resize(result.size() + size);
-    uint8_t* curr = result.data() + result.size();
+    uint8_t* curr = result.data() + result.size() - size;
     curr += copyVariable(curr, holding);
     curr += copyVariable(curr, needed);
     curr += copyVariable(curr, positionBuilding);

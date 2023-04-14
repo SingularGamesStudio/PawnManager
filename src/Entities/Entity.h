@@ -42,8 +42,8 @@ public:
     void changeHealth(double delta);
 #endif
     virtual ~Entity() = default;
-    virtual std::vector<uint8_t> serialize() const;
-    virtual size_t deserialize(const std::vector<uint8_t>& data);
+    std::vector<uint8_t> serialize() const override;
+    size_t deserialize(const std::vector<uint8_t>& data) override;
 
 protected:
     std::vector<uint8_t> serializeSelf() const;
