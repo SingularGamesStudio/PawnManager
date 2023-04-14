@@ -8,7 +8,7 @@ FetchContent_Declare(SFML
         GIT_TAG 2.6.x)
 FetchContent_MakeAvailable(SFML)
 
-add_compile_definitions(CLIENT_SIDE)
+add_compile_definitions(CLIENT_SIDE SERVER_SIDE)
 
 add_executable(PawnManagerGUI BuildingRenderer.cpp CraftBuildingWindow.cpp FontManager.cpp GameWindow.cpp
         GameWindowManager.cpp MainMenuWindow.cpp PawnManagerClient.cpp PawnRenderer.cpp ResourceRenderer.cpp
