@@ -42,13 +42,13 @@ void ResourceRenderer::drawResource(Resource r, sf::Vector2f pos, float rotation
         sf::Color col = sf::Color::Red;
         switch (r) {
 
-            case Resource::DummyOre:
+            case Resource::Ore:
                 col = sf::Color(192, 192, 192);
                 break;
-            case Resource::DummyIngot:
+            case Resource::Ingot:
                 col = sf::Color(255, 255, 255);
                 break;
-            case Resource::DummyWeapon:
+            case Resource::Weapon:
                 col = sf::Color::Red;
                 break;
         }
