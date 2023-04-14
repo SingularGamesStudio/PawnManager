@@ -31,7 +31,6 @@ public:
 #endif
     virtual ~Pawn();
     std::vector<uint8_t> serialize() const override;
-
     size_t deserialize(const std::vector<uint8_t>& data) override;
 
 protected:
