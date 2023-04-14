@@ -4,9 +4,11 @@
 #include <cstring>
 #include <iostream>
 
+#include "../../Event.h"
 #include "../../Player.h"
 #include "../Buildings/Building.h"
 #include "../ResourceEntity.h"
+
 
 #ifdef SERVER_SIDE
 
@@ -17,6 +19,7 @@ void WorkerPawn::create(ptr<Building> placeOfCreation) {
     needed = Resource::DummyNothing;
     owner = placeOfCreation->owner;
     IMHere(placeOfCreation);
+    global_server->sendPacketAll(Event(Event::Type::PAWN_APPEAR, id).getPacket());
 }
 void WorkerPawn::assignTask(const Task& toAssign) {
     currentTask = toAssign;
@@ -81,8 +84,9 @@ void WorkerPawn::tick(double deltaTime) {
         }
         if (signX * (position.first - dest->position.first) <= 1 && signY * (position.second - dest->position.second) <= 1) {
             IMHere(dest);
-
             ++currentInWay;
+            if (currentInWay < onTheWay.size())
+                global_server->sendPacketAll(Event(Event::Type::PAWN_MOVE, id, onTheWay[currentInWay]->position).getPacket());
         }
     } else {
         travelling = false;
@@ -96,9 +100,11 @@ void WorkerPawn::tick(double deltaTime) {
         }
         if (toTake) {
             if (positionBuilding->removeResource(needed)) {
+                global_server->sendPacketAll(Event(Event::Type::BUILDING_REMOVE_RES, positionBuilding->id, needed).getPacket());
                 toTake = false;
                 holding = needed;
                 needed = Resource::DummyNothing;
+                global_server->sendPacketAll(Event(Event::Type::PAWN_TAKE_RES, id, holding).getPacket());
             } else {
                 owner->manager.cancelTask(currentTask, ptr<Pawn>(id));
                 currentTask = TaskID::Idle;
@@ -115,7 +121,6 @@ void WorkerPawn::tick(double deltaTime) {
                 }
                 break;
             case TaskID::BeProcessed:
-                //TODO:set pawn to be waiting, not free
                 owner->manager.finishTask(currentTask, ptr<Pawn>(id));
                 currentTask.id = TaskID::Craft;
                 break;
@@ -194,10 +199,7 @@ size_t WorkerPawn::deserializeSelf(const std::vector<uint8_t>& data) {
 WorkerPawn::~WorkerPawn() {
 #ifdef SERVER_SIDE
     owner->manager.cancelTask(currentTask, ptr<Pawn>(id));
-    if (holding != Resource::DummyNothing)
-        if (positionBuilding) positionBuilding->addResource(holding);
-        else
-            makeptr<ResourceEntity>(holding, position);
+    drop(positionBuilding);
     IMNotHere();
 #endif
 }

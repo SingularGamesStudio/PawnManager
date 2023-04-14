@@ -22,7 +22,7 @@ add_library(PawnManagerClient src/Entities/Entity.cpp src/Player.cpp src/Player.
         src/Recipes/CraftRecipe.cpp src/Recipes/BuildRecipe.cpp)
 target_include_directories(PawnManagerClient PRIVATE ${Boost_SOURCE_DIR}/libs/asio/include)
 
-target_compile_definitions(PawnManagerClient PUBLIC CLIENT_SIDE BOOST_ASIO_STANDALONE)
+target_compile_definitions(PawnManagerClient PUBLIC CLIENT_SIDE SERVER_SIDE BOOST_ASIO_STANDALONE)
 
 add_subdirectory(src/GUI)
 
