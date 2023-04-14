@@ -78,10 +78,10 @@ void PawnRenderer::drawFighterPawn(FighterPawnType type, sf::Vector2f pos) {
     sf::Transform t;
     sf::Color col;
     switch (type) {
-        case FighterPawnType::DummyMonk:
+        case FighterPawnType::Monk:
             col = sf::Color(100, 100, 100);
             break;
-        case FighterPawnType::DummySwordsman:
+        case FighterPawnType::Swordsman:
             col = sf::Color(255, 0, 0);
             break;
     }
