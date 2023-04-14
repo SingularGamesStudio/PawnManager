@@ -23,11 +23,15 @@ void BuildingRegisty::init() {
         BuildingIdea blacksmith = BuildingIdea(Building::baseBuildingRadius * 2, database.size());
         CraftRecipe* ingot = new CraftRecipe();
         ingot->inResources.push_back(Resource::Ore);
+        ingot->inResources.push_back(Resource::Ore);
+        ingot->inResources.push_back(Resource::Ore);
+        ingot->outResources.push_back(Resource::Ingot);
         ingot->outResources.push_back(Resource::Ingot);
         ingot->duration = 1;
         blacksmith.available.push_back(ingot);
 
         CraftRecipe* weapon = new CraftRecipe();
+        weapon->inResources.push_back(Resource::Ingot);
         weapon->inResources.push_back(Resource::Ingot);
         weapon->outResources.push_back(Resource::Weapon);
         weapon->reqWorkers.push_back(expertisesID::Smeltery);
