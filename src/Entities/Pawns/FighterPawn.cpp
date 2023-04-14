@@ -8,11 +8,11 @@
 #include "../ResourceEntity.h"
 
 
-FighterPawnType DummyMonk::getType() const { return FighterPawnType::DummyMonk; }
-FighterPawnType DummySwordsman::getType() const { return FighterPawnType::DummySwordsman; }
+FighterPawnType Monk::getType() const { return FighterPawnType::Monk; }
+FighterPawnType Swordsman::getType() const { return FighterPawnType::Swordsman; }
 FighterPawnType FighterPawn::getType() const { return FighterPawnType::DummNotFound; };
 
-DummyMonk::DummyMonk(int id, Task task, bool BOOL, Resource resource, ptr<Player> Owner, ptr<Building> dest, ptr<Building> in) {
+Monk::Monk(int id, Task task, bool BOOL, Resource resource, ptr<Player> Owner, ptr<Building> dest, ptr<Building> in) {
     this->id = id;
     currentTask = task;
     travelling = BOOL;
@@ -23,7 +23,7 @@ DummyMonk::DummyMonk(int id, Task task, bool BOOL, Resource resource, ptr<Player
     IMHere(in);
 #endif
 }
-DummySwordsman::DummySwordsman(int id, Task task, bool BOOL, Resource resource, ptr<Player> Owner, ptr<Building> dest, ptr<Building> in) {
+Swordsman::Swordsman(int id, Task task, bool BOOL, Resource resource, ptr<Player> Owner, ptr<Building> dest, ptr<Building> in) {
     this->id = id;
     currentTask = task;
     travelling = BOOL;
@@ -47,13 +47,13 @@ void FighterPawn::attack(ptr<Entity> attacked, double deltaTime) {
 ptr<FighterPawn> FighterPawn::createFighterPawn(FighterPawnType type, ptr<Building> placeOfCreation) {
     ptr<FighterPawn> newborn;
     switch (type) {
-        case FighterPawnType::DummyMonk:
-            newborn = (makeptr<DummyMonk>(Task(TaskID::Idle, placeOfCreation), false, Resource::DummyNothing, placeOfCreation->owner, placeOfCreation,
+        case FighterPawnType::Monk:
+            newborn = (makeptr<Monk>(Task(TaskID::Idle, placeOfCreation), false, Resource::Nothing, placeOfCreation->owner, placeOfCreation,
                                           placeOfCreation))
                               .dyn_cast<FighterPawn>();
             break;
-        case FighterPawnType::DummySwordsman:
-            newborn = (makeptr<DummySwordsman>(Task(TaskID::Idle, placeOfCreation), false, Resource::DummyNothing, placeOfCreation->owner,
+        case FighterPawnType::Swordsman:
+            newborn = (makeptr<Swordsman>(Task(TaskID::Idle, placeOfCreation), false, Resource::Nothing, placeOfCreation->owner,
                                                placeOfCreation, placeOfCreation))
                               .dyn_cast<FighterPawn>();
             break;
@@ -173,7 +173,7 @@ void FighterPawn::tick(double deltaTime) {
         if (toTake) {
             toTake = false;
             holding = needed;
-            needed = Resource::DummyNothing;
+            needed = Resource::Nothing;
             ///TODO removeFromExistence needed
             if (!toDrop) currentTask = TaskID::Idle;
         }

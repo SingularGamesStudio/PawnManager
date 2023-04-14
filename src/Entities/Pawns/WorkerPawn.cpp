@@ -16,8 +16,8 @@
 void WorkerPawn::create(ptr<Building> placeOfCreation) {
     currentTask = Task(TaskID::Idle, placeOfCreation);
     travelling = false;
-    holding = Resource::DummyNothing;
-    needed = Resource::DummyNothing;
+    holding = Resource::Nothing;
+    needed = Resource::Nothing;
     owner = placeOfCreation->owner;
     IMHere(placeOfCreation);
     godObject::global_server->sendPacketAll(Event(Event::Type::PAWN_APPEAR, id).getPacket());
@@ -104,7 +104,7 @@ void WorkerPawn::tick(double deltaTime) {
                 godObject::global_server->sendPacketAll(Event(Event::Type::BUILDING_REMOVE_RES, positionBuilding->id, needed).getPacket());
                 toTake = false;
                 holding = needed;
-                needed = Resource::DummyNothing;
+                needed = Resource::Nothing;
                 godObject::global_server->sendPacketAll(Event(Event::Type::PAWN_TAKE_RES, id, holding).getPacket());
             } else {
                 owner->manager.cancelTask(currentTask, ptr<Pawn>(id));

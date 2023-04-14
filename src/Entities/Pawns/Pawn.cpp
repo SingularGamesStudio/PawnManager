@@ -11,14 +11,14 @@
 #ifdef SERVER_SIDE
 
 void Pawn::drop(ptr<Building> in, std::pair<double, double> pos) {
-    if (in && holding != Resource::DummyNothing) {
+    if (in && holding != Resource::Nothing) {
         in->addResource(holding);
         godObject::global_server->sendPacketAll(Event(Event::Type::BUILDING_ADD_RES, in->id, holding).getPacket());
-        holding = Resource::DummyNothing;
+        holding = Resource::Nothing;
         godObject::global_server->sendPacketAll(Event(Event::Type::PAWN_LET_RES, id).getPacket());
         return;
     }
-    if (holding != Resource::DummyNothing) {
+    if (holding != Resource::Nothing) {
         // TODO godObject::global_server->sendPacketAll(Event(Event::Type::RESOURCE_ENTITY_ADD, holding).getPacket());
         makeptr<ResourceEntity>(holding, pos);
     }

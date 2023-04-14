@@ -5,7 +5,7 @@
 #include <vector>
 
 #include "Pawn.h"
-enum class FighterPawnType : uint8_t { DummyMonk, DummySwordsman, DummNotFound };
+enum class FighterPawnType : uint8_t { Monk, Swordsman, DummNotFound };
 class Entity;
 class ResourceEntity;
 class FighterPawn : public Pawn {
@@ -39,18 +39,18 @@ protected:
     size_t deserializeSelf(const std::vector<uint8_t> &data);
 };
 
-class DummyMonk : public FighterPawn {
+class Monk : public FighterPawn {
 public:
     //void attack(ptr<Entity> attacked) override;
 
     FighterPawnType getType() const override;
-    DummyMonk(int id, Task task, bool BOOL, Resource resource, ptr<Player> Owner, ptr<Building> dest, ptr<Building> in);
+    Monk(int id, Task task, bool BOOL, Resource resource, ptr<Player> Owner, ptr<Building> dest, ptr<Building> in);
 };
-class DummySwordsman : public FighterPawn {
+class Swordsman : public FighterPawn {
 public:
     //void attack(ptr<Entity> attacked) override;
 
     FighterPawnType getType() const override;
-    DummySwordsman(int id, Task task, bool BOOL, Resource resource, ptr<Player> Owner, ptr<Building> dest, ptr<Building> in);
+    Swordsman(int id, Task task, bool BOOL, Resource resource, ptr<Player> Owner, ptr<Building> dest, ptr<Building> in);
 };
 #endif//FIGHTERPAWN_H
