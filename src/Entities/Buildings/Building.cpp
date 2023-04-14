@@ -19,6 +19,16 @@ void Building::addResource(Resource resource) {
 #endif
 }
 
+Building::Building(int id, std::pair<double, double> pos, ptr<Player> owner, double hp, double radius,
+         ptr<Building> parent) : Entity(pos, owner, hp, radius)
+        {
+    this->parent = parent;
+    this->id = id;
+#ifdef SERVER_SIDE
+    godObject::global_server->sendPacketAll(Event(Event::Type::BUILDING_APPEAR, id).getPacket());
+#endif
+}
+
 bool Building::removeResource(Resource resource) {
     auto x = resources.find(resource);
     if (x == resources.end()) return false;

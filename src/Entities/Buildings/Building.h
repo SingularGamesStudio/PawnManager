@@ -6,7 +6,6 @@
 #include <vector>
 
 #include "../../Resource.h"
-#include "../../godobject.h"
 #include "../Entity.h"
 
 enum class BuildingType : uint8_t { BASE_BUILDING, CRAFT_BUILDING };
@@ -18,14 +17,7 @@ class Building : public virtual Entity {
 public:
     constexpr static const double baseBuildingRadius = 30;
     Building(int id, std::pair<double, double> pos, ptr<Player> owner, double hp, double radius = baseBuildingRadius,
-             ptr<Building> parent = ptr<Building>())
-        : Entity(pos, owner, hp, radius) {
-        this->parent = parent;
-        this->id = id;
-#ifdef SERVER_SIDE
-        godObject::global_server->sendPacketAll(Event(Event::Type::BUILDING_APPEAR, id).getPacket());
-#endif
-    }
+             ptr<Building> parent = ptr<Building>());
 #ifdef CLIENT_SIDE
     Building() {}
 #endif
