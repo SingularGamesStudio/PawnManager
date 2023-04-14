@@ -28,7 +28,7 @@ Event::Event(Event::Type t, int id) : p(dlib::Packet::Type::RAW_MESSAGE) {
     p << tmp;
 }
 
-Event::Event(Event::Type t, int id, Resource res) : p(Packet::Type::RAW_MESSAGE) {
+Event::Event(Event::Type t, int id, Resource res) : p(dlib::Packet::Type::RAW_MESSAGE) {
     if (t != Event::Type::BUILDING_ADD_RES && t != Event::Type::BUILDING_REMOVE_RES && t != Event::Type::PAWN_TAKE_RES)
         throw std::invalid_argument("Trying to make event with wrong type");
     std::vector<uint8_t> tmp(sizeof(t) + sizeof(id) + sizeof(res));
@@ -38,7 +38,7 @@ Event::Event(Event::Type t, int id, Resource res) : p(Packet::Type::RAW_MESSAGE)
     p << tmp;
 }
 
-Event::Event(Event::Type t, int id, std::pair<double, double> pos) : p(Packet::Type::RAW_MESSAGE) {
+Event::Event(Event::Type t, int id, std::pair<double, double> pos) : p(dlib::Packet::Type::RAW_MESSAGE) {
     if (t != Event::Type::PAWN_MOVE) throw std::invalid_argument("Trying to make event with wrong type");
     std::vector<uint8_t> tmp(sizeof(t) + sizeof(id) + sizeof(pos));
     std::memcpy(tmp.data(), &t, sizeof(t));
@@ -47,8 +47,8 @@ Event::Event(Event::Type t, int id, std::pair<double, double> pos) : p(Packet::T
     p << tmp;
 }
 
-Packet Event::getPacket() {
-    Packet result = p;
+dlib::Packet Event::getPacket() {
+    dlib::Packet result = p;
     result.prepare();
     return result;
 }

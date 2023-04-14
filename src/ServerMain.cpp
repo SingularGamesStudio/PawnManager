@@ -7,7 +7,9 @@
 
 #include "Player.h"
 
-int fromString(const std::string& str) {
+using std::string;
+
+int fromString(const string& str) {
     int result = 0;
     for (char c: str) { result = 10 * result + c - '0'; }
     return result;
@@ -33,9 +35,9 @@ int main(int argc, char** argv) {
     }
     GameServer server(params["port"]);
     server.start();
-    auto currTime = chrono::steady_clock::now();
+    auto currTime = std::chrono::steady_clock::now();
     while (1) {
-        auto dTime = chrono::steady_clock::now() - currTime;
+        auto dTime = std::chrono::steady_clock::now() - currTime;
         currTime += dTime;
         /// TODO: Logic
         server.respond();

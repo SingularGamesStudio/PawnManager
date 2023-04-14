@@ -6,7 +6,7 @@ enum class Resource;
 
 class Event {
 private:
-    Packet p;
+    dlib::Packet p;
 
 public:
     enum class Type : uint8_t {
