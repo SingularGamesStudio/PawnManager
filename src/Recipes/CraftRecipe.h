@@ -13,6 +13,4 @@ public:
     void finish() override;
 #endif
 
-    std::vector<uint8_t> serialize() const override;
-    void deserialize(const std::vector<uint8_t>& data) override;
 };

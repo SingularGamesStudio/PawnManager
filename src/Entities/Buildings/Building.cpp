@@ -50,3 +50,38 @@ Building::~Building() {
     }
 #endif
 }
+
+BuildingType Building::getType() const {
+    return BuildingType::BASE_BUILDING;
+}
+
+std::vector<uint8_t> Building::serialize() const { return serializeSelf(); }
+size_t Building::deserialize(const std::vector<uint8_t>& data) { return deserializeSelf(data); }
+
+std::vector<uint8_t> Building::serializeSelf() const {
+    std::vector<uint8_t> result = Entity::serializeSelf();
+    size_t size = sizeof(ptr<Building>) + sizeof(size_t) * 4
+            + sizeof(ptr<Building>) * children.size()
+            + sizeof(Resource) * (resources.size() + reservedResources.size())
+            + sizeof(ptr<Pawn>) * pawns.size();
+    result.resize(result.size() + size);
+    uint8_t* curr = result.data() + result.size() - size;
+    curr += copyVariable(curr, parent);
+    curr += copySet(curr, children);
+    curr += copySet(curr, resources);
+    curr += copySet(curr, reservedResources);
+    curr += copySet(curr, pawns);
+    result.insert(result.begin(), static_cast<uint8_t>(getType()));
+    return result;
+}
+
+size_t Building::deserializeSelf(const std::vector<uint8_t>& data) {
+    size_t shift = Entity::deserializeSelf(data);
+    const uint8_t* curr = data.data() + shift;
+    curr += initializeVariable(curr, parent);
+    curr += initializeSet(curr, children);
+    curr += initializeSet(curr, resources);
+    curr += initializeSet(curr, reservedResources);
+    curr += initializeSet(curr, pawns);
+    return curr - data.data();
+}

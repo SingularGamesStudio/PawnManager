@@ -1,3 +1,5 @@
+#ifndef EVENT_H
+#define EVENT_H
 #include "net/packet.h"
 
 class Building;
@@ -32,3 +34,4 @@ public:
     Event(Type t, Recipe* recipe, int id);
     dlib::Packet getPacket();
 };
+#endif
