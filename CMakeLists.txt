@@ -19,7 +19,7 @@ add_library(PawnManagerClient src/Entities/Entity.cpp src/Player.cpp src/Player.
         src/Entities/Buildings/Building.cpp src/Entities/Pawns/FighterPawn.cpp src/Entities/Pawns/Pawn.cpp
         src/Recipes/Recipe.cpp src/Entities/ResourceEntity.cpp src/Entities/Pawns/WorkerPawn.cpp
         src/Entities/Buildings/CraftBuilding.cpp src/IDmanager.cpp src/Entities/Buildings/BuildingRegisty.cpp
-        src/Recipes/CraftRecipe.cpp src/Recipes/BuildRecipe.cpp src/Event.cpp src/godobject.cpp)
+        src/Recipes/CraftRecipe.cpp src/Recipes/BuildRecipe.cpp src/Event.cpp src/godobject.cpp src/LocalController.cpp)
 target_include_directories(PawnManagerClient PRIVATE ${Boost_SOURCE_DIR}/libs/asio/include)
 
 target_compile_definitions(PawnManagerClient PUBLIC CLIENT_SIDE SERVER_SIDE BOOST_ASIO_STANDALONE)
@@ -38,11 +38,11 @@ add_executable(PawnManagerServer src/Entities/Entity.cpp src/Player.cpp src/Play
         src/Entities/Buildings/Building.cpp src/Entities/Pawns/FighterPawn.cpp src/Entities/Pawns/Pawn.cpp
         src/Recipes/Recipe.cpp src/Entities/ResourceEntity.cpp src/Entities/Pawns/WorkerPawn.cpp
         src/Entities/Buildings/CraftBuilding.cpp src/IDmanager.cpp src/Entities/Buildings/BuildingRegisty.cpp
-        src/Recipes/CraftRecipe.cpp src/Recipes/BuildRecipe.cpp src/ServerMain.cpp src/Event.cpp src/godobject.cpp)
+        src/Recipes/CraftRecipe.cpp src/Recipes/BuildRecipe.cpp src/ServerMain.cpp src/Event.cpp src/godobject.cpp src/LocalController.cpp)
 
 target_include_directories(PawnManagerServer PRIVATE ${Boost_SOURCE_DIR}/libs/asio/include)
 
-target_compile_definitions(PawnManagerServer PUBLIC SERVER_SIDE BOOST_ASIO_STANDALONE)
+target_compile_definitions(PawnManagerServer PUBLIC SERVER_SIDE CLIENT_SIDE BOOST_ASIO_STANDALONE)
 
 install(TARGETS PawnManagerServer)
 target_link_libraries(PawnManagerServer PRIVATE Boost::system)

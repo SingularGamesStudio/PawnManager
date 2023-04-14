@@ -5,11 +5,17 @@
 #ifndef PAWNMANAGER_GODOBJECT_H
 #define PAWNMANAGER_GODOBJECT_H
 
+#include "LocalController.h"
 #include "net/server.h"
-#ifdef SERVER_SIDE
+
 struct godObject {
+#ifdef SERVER_SIDE
     static dlib::ServerInterface* global_server;
-};
 #endif
+#ifdef CLIENT_SIDE
+    static LocalController* local_server;
+#endif
+};
+
 
 #endif//PAWNMANAGER_GODOBJECT_H
