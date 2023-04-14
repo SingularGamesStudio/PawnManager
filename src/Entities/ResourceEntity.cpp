@@ -6,7 +6,6 @@
 #include "Entity.h"
 
 std::set<ptr<ResourceEntity>> ResourceEntity::danglingResources;
-
 ResourceEntity::ResourceEntity(int id, Resource res, std::pair<double, double> pos) : Entity(pos, ptr<Player>(), 1, 1) {
     resource = res;
     this->id = id;

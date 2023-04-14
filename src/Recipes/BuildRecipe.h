@@ -15,6 +15,8 @@ public:
     BuildRecipe(std::pair<double, double> pos, BuildingIdea toBuild) : pos(pos), toBuild(toBuild) {}
 
     void deserialize(const std::vector<uint8_t>& data) override{};
+#ifdef SERVER_SIDE
     void finish() override;
+#endif
     std::vector<uint8_t> serialize() const override{};
 };

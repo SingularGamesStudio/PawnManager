@@ -3,7 +3,7 @@
 #include "../Entities/Buildings/Building.h"
 #include "../Entities/Buildings/CraftBuilding.h"
 #include "../Entities/Pawns/Pawn.h"
-
+#ifdef SERVER_SIDE
 void BuildRecipe::finish() {
     for (ptr<Pawn> p: procPawns) { p.del(); }
     ptr<Building> res = ptr<Building>();
@@ -31,7 +31,7 @@ void BuildRecipe::finish() {
     res->id = newid;
     cleanup(res);
 }
-
+#endif
 Recipe* BuildRecipe::cloneSelf() {
     BuildRecipe* res = new BuildRecipe(pos, toBuild);
     return res;

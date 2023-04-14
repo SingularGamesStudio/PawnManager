@@ -22,7 +22,7 @@ unsigned int unparseVector(const uint8_t* v, std::vector<T>& result) {
     std::memcpy(result.data(), v + 4, sz * sizeof(T));
     return 4 + sz * sizeof(T);
 }
-
+#ifdef SERVER_SIDE
 void CraftRecipe::finish() {
     for (ptr<Pawn> p: procPawns) { p.del(); }
 
@@ -30,6 +30,7 @@ void CraftRecipe::finish() {
     for (Resource t: outResources) { place->addResource(t); }
     cleanup();
 }
+#endif
 
 std::vector<uint8_t> CraftRecipe::serialize() const {
     std::vector<uint8_t> result(1);
