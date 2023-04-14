@@ -6,9 +6,10 @@
 #include <vector>
 
 #include "../../Resource.h"
+#include "../../godobject.h"
 #include "../Entity.h"
 
-enum class BuildingType : uint8_t {BASE_BUILDING, CRAFT_BUILDING};
+enum class BuildingType : uint8_t { BASE_BUILDING, CRAFT_BUILDING };
 
 class Pawn;
 
@@ -21,6 +22,9 @@ public:
         : Entity(pos, owner, hp, radius) {
         this->parent = parent;
         this->id = id;
+#ifdef SERVER_SIDE
+        godObject::global_server->sendPacketAll(Event(Event::Type::BUILDING_APPEAR, id).getPacket());
+#endif
     }
 #ifdef CLIENT_SIDE
     Building() {}

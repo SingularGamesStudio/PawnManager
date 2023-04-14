@@ -9,7 +9,6 @@
 
 class ResourceEntity : public Entity {
 public:
-    static std::set<ptr<ResourceEntity>> danglingResources;
     Resource resource;
     ResourceEntity(int id, Resource res, std::pair<double, double> pos);
     virtual ~ResourceEntity();

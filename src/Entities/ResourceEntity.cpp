@@ -3,16 +3,28 @@
 #include <utility>
 
 #include "../Resource.h"
+#include "../godobject.h"
 #include "Entity.h"
 
-std::set<ptr<ResourceEntity>> ResourceEntity::danglingResources;
 ResourceEntity::ResourceEntity(int id, Resource res, std::pair<double, double> pos) : Entity(pos, ptr<Player>(), 1, 1) {
     resource = res;
     this->id = id;
-    danglingResources.insert(ptr<ResourceEntity>(id));
+#ifdef CLIENT_SIDE
+    godObject::local_server->danglingResources.insert(ptr<ResourceEntity>(id));
+#endif
+#ifdef SERVER_SIDE
+    godObject::global_server->sendPacketAll(Event(Event::Type::RESOURCE_ENTITY_APPEAR, id).getPacket());
+#endif
 }
 
-ResourceEntity::~ResourceEntity() { danglingResources.erase(ptr<ResourceEntity>(id)); }
+ResourceEntity::~ResourceEntity() {
+#ifdef CLIENT_SIDE
+    godObject::local_server->danglingResources.erase(ptr<ResourceEntity>(id));
+#endif
+#ifdef SERVER_SIDE
+    godObject::global_server->sendPacketAll(Event(Event::Type::RESOURCE_ENTITY_DISAPPEAR, id).getPacket());
+#endif
+}
 
 std::vector<uint8_t> ResourceEntity::serialize() const { return serializeSelf(); }
 size_t ResourceEntity::deserialize(const std::vector<uint8_t>& data) { return deserializeSelf(data); }
