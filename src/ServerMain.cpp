@@ -62,7 +62,7 @@ void tickBuildings(ptr<Building> place, double deltaTime) {
     place->tick(deltaTime);
     for (ptr<Building> ch: place->children) { tickBuildings(ch, deltaTime); }
 }
-std::mt19937 rnd(42);
+
 void GameServer::tick(double deltaTime) {
     for (auto p: players) {
         p.second->tick();

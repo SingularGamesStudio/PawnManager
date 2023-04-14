@@ -4,9 +4,11 @@
 #include <cstring>
 #include <iostream>
 
+#include "../../Event.h"
 #include "../../Player.h"
 #include "../Buildings/Building.h"
 #include "../ResourceEntity.h"
+
 
 #ifdef SERVER_SIDE
 
@@ -102,7 +104,7 @@ void WorkerPawn::tick(double deltaTime) {
                 toTake = false;
                 holding = needed;
                 needed = Resource::DummyNothing;
-                global_server->sendPacketAll(Event(Event::Type::PAWN_TAKE_RES, id, resource);.getPacket());
+                global_server->sendPacketAll(Event(Event::Type::PAWN_TAKE_RES, id, holding).getPacket());
             } else {
                 owner->manager.cancelTask(currentTask, ptr<Pawn>(id));
                 currentTask = TaskID::Idle;

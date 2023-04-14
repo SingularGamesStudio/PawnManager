@@ -1,5 +1,6 @@
 #include "FighterPawn.h"
 
+#include "../../Event.h"
 #include "../../Player.h"
 #include "../Buildings/Building.h"
 #include "../Entity.h"
@@ -60,7 +61,7 @@ ptr<FighterPawn> FighterPawn::createFighterPawn(FighterPawnType type, ptr<Buildi
     }
     placeOfCreation->owner->pawns.insert(newborn->id);
     newborn->IMHere(placeOfCreation);
-    global_server->sendPacketAll(Event(Event::Type::PAWN_APPEAR, id).getPacket());
+    global_server->sendPacketAll(Event(Event::Type::PAWN_APPEAR, newborn->id).getPacket());
 }
 void FighterPawn::getResource(ResourceEntity* toGet) {
     if (positionBuilding) IMNotHere();
@@ -213,8 +214,8 @@ size_t FighterPawn::deserializeSelf(const std::vector<uint8_t>& data) {
 FighterPawn::~FighterPawn() {
 #ifdef SERVER_SIDE
     owner->manager.cancelTask(currentTask, ptr<Pawn>(id));
-    drop(buildingPosition);
-    global_server->sendPacketAll(Event(Event::Type::PAWN_DISAPPEAR, id);.getPacket);
+    drop(positionBuilding);
+    global_server->sendPacketAll(Event(Event::Type::PAWN_DISAPPEAR, id).getPacket());
     IMNotHere();
 #endif
 }
