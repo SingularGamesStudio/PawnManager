@@ -11,6 +11,7 @@ class LocalController : dlib::ClientInterface {
 public:
     std::set<ptr<Player>> players;
     std::set<ptr<ResourceEntity>> danglingResources;
+    ptr<Player> mainPlayer;
 
     void onPacketReceive(const dlib::Packet &p) override;
 };

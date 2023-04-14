@@ -21,6 +21,7 @@
 #include "SFML/Graphics/Text.hpp"
 #include "SFML/Window.hpp"
 #include "../IDmanager.h"
+#include "../LocalController.h"
 
 
 sf::RenderWindow* PawnManagerClient::window;
@@ -28,16 +29,15 @@ sf::View PawnManagerClient::view;
 PawnRenderer* PawnManagerClient::pawnRenderer;
 BuildingRenderer* PawnManagerClient::buildingRenderer;
 ResourceRenderer* PawnManagerClient::resourceRenderer;
-ptr<Player> PawnManagerClient::player;
 double PawnManagerClient::curTime;
 int PawnManagerClient::selectedBuilding;
 GameWindowManager PawnManagerClient::winManager;
 FontManager PawnManagerClient::fontManager;
+LocalController* PawnManagerClient::controller;
 
 
 void PawnManagerClient::run() {
     init();
-    player = ptr<Player>();
     while (window->isOpen()) {
         sf::Event evt{};
         while (window->pollEvent(evt)) {
@@ -67,24 +67,26 @@ void PawnManagerClient::updateAndRender() {
     curTime = newTime;
     window->clear(sf::Color::White);
     sf::Vector2f center = ((sf::Vector2f) window->getSize()) * 0.5f;
-    buildingRenderDfs(player->hub, center);
-    std::default_random_engine rng;
-    std::uniform_real_distribution<float> dist2(0, std::numbers::pi_v<float>);
-    for (ptr<Pawn> p: player->pawns) {
-        auto [x, y] = p->getInterpolatedPos();
-        ptr<WorkerPawn> wp = p.dyn_cast<WorkerPawn>();
-        ptr<FighterPawn> fp = p.dyn_cast<FighterPawn>();
-        if (wp) {
-            pawnRenderer->drawWorkerPawn(wp->expertises, sf::Vector2f(x, y) * renderScale + center);
-            if (wp->holding != Resource::DummyNothing) {
-                float rotation = dist2(rng);
-                resourceRenderer->drawResource(wp->holding, sf::Vector2f(x, y) * renderScale + center, rotation);
+    for(ptr<Player> player : controller->players) {
+        buildingRenderDfs(player->hub, center);
+        std::default_random_engine rng;
+        std::uniform_real_distribution<float> dist2(0, std::numbers::pi_v<float>);
+        for (ptr<Pawn> p: player->pawns) {
+            auto [x, y] = p->getInterpolatedPos();
+            ptr<WorkerPawn> wp = p.dyn_cast<WorkerPawn>();
+            ptr<FighterPawn> fp = p.dyn_cast<FighterPawn>();
+            if (wp) {
+                pawnRenderer->drawWorkerPawn(wp->expertises, sf::Vector2f(x, y) * renderScale + center);
+                if (wp->holding != Resource::Nothing) {
+                    float rotation = dist2(rng);
+                    resourceRenderer->drawResource(wp->holding, sf::Vector2f(x, y) * renderScale + center, rotation);
+                }
+            } else if (fp) {
+                pawnRenderer->drawFighterPawn(fp->getType(), sf::Vector2f(x, y) * renderScale + center);
             }
-        } else if (fp) {
-            pawnRenderer->drawFighterPawn(fp->getType(), sf::Vector2f(x, y) * renderScale + center);
         }
     }
-    for (ptr<ResourceEntity> res: ResourceEntity::danglingResources) {
+    for (ptr<ResourceEntity> res : controller->danglingResources) {
         resourceRenderer->drawResource(res->resource, sf::Vector2f(res->position.first, res->position.second) * renderScale + center,
                                        std::numbers::pi_v<float> / 4.0f);
     }
@@ -133,7 +135,7 @@ void PawnManagerClient::onMouseClick(int x, int y, sf::Mouse::Button b) {
     }
     sf::Vector2f center = ((sf::Vector2f) window->getSize()) * 0.5f;
     sf::Vector2f pos = (sf::Vector2f(x, y) - center) / renderScale;
-    if (!onBuildingMouseClick(player->hub, pos, b)) {
+    if (!onBuildingMouseClick(controller->mainPlayer->hub, pos, b)) {
         ptr<Building> building = ptr<Building>(selectedBuilding);
         if (building) {
             winManager.pushWindow(new BuildBuildingWindow(selectedBuilding, pos));
@@ -154,7 +156,7 @@ bool PawnManagerClient::onBuildingMouseClick(ptr<Building> b, sf::Vector2f pos, 
             if (cb && !cb->recipes.empty()) { winManager.pushWindow(new CraftBuildingWindow(c->id)); }
         } else if (button == sf::Mouse::Middle) {
             //b.del();
-            player->attack(b);
+            controller->mainPlayer->attack(b);
         }
         return true;
     }
