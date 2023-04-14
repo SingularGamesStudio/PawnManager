@@ -35,7 +35,9 @@ public:
 
     void removePawn(ptr<Pawn> pawn);
 
+#ifdef SERVER_SIDE
     virtual void tick(double deltaTime){};
+#endif
 
     virtual ~Building();
 };

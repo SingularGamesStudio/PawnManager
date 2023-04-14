@@ -11,6 +11,8 @@
 #include "../Resource.h"
 #include "../testSystem.h"
 
+#ifdef SERVER_SIDE
+
 bool Recipe::checkRequirements(ptr<CraftBuilding> place, bool start) {
     std::set<ptr<WorkerPawn>> workersInside;
     std::set<ptr<FighterPawn>> fightersInside;
@@ -109,17 +111,6 @@ void Recipe::tick(double deltaTime) {
     if (progress >= duration) finish();
 }
 
-Recipe *Recipe::clone() {
-    Recipe *res = cloneSelf();
-    res->progress = 0;
-    res->inResources = inResources;
-    res->inWorkers = inWorkers;
-    res->inFighters = inFighters;
-    res->duration = duration;
-    res->reqWorkers = reqWorkers;
-    return res;
-}
-
 void Recipe::cleanup(ptr<Building> where) {
     if (!where) {
         where = place.dyn_cast<Building>();
@@ -142,4 +133,19 @@ void Recipe::cancel() {
     }
     for (Resource p: procResources) { place->addResource(p); }
     cleanup();
+}
+#endif
+
+
+Recipe *Recipe::clone() {
+    Recipe *res = cloneSelf();
+#ifdef SERVER_SIDE
+    res->progress = 0;
+#endif
+    res->inResources = inResources;
+    res->inWorkers = inWorkers;
+    res->inFighters = inFighters;
+    res->duration = duration;
+    res->reqWorkers = reqWorkers;
+    return res;
 }

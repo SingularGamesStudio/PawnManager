@@ -28,6 +28,7 @@ void Building::addPawn(ptr<Pawn> pawn) {
 void Building::removePawn(ptr<Pawn> pawn) { pawns.erase(pawn); }
 
 Building::~Building() {
+#ifdef SERVER_SIDE
     if (owner->hub.id == id) {
         std::cerr << "YOU DIED" << std::endl;
         exit(0);
@@ -51,4 +52,5 @@ Building::~Building() {
         pos.second += x * radius;
         makeptr<ResourceEntity>(r, pos);
     }
+#endif
 }

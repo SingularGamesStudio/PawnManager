@@ -8,14 +8,15 @@ FetchContent_Declare(SFML
         GIT_TAG 2.6.x)
 FetchContent_MakeAvailable(SFML)
 
+add_compile_definitions(CLIENT_SIDE)
+
 add_executable(PawnManagerGUI BuildingRenderer.cpp CraftBuildingWindow.cpp FontManager.cpp GameWindow.cpp
         GameWindowManager.cpp MainMenuWindow.cpp PawnManagerClient.cpp PawnRenderer.cpp ResourceRenderer.cpp
-        ClientMain.cpp Control.cpp ButtonControl.cpp SlotControl.cpp ArrowControl.cpp BuildBuildingWindow.cpp)
+        ClientMain.cpp Control.cpp ButtonControl.cpp SlotControl.cpp ArrowControl.cpp BuildBuildingWindow.cpp
+        BuildingResultControl.cpp)
 
-target_link_libraries(PawnManagerGUI PRIVATE sfml-graphics PawnManager)
+target_link_libraries(PawnManagerGUI PRIVATE sfml-graphics PawnManagerClient)
 target_compile_features(PawnManagerGUI PRIVATE cxx_std_20)
-
-add_compile_definitions(SERVER_SIDE CLIENT_SIDE)
 
 if (WIN32 AND BUILD_SHARED_LIBS)
     add_custom_command(TARGET PawnManagerGUI POST_BUILD

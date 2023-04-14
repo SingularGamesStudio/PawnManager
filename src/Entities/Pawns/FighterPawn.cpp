@@ -4,14 +4,39 @@
 #include "../Buildings/Building.h"
 #include "../Entity.h"
 #include "../ResourceEntity.h"
+
+
 FighterPawnType DummyMonk::getType() const { return FighterPawnType::DummyMonk; }
 FighterPawnType DummySwordsman::getType() const { return FighterPawnType::DummySwordsman; }
 FighterPawnType FighterPawn::getType() const { return FighterPawnType::DummNotFound; };
 
+DummyMonk::DummyMonk(int id, Task task, bool BOOL, Resource resource, ptr<Player> Owner, ptr<Building> dest, ptr<Building> in) {
+    this->id = id;
+    currentTask = task;
+    travelling = BOOL;
+    holding = resource;
+    owner = Owner;
+    destination = dest;
+#ifdef SERVER_SIDE
+    IMHere(in);
+#endif
+}
+DummySwordsman::DummySwordsman(int id, Task task, bool BOOL, Resource resource, ptr<Player> Owner, ptr<Building> dest, ptr<Building> in) {
+    this->id = id;
+    currentTask = task;
+    travelling = BOOL;
+    holding = resource;
+    owner = Owner;
+    destination = dest;
+#ifdef SERVER_SIDE
+    IMHere(in);
+#endif
+}
+#ifdef SERVER_SIDE
 void FighterPawn::attack(ptr<Entity> attacked, double deltaTime) {
     std::cout << "Genuinly attacking " << -atk << " " << attacked->hp << "\n";
     attacked->changeHealth(-atk * deltaTime);
-    if (attacked.dyn_cast<FighterPawn>()){
+    if (attacked.dyn_cast<FighterPawn>()) {
         ptr<FighterPawn> fighterPawnAttacked = attacked.dyn_cast<FighterPawn>();
         changeHealth(-(fighterPawnAttacked->atk) * deltaTime);
     }
@@ -76,24 +101,7 @@ void FighterPawn::assignTask(const Task& toAssign) {
             throw("Unexpected FighterPawn TaskID: ", toAssign.id);
     }
 }
-DummyMonk::DummyMonk(int id, Task task, bool BOOL, Resource resource, ptr<Player> Owner, ptr<Building> dest, ptr<Building> in) {
-    this->id = id;
-    currentTask = task;
-    travelling = BOOL;
-    holding = resource;
-    owner = Owner;
-    destination = dest;
-    IMHere(in);
-}
-DummySwordsman::DummySwordsman(int id, Task task, bool BOOL, Resource resource, ptr<Player> Owner, ptr<Building> dest, ptr<Building> in) {
-    this->id = id;
-    currentTask = task;
-    travelling = BOOL;
-    holding = resource;
-    owner = Owner;
-    destination = dest;
-    IMHere(in);
-}
+
 void FighterPawn::moveToResource(ResourceEntity* toGet) { moveToPosition(toGet->position); }
 void FighterPawn::takePresentResource(ResourceEntity* toTake) {
     holding = toTake->resource;
@@ -111,13 +119,12 @@ void FighterPawn::tick(double deltaTime) {
         currentTask = Task(TaskID::Move, owner->hub);
         return;
     }
-    if (currentTask.id == TaskID::Protect){
+    if (currentTask.id == TaskID::Protect) {
         ptr<Entity> enemy;
         ///TODO enemy spotted
-        if (enemy){
+        if (enemy) {
             attack(enemy, deltaTime);
-        }
-        else
+        } else
             moveToBuilding(currentTask.destination);
     }
     std::pair<double, double> dest = destinationPosition;
@@ -173,7 +180,7 @@ void FighterPawn::tick(double deltaTime) {
         }
     }
 }
-
+#endif
 std::vector<uint8_t> FighterPawn::serialize() const { return serializeSelf(); }
 
 size_t FighterPawn::deserialize(const std::vector<uint8_t>& data) { return deserializeSelf(data); }
@@ -202,10 +209,12 @@ size_t FighterPawn::deserializeSelf(const std::vector<uint8_t>& data) {
 }
 
 FighterPawn::~FighterPawn() {
+#ifdef SERVER_SIDE
     owner->manager.cancelTask(currentTask, ptr<Pawn>(id));
     if (holding != Resource::DummyNothing)
         if (positionBuilding) positionBuilding->addResource(holding);
         else
             makeptr<ResourceEntity>(holding, position);
     IMNotHere();
+#endif
 }

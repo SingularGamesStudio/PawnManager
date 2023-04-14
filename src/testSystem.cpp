@@ -13,7 +13,7 @@
 
 
 ptr<Player> player;
-
+#ifdef SERVER_SIDE
 ptr<Player> initTest() {
     CraftRecipe* recipe;
     ptr<CraftBuilding> crafter;
@@ -55,3 +55,4 @@ void tick(double deltaTime) {
     for (ptr<Pawn> p: player->pawns) { p->tick(deltaTime); }
     tickBuildings(player->hub, deltaTime);
 }
+#endif

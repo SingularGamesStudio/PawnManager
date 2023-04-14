@@ -1,12 +1,12 @@
 #ifndef ENTITY_H
 #define ENTITY_H
 /// misha does not believe in me  :(
+#include <cstring>
 #include <iostream>
 #include <utility>
 #include <vector>
 
 #include "../IDmanager.h"
-#include <cstring>
 
 template<typename T>
 size_t copyVariable(uint8_t* dst, T src) {
@@ -31,13 +31,15 @@ public:
     ptr<Player> owner;
     std::pair<double, double> position;
     double radius;
-
+#ifdef SERVER_SIDE
     void changeHealth(double delta);
+#endif
     virtual ~Entity() = default;
     virtual std::vector<uint8_t> serialize() const;
-    virtual size_t deserialize(const std::vector<uint8_t> &data);
+    virtual size_t deserialize(const std::vector<uint8_t>& data);
+
 protected:
     std::vector<uint8_t> serializeSelf() const;
-    size_t deserializeSelf(const std::vector<uint8_t> &data);
+    size_t deserializeSelf(const std::vector<uint8_t>& data);
 };
 #endif// ENTITY_H

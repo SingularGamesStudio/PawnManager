@@ -1,12 +1,15 @@
 #include "WorkerPawn.h"
 
 #include <cmath>
-#include <iostream>
 #include <cstring>
+#include <iostream>
 
 #include "../../Player.h"
 #include "../Buildings/Building.h"
 #include "../ResourceEntity.h"
+
+#ifdef SERVER_SIDE
+
 void WorkerPawn::create(ptr<Building> placeOfCreation) {
     currentTask = Task(TaskID::Idle, placeOfCreation);
     travelling = false;
@@ -148,40 +151,31 @@ void WorkerPawn::moveToBuilding(ptr<Building> dest) {
     }
     for (ptr<Building> v: visited[dest]) { onTheWay.push_back(v); }
 }
+#endif
+std::vector<uint8_t> WorkerPawn::serialize() const { return serializeSelf(); }
 
-std::vector<uint8_t> WorkerPawn::serialize() const {
-    return serializeSelf();
-}
-
-size_t WorkerPawn::deserialize(const std::vector<uint8_t>& data) {
-    return deserializeSelf(data);
-}
+size_t WorkerPawn::deserialize(const std::vector<uint8_t>& data) { return deserializeSelf(data); }
 
 std::vector<uint8_t> WorkerPawn::serializeSelf() const {
     std::vector<uint8_t> result = Pawn::serializeSelf();
     result.insert(result.begin(), DummyWorker);
-    size_t size = sizeof(size_t) * 3 + sizeof(expertisesID) * expertises.size()
-            + sizeof(ptr<Building>) * onTheWay.size();
+    size_t size = sizeof(size_t) * 3 + sizeof(expertisesID) * expertises.size() + sizeof(ptr<Building>) * onTheWay.size();
     result.resize(result.size() + size);
     uint8_t* curr = result.data() + result.size();
     curr += copyVariable(curr, currentInWay);
 
     curr += copyVariable(curr, expertises.size());
-    for(const auto& i : expertises) {
-        curr += copyVariable(curr, i);
-    }
+    for (const auto& i: expertises) { curr += copyVariable(curr, i); }
 
     curr += copyVariable(curr, onTheWay.size());
-    for(const auto& i : onTheWay) {
-        curr += copyVariable(curr, i);
-    }
+    for (const auto& i: onTheWay) { curr += copyVariable(curr, i); }
     return result;
 }
 
 
-size_t WorkerPawn::deserializeSelf(const std::vector<uint8_t> &data) {
+size_t WorkerPawn::deserializeSelf(const std::vector<uint8_t>& data) {
     size_t shift = Pawn::deserializeSelf(data);
-    const uint8_t *curr = data.data() + shift;
+    const uint8_t* curr = data.data() + shift;
     curr += initializeVariable(curr, currentInWay);
 
     size_t size;
@@ -193,17 +187,17 @@ size_t WorkerPawn::deserializeSelf(const std::vector<uint8_t> &data) {
 
     curr += initializeVariable(curr, size);
     onTheWay.resize(size);
-    for (size_t i = 0; i < size; ++i) {
-        curr += initializeVariable(curr, onTheWay[i]);
-    }
+    for (size_t i = 0; i < size; ++i) { curr += initializeVariable(curr, onTheWay[i]); }
     return curr - data.data();
 }
 
 WorkerPawn::~WorkerPawn() {
+#ifdef SERVER_SIDE
     owner->manager.cancelTask(currentTask, ptr<Pawn>(id));
     if (holding != Resource::DummyNothing)
         if (positionBuilding) positionBuilding->addResource(holding);
         else
             makeptr<ResourceEntity>(holding, position);
     IMNotHere();
+#endif
 }

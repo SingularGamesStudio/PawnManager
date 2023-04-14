@@ -8,9 +8,9 @@
 #include "Building.h"
 
 class CraftBuilding : public Building {
-
+#ifdef SERVER_SIDE
     void stopRecipe();
-
+#endif
 public:
     CraftBuilding(int id, std::pair<double, double> pos, ptr<Player> owner, double hp, double radius = baseBuildingRadius,
                   ptr<Building> parent = ptr<Building>())
@@ -19,11 +19,11 @@ public:
           current(nullptr) {}
     std::vector<Recipe*> recipes;
     Recipe* current;
-
+#ifdef SERVER_SIDE
     bool assignRecipe(Recipe* recipe);
 
     void tick(double deltaTime) override;
-
+#endif
     virtual ~CraftBuilding();
 };
 #endif//CRAFTBUILDING_H
