@@ -7,7 +7,7 @@
 #include "Player.h"
 #include "net/client.h"
 
-class LocalController : dlib::ClientInterface {
+class LocalController : public dlib::ClientInterface {
 public:
     std::set<ptr<Player>> players;
     std::set<ptr<ResourceEntity>> danglingResources;

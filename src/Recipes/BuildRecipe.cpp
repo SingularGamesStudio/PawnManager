@@ -42,7 +42,7 @@ RecipeType BuildRecipe::getType() const {
 }
 
 std::vector<uint8_t> BuildRecipe::serialize() const { return serializeSelf(); }
-size_t BuildRecipe::deserialize(const std::vector<uint8_t>& data) { return deserializeSelf(data); }
+size_t BuildRecipe::deserialize(const uint8_t* data) { return deserializeSelf(data); }
 
 std::vector<uint8_t> BuildRecipe::serializeSelf() const {
     std::vector<uint8_t> result = Recipe::serializeSelf();
@@ -54,12 +54,12 @@ std::vector<uint8_t> BuildRecipe::serializeSelf() const {
     return result;
 }
 
-size_t BuildRecipe::deserializeSelf(const std::vector<uint8_t>& data) {
+size_t BuildRecipe::deserializeSelf(const uint8_t* data) {
     size_t shift = Recipe::deserializeSelf(data);
-    const uint8_t* curr = data.data() + shift;
+    const uint8_t* curr = data + shift;
     curr += initializeVariable(curr, pos);
     int ind;
     curr += initializeVariable(curr, ind);
     toBuild = BuildingRegisty::database[ind]->toBuild;
-    return curr - data.data();
+    return curr - data;
 }

@@ -33,10 +33,10 @@ public:
     virtual ~FighterPawn();
     std::vector<uint8_t> serialize() const override;
 
-    size_t deserialize(const std::vector<uint8_t>& data) override;
+    size_t deserialize(const uint8_t* data) override;
 protected:
     std::vector<uint8_t> serializeSelf() const;
-    size_t deserializeSelf(const std::vector<uint8_t> &data);
+    size_t deserializeSelf(const uint8_t* data);
 };
 
 class Monk : public FighterPawn {

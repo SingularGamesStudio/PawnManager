@@ -154,7 +154,7 @@ RecipeType Recipe::getType() const {
 }
 
 std::vector<uint8_t> Recipe::serialize() const { return serializeSelf(); }
-size_t Recipe::deserialize(const std::vector<uint8_t>& data) { return deserializeSelf(data); }
+size_t Recipe::deserialize(const uint8_t* data) { return deserializeSelf(data); }
 
 std::vector<uint8_t> Recipe::serializeSelf() const {
     size_t size = sizeof(double) + sizeof(size_t) * 4 + sizeof(uint8_t) * (reqWorkers.size() +
@@ -186,8 +186,8 @@ std::vector<uint8_t> Recipe::serializeSelf() const {
     return result;
 }
 
-size_t Recipe::deserializeSelf(const std::vector<uint8_t>& data) {
-    const uint8_t* curr = data.data();
+size_t Recipe::deserializeSelf(const uint8_t* data) {
+    const uint8_t* curr = data;
     curr += initializeVariable(curr, duration);
     size_t size;
 
@@ -214,5 +214,5 @@ size_t Recipe::deserializeSelf(const std::vector<uint8_t>& data) {
     for(auto& i : inResources){
         curr += initializeVariable(curr, i);
     }
-    return curr - data.data();
+    return curr - data;
 }

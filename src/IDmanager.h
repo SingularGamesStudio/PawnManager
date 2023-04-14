@@ -26,10 +26,10 @@ struct RequiresID {
 
     virtual ~RequiresID() { IDmanager::set(id, nullptr); }
     virtual std::vector<uint8_t> serialize() const;
-    virtual size_t deserialize(const std::vector<uint8_t>& data);
+    virtual size_t deserialize(const uint8_t* data);
 
     std::vector<uint8_t> serializeSelf() const;
-    size_t deserializeSelf(const std::vector<uint8_t>& data);
+    size_t deserializeSelf(const uint8_t* data);
 };
 
 template<typename T>

@@ -25,9 +25,6 @@ public:
 private:
     static BuildingRenderer* buildingRenderer;
 
-public:
-    static LocalController* controller;
-
 private:
     static double curTime;
     static int selectedBuilding;

@@ -10,6 +10,7 @@
 #include "ButtonControl.h"
 #include "PawnManagerClient.h"
 #include "SFML/Graphics/Text.hpp"
+#include "../godobject.h"
 
 CraftBuildingWindow::CraftBuildingWindow(int id) : id(id), selectedRecipe(0), shouldClose(false) {
     slotCounts = sf::Vector2i(5, 5);
@@ -17,7 +18,7 @@ CraftBuildingWindow::CraftBuildingWindow(int id) : id(id), selectedRecipe(0), sh
         ptr<CraftBuilding> p(w->id);
         Recipe* r = p->recipes[w->selectedRecipe];
         
-        PawnManagerClient::controller->mainPlayer->manager.startRecipe(r, p.dyn_cast<Building>());
+        godObject::local_server->mainPlayer->manager.startRecipe(r, p.dyn_cast<Building>());
         w->shouldClose = true;
         //        PawnManagerClient::winManager.popWindow();
     }));

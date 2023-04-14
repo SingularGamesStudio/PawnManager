@@ -86,8 +86,14 @@ void WorkerPawn::tick(double deltaTime) {
         if (signX * (position.first - dest->position.first) <= 1 && signY * (position.second - dest->position.second) <= 1) {
             IMHere(dest);
             ++currentInWay;
-            if (currentInWay < onTheWay.size())
-                godObject::global_server->sendPacketAll(Event(Event::Type::PAWN_MOVE, id, onTheWay[currentInWay]->position).getPacket());
+            if (currentInWay < onTheWay.size()) {
+                auto tmp = onTheWay[currentInWay]->position;
+                double tim = std::hypot(tmp.first - position.first, tmp.second - position.second);
+                tim /= speed;
+
+                godObject::global_server->sendPacketAll(
+                        Event(Event::Type::PAWN_MOVE, id, onTheWay[currentInWay]->position, tim).getPacket());
+            }
         }
     } else {
         travelling = false;
@@ -160,7 +166,7 @@ void WorkerPawn::moveToBuilding(ptr<Building> dest) {
 #endif
 std::vector<uint8_t> WorkerPawn::serialize() const { return serializeSelf(); }
 
-size_t WorkerPawn::deserialize(const std::vector<uint8_t>& data) { return deserializeSelf(data); }
+size_t WorkerPawn::deserialize(const uint8_t* data) { return deserializeSelf(data); }
 
 std::vector<uint8_t> WorkerPawn::serializeSelf() const {
     std::vector<uint8_t> result = Pawn::serializeSelf();
@@ -179,9 +185,9 @@ std::vector<uint8_t> WorkerPawn::serializeSelf() const {
 }
 
 
-size_t WorkerPawn::deserializeSelf(const std::vector<uint8_t>& data) {
+size_t WorkerPawn::deserializeSelf(const uint8_t* data) {
     size_t shift = Pawn::deserializeSelf(data);
-    const uint8_t* curr = data.data() + shift;
+    const uint8_t* curr = data + shift;
     curr += initializeVariable(curr, currentInWay);
 
     size_t size;
@@ -194,7 +200,7 @@ size_t WorkerPawn::deserializeSelf(const std::vector<uint8_t>& data) {
     curr += initializeVariable(curr, size);
     onTheWay.resize(size);
     for (size_t i = 0; i < size; ++i) { curr += initializeVariable(curr, onTheWay[i]); }
-    return curr - data.data();
+    return curr - data;
 }
 
 WorkerPawn::~WorkerPawn() {

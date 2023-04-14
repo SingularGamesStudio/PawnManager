@@ -4,7 +4,8 @@
 
 class Building;
 class Pawn;
-class Recipe enum class Resource : uint8_t;
+class Recipe;
+enum class Resource : uint8_t;
 
 class Event {
 private:

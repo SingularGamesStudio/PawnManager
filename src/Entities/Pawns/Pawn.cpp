@@ -46,7 +46,7 @@ void Pawn::tick(double deltaTime) {}
 #endif
 std::vector<uint8_t> Pawn::serialize() const { return serializeSelf(); }
 
-size_t Pawn::deserialize(const std::vector<uint8_t>& data) { return deserializeSelf(data); }
+size_t Pawn::deserialize(const uint8_t* data) { return deserializeSelf(data); }
 
 std::vector<uint8_t> Pawn::serializeSelf() const {
     std::vector<uint8_t> result = Entity::serializeSelf();
@@ -65,9 +65,9 @@ std::vector<uint8_t> Pawn::serializeSelf() const {
 }
 
 
-size_t Pawn::deserializeSelf(const std::vector<uint8_t>& data) {
+size_t Pawn::deserializeSelf(const uint8_t* data) {
     size_t shift = Entity::deserializeSelf(data);
-    const uint8_t* curr = data.data() + shift;
+    const uint8_t* curr = data + shift;
     curr += initializeVariable(curr, holding);
     curr += initializeVariable(curr, needed);
     curr += initializeVariable(curr, positionBuilding);
@@ -76,10 +76,12 @@ size_t Pawn::deserializeSelf(const std::vector<uint8_t>& data) {
     curr += initializeVariable(curr, travelling);
     curr += initializeVariable(curr, toDrop);
     curr += initializeVariable(curr, toTake);
-    return curr - data.data();
+    return curr - data;
 }
 
 Pawn::~Pawn() {
+#ifdef SERVER_SIDE
     owner->pawns.erase(ptr<Pawn>(id));
     godObject::global_server->sendPacketAll(Event(Event::Type::PAWN_DISAPPEAR, id).getPacket());
+#endif
 }
