@@ -20,6 +20,7 @@
 #include "MainMenuWindow.h"
 #include "SFML/Graphics/Text.hpp"
 #include "SFML/Window.hpp"
+#include "../IDmanager.h"
 
 
 sf::RenderWindow* PawnManagerClient::window;
@@ -36,7 +37,7 @@ FontManager PawnManagerClient::fontManager;
 
 void PawnManagerClient::run() {
     init();
-    player = initTest();
+    player = ptr<Player>();
     while (window->isOpen()) {
         sf::Event evt{};
         while (window->pollEvent(evt)) {
@@ -62,7 +63,7 @@ void PawnManagerClient::run() {
 
 void PawnManagerClient::updateAndRender() {
     double newTime = clock();
-    tick((newTime - curTime) / CLOCKS_PER_SEC);
+//    tick((newTime - curTime) / CLOCKS_PER_SEC);
     curTime = newTime;
     window->clear(sf::Color::White);
     sf::Vector2f center = ((sf::Vector2f) window->getSize()) * 0.5f;
