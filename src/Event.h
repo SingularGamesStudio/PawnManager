@@ -18,7 +18,11 @@ public:
         PAWN_DISAPPEAR,
         PAWN_MOVE,
         PAWN_TAKE_RES,
-        PAWN_LET_RES
+        PAWN_LET_RES,
+        PLAYER_APPEAR,
+        PLAYER_DISAPPEAR,
+        RESOURCE_ENTITY_APPEAR,
+        RESOURCE_ENTITY_DISAPPEAR
     };
     Event() = delete;
     Event(Type t, int id);
