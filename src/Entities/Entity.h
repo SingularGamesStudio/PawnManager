@@ -14,11 +14,75 @@ size_t copyVariable(uint8_t* dst, T src) {
     return sizeof(src);
 }
 
-
 template<typename T>
 size_t initializeVariable(const uint8_t* src, T& dst) {
     std::memcpy(&dst, src, sizeof(dst));
     return sizeof(dst);
+}
+
+
+template<typename T>
+size_t copyVector(uint8_t* dst, const std::vector<T>& src) {
+    dst += copyVariable(dst, src.size());
+    for(const T& i : src) {
+        dst += copyVariable(dst, i);
+    }
+    return sizeof(size_t) + sizeof(T) * src.size();
+}
+
+template<typename T>
+size_t initializeVector(const uint8_t* src, std::vector<T>& dst) {
+    size_t size;
+    src += initializeVariable(src, size);
+    dst.resize(size);
+    for(T& i : dst) {
+        src += initializeVariable(src, i);
+    }
+    return sizeof(size_t) + sizeof(T) * size;
+}
+
+
+template<typename T>
+size_t copySet(uint8_t* dst, const std::set<T>& src) {
+    dst += copyVariable(dst, src.size());
+    for(const T& i : src) {
+        dst += copyVariable(dst, i);
+    }
+    return sizeof(size_t) + sizeof(T) * src.size();
+}
+
+template<typename T>
+size_t initializeSet(const uint8_t* src, std::set<T>& dst) {
+    size_t size;
+    src += initializeVariable(src, size);
+    for(size_t i = 0; i < size; ++i) {
+        T tmp;
+        src += initializeVariable(src, tmp);
+        dst.insert(tmp);
+    }
+    return sizeof(size_t) + sizeof(T) * size;
+}
+
+
+template<typename T>
+size_t copySet(uint8_t* dst, const std::multiset<T>& src) {
+    dst += copyVariable(dst, src.size());
+    for(const T& i : src) {
+        dst += copyVariable(dst, i);
+    }
+    return sizeof(size_t) + sizeof(T) * src.size();
+}
+
+template<typename T>
+size_t initializeSet(const uint8_t* src, std::multiset<T>& dst) {
+    size_t size;
+    src += initializeVariable(src, size);
+    for(size_t i = 0; i < size; ++i) {
+        T tmp;
+        src += initializeVariable(src, tmp);
+        dst.insert(tmp);
+    }
+    return sizeof(size_t) + sizeof(T) * size;
 }
 
 class Player;
