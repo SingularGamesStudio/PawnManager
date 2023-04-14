@@ -4,6 +4,9 @@
 #include "../Buildings/Building.h"
 #include "../Entity.h"
 #include "../ResourceEntity.h"
+
+#ifdef SERVER_SIDE
+
 FighterPawnType DummyMonk::getType() const { return FighterPawnType::DummyMonk; }
 FighterPawnType DummySwordsman::getType() const { return FighterPawnType::DummySwordsman; }
 FighterPawnType FighterPawn::getType() const { return FighterPawnType::DummNotFound; };
@@ -209,3 +212,5 @@ FighterPawn::~FighterPawn() {
             makeptr<ResourceEntity>(holding, position);
     IMNotHere();
 }
+
+#endif

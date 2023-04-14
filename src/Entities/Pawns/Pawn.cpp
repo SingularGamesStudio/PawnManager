@@ -6,6 +6,7 @@
 #include "../ResourceEntity.h"
 #include <cstring>
 
+#ifdef SERVER_SIDE
 
 void Pawn::drop(ptr<Building> in, std::pair<double, double> pos) {
     if (in && holding != Resource::DummyNothing) {
@@ -76,3 +77,5 @@ size_t Pawn::deserializeSelf(const std::vector<uint8_t> &data) {
 }
 
 Pawn::~Pawn() { owner->pawns.erase(ptr<Pawn>(id)); }
+
+#endif

@@ -17,6 +17,7 @@ public:
     size_t currentInWay;
     std::set<expertisesID> expertises;
     std::vector<ptr<Building>> onTheWay;
+    #ifdef SERVER_SIDE
     WorkerPawn(int id) { this->id = id; }
     void create(ptr<Building> placeOfCreation);
     void assignTask(const Task& toAssign) override;
@@ -24,6 +25,7 @@ public:
     void moveToPosition(std::pair<double, double> toMove) override{};
     void tick(double deltaTime) override;
     virtual ~WorkerPawn();
+    #endif
     std::vector<uint8_t> serialize() const override;
     size_t deserialize(const std::vector<uint8_t>& data) override;
 protected:

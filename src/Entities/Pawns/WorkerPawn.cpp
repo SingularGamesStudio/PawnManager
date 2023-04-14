@@ -7,6 +7,9 @@
 #include "../../Player.h"
 #include "../Buildings/Building.h"
 #include "../ResourceEntity.h"
+
+#ifdef SERVER_SIDE
+
 void WorkerPawn::create(ptr<Building> placeOfCreation) {
     currentTask = Task(TaskID::Idle, placeOfCreation);
     travelling = false;
@@ -207,3 +210,5 @@ WorkerPawn::~WorkerPawn() {
             makeptr<ResourceEntity>(holding, position);
     IMNotHere();
 }
+
+#endif
