@@ -8,14 +8,16 @@ class Entity;
 class Pawn;
 class Building;
 
+struct RequiresID;
+
 struct IDmanager {
-    static std::unordered_map<int, void*> all;
+    static std::unordered_map<int, RequiresID*> all;
 
     static int nextID;
     static int newID();
-    static int newObject(void* ptr);
-    static void* get(int id);
-    static void set(int id, void* data);
+    static int newObject(RequiresID* ptr);
+    static RequiresID* get(int id);
+    static void set(int id, RequiresID* data);
 };
 
 struct RequiresID {
@@ -38,26 +40,26 @@ struct ptr {
 
     template<typename Q>
     ptr<Q> dyn_cast() const {
-        if (dynamic_cast<Q*>(reinterpret_cast<T*>(IDmanager::get(id)))) {
+        if (dynamic_cast<Q*>(IDmanager::get(id))) {
             return ptr<Q>(id);
         } else
             return ptr<Q>();
     }
 
-    T operator*() const { return *(reinterpret_cast<T*>(IDmanager::get(id))); }
+    T operator*() const { return *(dynamic_cast<T*>(IDmanager::get(id))); }
 
-    T* operator->() const { return reinterpret_cast<T*>(IDmanager::get(id)); }
+    T* operator->() const { return dynamic_cast<T*>(IDmanager::get(id)); }
 
     bool operator<(const ptr& other) const { return id < other.id; }
     bool operator==(const ptr& other) const { return id == other.id; }
 
     void del() const {
         int id0 = id;
-        delete reinterpret_cast<T*>(IDmanager::get(id));
+        delete dynamic_cast<T*>(IDmanager::get(id));
         IDmanager::set(id0, nullptr);
     }
 
-    T* pointer() const { return reinterpret_cast<T*>(IDmanager::get(id)); }
+    T* pointer() const { return dynamic_cast<T*>(IDmanager::get(id)); }
 
     template<typename Q>
     explicit operator ptr<Q>() const {
@@ -75,8 +77,9 @@ namespace std {
 template<typename T, typename... Targs>
 ptr<T> makeptr(Targs... args) {
     T* mem = reinterpret_cast<T*>(new char[sizeof(T)]);
-    int id = IDmanager::newObject(mem);
+    int id = IDmanager::newID();
     new (mem) T(id, args...);
+    IDmanager::set(id, dynamic_cast<RequiresID*>(mem));
     return ptr<T>(id);
 }
 

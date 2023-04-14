@@ -8,7 +8,10 @@ FighterPawnType DummyMonk::getType() const { return FighterPawnType::DummyMonk; 
 FighterPawnType DummySwordsman::getType() const { return FighterPawnType::DummySwordsman; }
 FighterPawnType FighterPawn::getType() const { return FighterPawnType::DummNotFound; };
 
-void FighterPawn::attack(ptr<Entity> attacked) { attacked->changeHealth(-atk * 1e-7); std::cout<<"Genuinly attacking\n"; };
+void FighterPawn::attack(ptr<Entity> attacked) {
+    std::cout << "Genuinly attacking " << -atk << " " << attacked->hp << "\n";
+    attacked->changeHealth(-atk);
+};
 
 ptr<FighterPawn> FighterPawn::createFighterPawn(FighterPawnType type, ptr<Building> placeOfCreation) {
     ptr<FighterPawn> newborn;
@@ -62,7 +65,6 @@ void FighterPawn::assignTask(const Task& toAssign) {
         case TaskID::Attack:
             toAttack = true;
             moveToBuilding(toAssign.destination);
-            std::cout<<"Attacking\n";
             break;
         default:
             throw("Unexpected FighterPawn TaskID: ", toAssign.id);
@@ -96,9 +98,7 @@ void FighterPawn::moveToPosition(std::pair<double, double> pos) {
     travelling = true;
     destinationPosition = pos;
 }
-void FighterPawn::moveToBuilding(ptr<Building> dest) {
-    moveToPosition(dest->position);
-}
+void FighterPawn::moveToBuilding(ptr<Building> dest) { moveToPosition(dest->position); }
 void FighterPawn::tick(double deltaTime) {
     if (!currentTask.destination) {
         toAttack = false;
@@ -159,13 +159,9 @@ void FighterPawn::tick(double deltaTime) {
     }
 }
 
-std::vector<uint8_t> FighterPawn::serialize() const {
-    return serializeSelf();
-}
+std::vector<uint8_t> FighterPawn::serialize() const { return serializeSelf(); }
 
-size_t FighterPawn::deserialize(const std::vector<uint8_t>& data) {
-    return deserializeSelf(data);
-}
+size_t FighterPawn::deserialize(const std::vector<uint8_t>& data) { return deserializeSelf(data); }
 
 std::vector<uint8_t> FighterPawn::serializeSelf() const {
     std::vector<uint8_t> result = Pawn::serializeSelf();
@@ -180,9 +176,9 @@ std::vector<uint8_t> FighterPawn::serializeSelf() const {
     return result;
 }
 
-size_t FighterPawn::deserializeSelf(const std::vector<uint8_t> &data) {
+size_t FighterPawn::deserializeSelf(const std::vector<uint8_t>& data) {
     size_t shift = Pawn::deserializeSelf(data);
-    const uint8_t *curr = data.data() + shift;
+    const uint8_t* curr = data.data() + shift;
     curr += initializeVariable(curr, atk);
     curr += initializeVariable(curr, speed);
     curr += initializeVariable(curr, toAttack);
@@ -193,8 +189,7 @@ size_t FighterPawn::deserializeSelf(const std::vector<uint8_t> &data) {
 FighterPawn::~FighterPawn() {
     owner->manager.cancelTask(currentTask, ptr<Pawn>(id));
     if (holding != Resource::DummyNothing)
-        if (positionBuilding)
-            positionBuilding->addResource(holding);
+        if (positionBuilding) positionBuilding->addResource(holding);
         else
             makeptr<ResourceEntity>(holding, position);
     IMNotHere();

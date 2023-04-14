@@ -3,21 +3,22 @@
 #include "Entities/Buildings/Building.h"
 #include "Entities/Entity.h"
 #include "Entities/Pawns/Pawn.h"
-std::unordered_map<int, void*> IDmanager::all;
+std::unordered_map<int, RequiresID*> IDmanager::all;
 int IDmanager::nextID = 0;
 
 int IDmanager::newID() { return nextID++; }
 
-int IDmanager::newObject(void* ptr) {
+int IDmanager::newObject(RequiresID* ptr) {
     all[nextID] = ptr;
     return nextID++;
 }
 
-void* IDmanager::get(int id) { return all[id]; }
+RequiresID* IDmanager::get(int id) { return all[id]; }
 
-void IDmanager::set(int id, void* data) {
+void IDmanager::set(int id, RequiresID* data) {
     all[id] = data;
-    if (id == 0) {
+    if (id == 0 && data == nullptr) {
         throw "aboba";
-    std::cout << "a";}
+        std::cout << "a";
+    }
 }
