@@ -21,7 +21,7 @@ public:
     bool avaliable(ptr<Player> owner);
 
     Task(TaskID taskid = TaskID::Idle, ptr<Building> building = ptr<Building>(), ptr<Building> building2 = ptr<Building>(),
-         Resource resource = Resource::DummyNothing, int returnID = -1);
+         Resource resource = Resource::Nothing, int returnID = -1);
     ///TASK_REFORM(player -> pawn commands)
 };
 #endif//TASK_H

@@ -5,20 +5,21 @@
 #include "../../Event.h"
 #include "../../Player.h"
 #include "../../Resource.h"
+#include "../../godobject.h"
 #include "../Buildings/Building.h"
 #include "../ResourceEntity.h"
 #ifdef SERVER_SIDE
 
 void Pawn::drop(ptr<Building> in, std::pair<double, double> pos) {
-    if (in && holding != Resource::DummyNothing) {
+    if (in && holding != Resource::Nothing) {
         in->addResource(holding);
-        global_server->sendPacketAll(Event(Event::Type::BUILDING_ADD_RES, in->id, holding).getPacket());
-        holding = Resource::DummyNothing;
-        global_server->sendPacketAll(Event(Event::Type::PAWN_LET_RES, id).getPacket());
+        godObject::global_server->sendPacketAll(Event(Event::Type::BUILDING_ADD_RES, in->id, holding).getPacket());
+        holding = Resource::Nothing;
+        godObject::global_server->sendPacketAll(Event(Event::Type::PAWN_LET_RES, id).getPacket());
         return;
     }
-    if (holding != Resource::DummyNothing) {
-        // TODO global_server->sendPacketAll(Event(Event::Type::RESOURCE_ENTITY_ADD, holding).getPacket());
+    if (holding != Resource::Nothing) {
+        // TODO godObject::global_server->sendPacketAll(Event(Event::Type::RESOURCE_ENTITY_ADD, holding).getPacket());
         makeptr<ResourceEntity>(holding, pos);
     }
 }
@@ -80,5 +81,5 @@ size_t Pawn::deserializeSelf(const std::vector<uint8_t>& data) {
 
 Pawn::~Pawn() {
     owner->pawns.erase(ptr<Pawn>(id));
-    global_server->sendPacketAll(Event(Event::Type::PAWN_DISAPPEAR, id).getPacket());
+    godObject::global_server->sendPacketAll(Event(Event::Type::PAWN_DISAPPEAR, id).getPacket());
 }

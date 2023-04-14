@@ -34,7 +34,7 @@ bool GameServer::onConnection(std::shared_ptr<dlib::Connection> client) {
     for (int i = 0; i < 5; i++) {
         ptr<WorkerPawn> pawn = makeptr<WorkerPawn>();
         pawn->create(player->hub);
-        pawn->expertises.insert(expertisesID::DummySmeltery);
+        pawn->expertises.insert(expertisesID::Smeltery);
         player->pawns.insert(pawn.dyn_cast<Pawn>());
     }
     crafter = makeptr<CraftBuilding>(pos1, player, 100);
@@ -42,7 +42,7 @@ bool GameServer::onConnection(std::shared_ptr<dlib::Connection> client) {
     crafter->parent = player->hub;
     recipe = new CraftRecipe();
     recipe->inResources.push_back(Resource::DummyOre);
-    recipe->reqWorkers.push_back(expertisesID::DummySmeltery);
+    recipe->reqWorkers.push_back(expertisesID::Smeltery);
     recipe->outResources.push_back(Resource::DummyIngot);
     recipe->duration = 5;
     crafter->recipes.push_back(recipe);

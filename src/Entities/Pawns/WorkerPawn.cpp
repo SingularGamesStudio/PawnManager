@@ -6,6 +6,7 @@
 
 #include "../../Event.h"
 #include "../../Player.h"
+#include "../../godobject.h"
 #include "../Buildings/Building.h"
 #include "../ResourceEntity.h"
 
@@ -15,11 +16,11 @@
 void WorkerPawn::create(ptr<Building> placeOfCreation) {
     currentTask = Task(TaskID::Idle, placeOfCreation);
     travelling = false;
-    holding = Resource::DummyNothing;
-    needed = Resource::DummyNothing;
+    holding = Resource::Nothing;
+    needed = Resource::Nothing;
     owner = placeOfCreation->owner;
     IMHere(placeOfCreation);
-    global_server->sendPacketAll(Event(Event::Type::PAWN_APPEAR, id).getPacket());
+    godObject::global_server->sendPacketAll(Event(Event::Type::PAWN_APPEAR, id).getPacket());
 }
 void WorkerPawn::assignTask(const Task& toAssign) {
     currentTask = toAssign;
@@ -86,7 +87,7 @@ void WorkerPawn::tick(double deltaTime) {
             IMHere(dest);
             ++currentInWay;
             if (currentInWay < onTheWay.size())
-                global_server->sendPacketAll(Event(Event::Type::PAWN_MOVE, id, onTheWay[currentInWay]->position).getPacket());
+                godObject::global_server->sendPacketAll(Event(Event::Type::PAWN_MOVE, id, onTheWay[currentInWay]->position).getPacket());
         }
     } else {
         travelling = false;
@@ -100,11 +101,11 @@ void WorkerPawn::tick(double deltaTime) {
         }
         if (toTake) {
             if (positionBuilding->removeResource(needed)) {
-                global_server->sendPacketAll(Event(Event::Type::BUILDING_REMOVE_RES, positionBuilding->id, needed).getPacket());
+                godObject::global_server->sendPacketAll(Event(Event::Type::BUILDING_REMOVE_RES, positionBuilding->id, needed).getPacket());
                 toTake = false;
                 holding = needed;
-                needed = Resource::DummyNothing;
-                global_server->sendPacketAll(Event(Event::Type::PAWN_TAKE_RES, id, holding).getPacket());
+                needed = Resource::Nothing;
+                godObject::global_server->sendPacketAll(Event(Event::Type::PAWN_TAKE_RES, id, holding).getPacket());
             } else {
                 owner->manager.cancelTask(currentTask, ptr<Pawn>(id));
                 currentTask = TaskID::Idle;

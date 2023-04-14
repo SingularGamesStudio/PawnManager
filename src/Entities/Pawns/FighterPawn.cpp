@@ -2,16 +2,17 @@
 
 #include "../../Event.h"
 #include "../../Player.h"
+#include "../../godobject.h"
 #include "../Buildings/Building.h"
 #include "../Entity.h"
 #include "../ResourceEntity.h"
 
 
-FighterPawnType DummyMonk::getType() const { return FighterPawnType::DummyMonk; }
-FighterPawnType DummySwordsman::getType() const { return FighterPawnType::DummySwordsman; }
+FighterPawnType Monk::getType() const { return FighterPawnType::Monk; }
+FighterPawnType Swordsman::getType() const { return FighterPawnType::Swordsman; }
 FighterPawnType FighterPawn::getType() const { return FighterPawnType::DummNotFound; };
 
-DummyMonk::DummyMonk(int id, Task task, bool BOOL, Resource resource, ptr<Player> Owner, ptr<Building> dest, ptr<Building> in) {
+Monk::Monk(int id, Task task, bool BOOL, Resource resource, ptr<Player> Owner, ptr<Building> dest, ptr<Building> in) {
     this->id = id;
     currentTask = task;
     travelling = BOOL;
@@ -22,7 +23,7 @@ DummyMonk::DummyMonk(int id, Task task, bool BOOL, Resource resource, ptr<Player
     IMHere(in);
 #endif
 }
-DummySwordsman::DummySwordsman(int id, Task task, bool BOOL, Resource resource, ptr<Player> Owner, ptr<Building> dest, ptr<Building> in) {
+Swordsman::Swordsman(int id, Task task, bool BOOL, Resource resource, ptr<Player> Owner, ptr<Building> dest, ptr<Building> in) {
     this->id = id;
     currentTask = task;
     travelling = BOOL;
@@ -46,13 +47,13 @@ void FighterPawn::attack(ptr<Entity> attacked, double deltaTime) {
 ptr<FighterPawn> FighterPawn::createFighterPawn(FighterPawnType type, ptr<Building> placeOfCreation) {
     ptr<FighterPawn> newborn;
     switch (type) {
-        case FighterPawnType::DummyMonk:
-            newborn = (makeptr<DummyMonk>(Task(TaskID::Idle, placeOfCreation), false, Resource::DummyNothing, placeOfCreation->owner, placeOfCreation,
+        case FighterPawnType::Monk:
+            newborn = (makeptr<Monk>(Task(TaskID::Idle, placeOfCreation), false, Resource::Nothing, placeOfCreation->owner, placeOfCreation,
                                           placeOfCreation))
                               .dyn_cast<FighterPawn>();
             break;
-        case FighterPawnType::DummySwordsman:
-            newborn = (makeptr<DummySwordsman>(Task(TaskID::Idle, placeOfCreation), false, Resource::DummyNothing, placeOfCreation->owner,
+        case FighterPawnType::Swordsman:
+            newborn = (makeptr<Swordsman>(Task(TaskID::Idle, placeOfCreation), false, Resource::Nothing, placeOfCreation->owner,
                                                placeOfCreation, placeOfCreation))
                               .dyn_cast<FighterPawn>();
             break;
@@ -61,7 +62,7 @@ ptr<FighterPawn> FighterPawn::createFighterPawn(FighterPawnType type, ptr<Buildi
     }
     placeOfCreation->owner->pawns.insert(newborn->id);
     newborn->IMHere(placeOfCreation);
-    global_server->sendPacketAll(Event(Event::Type::PAWN_APPEAR, newborn->id).getPacket());
+    godObject::global_server->sendPacketAll(Event(Event::Type::PAWN_APPEAR, newborn->id).getPacket());
 }
 void FighterPawn::getResource(ResourceEntity* toGet) {
     if (positionBuilding) IMNotHere();
@@ -111,7 +112,7 @@ void FighterPawn::takePresentResource(ResourceEntity* toTake) {
 }
 void FighterPawn::moveToPosition(std::pair<double, double> pos) {
     IMNotHere();
-    global_server->sendPacketAll(Event(Event::Type::PAWN_MOVE, id, pos).getPacket());
+    godObject::global_server->sendPacketAll(Event(Event::Type::PAWN_MOVE, id, pos).getPacket());
     travelling = true;
     destinationPosition = pos;
 }
@@ -172,7 +173,7 @@ void FighterPawn::tick(double deltaTime) {
         if (toTake) {
             toTake = false;
             holding = needed;
-            needed = Resource::DummyNothing;
+            needed = Resource::Nothing;
             ///TODO removeFromExistence needed
             if (!toDrop) currentTask = TaskID::Idle;
         }
@@ -215,7 +216,7 @@ FighterPawn::~FighterPawn() {
 #ifdef SERVER_SIDE
     owner->manager.cancelTask(currentTask, ptr<Pawn>(id));
     drop(positionBuilding);
-    global_server->sendPacketAll(Event(Event::Type::PAWN_DISAPPEAR, id).getPacket());
+    godObject::global_server->sendPacketAll(Event(Event::Type::PAWN_DISAPPEAR, id).getPacket());
     IMNotHere();
 #endif
 }
