@@ -33,6 +33,6 @@ void BuildRecipe::finish() {
 }
 
 Recipe* BuildRecipe::cloneSelf() {
-    BuildRecipe* res = new BuildRecipe(pos, toBuild.index);
+    BuildRecipe* res = new BuildRecipe(pos, toBuild);
     return res;
 }

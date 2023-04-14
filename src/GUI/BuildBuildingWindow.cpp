@@ -4,6 +4,7 @@
 
 #include "BuildBuildingWindow.h"
 
+#include "../Entities/Buildings/BuildingRegisty.h"
 #include "../Recipes/BuildRecipe.h"
 #include "ButtonControl.h"
 #include "PawnManagerClient.h"
@@ -18,8 +19,10 @@ BuildBuildingWindow::BuildBuildingWindow(int id, const sf::Vector2f& pos) : id(i
         //        ptr<CraftBuilding> p(w->id);
         //        Recipe* r = p->recipes[w->selectedRecipe];
         //        PawnManagerClient::player->manager.startRecipe(r, static_cast<ptr<Building>>(p));
-
-        PawnManagerClient::player->manager.startRecipe(new BuildRecipe({w->pos.x, w->pos.y}, 0), ptr<Building>(w->id));
+        BuildRecipe* rec = dynamic_cast<BuildRecipe*>(BuildingRegisty::database[0]->clone());
+        rec->pos = {w->pos.x, w->pos.y};
+        PawnManagerClient::player->manager.startRecipe(rec, ptr<Building>(w->id));
+        delete rec;
         w->shouldClose = true;
         //        PawnManagerClient::winManager.popWindow();
     }));

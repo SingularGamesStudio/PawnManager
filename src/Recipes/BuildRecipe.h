@@ -12,10 +12,7 @@ public:
     std::pair<double, double> pos;
     BuildingIdea toBuild;
 
-    BuildRecipe(std::pair<double, double> pos, int index) : pos(pos), toBuild(BuildingRegisty::database[index]) {
-        inResources.push_back(Resource::DummyOre);//TODO:get from database
-        duration = 4;
-    }
+    BuildRecipe(std::pair<double, double> pos, BuildingIdea toBuild) : pos(pos), toBuild(toBuild) {}
 
     void deserialize(const std::vector<uint8_t>& data) override{};
     void finish() override;
