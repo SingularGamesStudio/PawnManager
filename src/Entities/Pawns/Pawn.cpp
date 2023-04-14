@@ -6,16 +6,21 @@
 #include "../../Resource.h"
 #include "../Buildings/Building.h"
 #include "../ResourceEntity.h"
-
+#include "../../Event.h"
 #ifdef SERVER_SIDE
 
 void Pawn::drop(ptr<Building> in, std::pair<double, double> pos) {
     if (in && holding != Resource::DummyNothing) {
         in->addResource(holding);
+        global_server->sendPacketAll(Event(Event::Type::BUILDING_ADD_RES, in->id, holding).getPacket());
         holding = Resource::DummyNothing;
+        global_server->sendPacketAll(Event(Event::Type::Pawn_LET_RES, id).getPacket());
         return;
     }
-    if (holding != Resource::DummyNothing) makeptr<ResourceEntity>(holding, pos);
+    if (holding != Resource::DummyNothing){
+        // TODO global_server->sendPacketAll(Event(Event::Type::RESOURCE_ENTITY_ADD, holding).getPacket());
+        makeptr<ResourceEntity>(holding, pos);
+    }
 }
 void Pawn::IMNotHere() {
     if (positionBuilding) {
@@ -73,4 +78,7 @@ size_t Pawn::deserializeSelf(const std::vector<uint8_t>& data) {
     return curr - data.data();
 }
 
-Pawn::~Pawn() { owner->pawns.erase(ptr<Pawn>(id)); }
+Pawn::~Pawn() {
+    owner->pawns.erase(ptr<Pawn>(id);
+    global_server->sendPacketAll(Event(Event::Type::PAWN_DISAPPEAR, id).getPacket());
+    ); }
