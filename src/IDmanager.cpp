@@ -1,8 +1,7 @@
 #include <stdexcept>
 
-#include "Entities/Buildings/Building.h"
 #include "Entities/Entity.h"
-#include "Entities/Pawns/Pawn.h"
+
 std::unordered_map<int, RequiresID*> IDmanager::all;
 int IDmanager::nextID = 0;
 

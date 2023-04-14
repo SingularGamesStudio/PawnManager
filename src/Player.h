@@ -18,7 +18,7 @@ public:
     Player(int id) { this->id = id; }
     ptr<Building> hub;
     std::set<ptr<Pawn>> pawns;
-
+#ifdef SERVER_SIDE
     struct TaskManager {
 
         struct PawnReq {
@@ -79,9 +79,11 @@ public:
 
     bool checkRecipe(Recipe* recipe);
 
+
     ptr<CraftBuilding> placeBlueprint(std::pair<double, double> pos, ptr<Building> parent, double r);
 
     void tick();
     void attack(ptr<Building> what);
+#endif
 };
 #endif//PLAYER_H

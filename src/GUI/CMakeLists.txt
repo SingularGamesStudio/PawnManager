@@ -15,6 +15,8 @@ add_executable(PawnManagerGUI BuildingRenderer.cpp CraftBuildingWindow.cpp FontM
 target_link_libraries(PawnManagerGUI PRIVATE sfml-graphics PawnManager)
 target_compile_features(PawnManagerGUI PRIVATE cxx_std_20)
 
+add_compile_definitions(SERVER_SIDE CLIENT_SIDE)
+
 if (WIN32 AND BUILD_SHARED_LIBS)
     add_custom_command(TARGET PawnManagerGUI POST_BUILD
             COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_RUNTIME_DLLS:PawnManagerGUI> $<TARGET_FILE_DIR:PawnManagerGUI> COMMAND_EXPAND_LISTS)

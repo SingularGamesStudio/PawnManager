@@ -1,3 +1,4 @@
+#ifdef SERVER_SIDE
 #include "Player.h"
 
 #include <set>
@@ -9,6 +10,7 @@
 #include "Entities/Pawns/FighterPawn.h"
 #include "Entities/Pawns/WorkerPawn.h"
 #include "Recipes/BuildRecipe.h"
+
 
 void dfs(ptr<Building> vertex, std::multiset<Resource>& resources) {
     for (Resource r: vertex->resources) {
@@ -258,3 +260,4 @@ void Player::attack(ptr<Building> what) {
         }
     }
 }
+#endif

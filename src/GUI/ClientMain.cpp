@@ -1,4 +1,3 @@
-
 #include "PawnManagerClient.h"
 
 int main() {
