@@ -11,6 +11,7 @@ protected:
 public:
     std::pair<double, double> pos;
     BuildingIdea toBuild;
+    BuildRecipe() : toBuild(BuildingRegisty::database[0]->toBuild) {}
 
     BuildRecipe(std::pair<double, double> pos, BuildingIdea toBuild) : pos(pos), toBuild(toBuild) {}
 
