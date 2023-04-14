@@ -8,7 +8,7 @@
 #include "PawnManagerClient.h"
 #include <numbers>
 
-SlotControl::SlotControl(GameWindow& win, const sf::IntRect& rect) : Control(win, rect), res(Resource::DummyNothing) {}
+SlotControl::SlotControl(GameWindow& win, const sf::IntRect& rect) : Control(win, rect), res(Resource::Nothing) {}
 
 void SlotControl::updateAndRender() {
     Control::updateAndRender();

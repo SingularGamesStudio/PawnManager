@@ -21,7 +21,7 @@ BuildBuildingWindow::BuildBuildingWindow(int id, const sf::Vector2f& pos) : id(i
         //        PawnManagerClient::player->manager.startRecipe(r, static_cast<ptr<Building>>(p));
         BuildRecipe* rec = dynamic_cast<BuildRecipe*>(BuildingRegisty::database[w->selectedRecipe]->clone());
         rec->pos = {w->pos.x, w->pos.y};
-        PawnManagerClient::player->manager.startRecipe(rec, ptr<Building>(w->id));
+        PawnManagerClient::controller->mainPlayer->manager.startRecipe(rec, ptr<Building>(w->id));
         delete rec;
         w->shouldClose = true;
         //        PawnManagerClient::winManager.popWindow();
@@ -69,6 +69,6 @@ void BuildBuildingWindow::updateAndRender() {
     if (cr) {
         for (Resource res: cr->inResources) { inputSlots[cInputPos++]->res = res; }
     }
-    for (; cInputPos < inputSlots.size(); ++cInputPos) { inputSlots[cInputPos]->res = Resource::DummyNothing; }
+    for (; cInputPos < inputSlots.size(); ++cInputPos) { inputSlots[cInputPos]->res = Resource::Nothing; }
     arrow->pawnExpertises = cr->reqWorkers;
 }

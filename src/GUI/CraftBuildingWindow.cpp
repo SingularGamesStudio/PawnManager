@@ -17,7 +17,7 @@ CraftBuildingWindow::CraftBuildingWindow(int id) : id(id), selectedRecipe(0), sh
         ptr<CraftBuilding> p(w->id);
         Recipe* r = p->recipes[w->selectedRecipe];
         
-        PawnManagerClient::player->manager.startRecipe(r, p.dyn_cast<Building>());
+        PawnManagerClient::controller->mainPlayer->manager.startRecipe(r, p.dyn_cast<Building>());
         w->shouldClose = true;
         //        PawnManagerClient::winManager.popWindow();
     }));
@@ -73,7 +73,7 @@ void CraftBuildingWindow::updateAndRender() {
         for (Resource res: cr->inResources) { inputSlots[cInputPos++]->res = res; }
         for (Resource res: cr->outResources) { outputSlots[cOutputPos++]->res = res; }
     }
-    for (; cInputPos < inputSlots.size(); ++cInputPos) { inputSlots[cInputPos]->res = Resource::DummyNothing; }
-    for (; cOutputPos < outputSlots.size(); ++cOutputPos) { outputSlots[cOutputPos]->res = Resource::DummyNothing; }
+    for (; cInputPos < inputSlots.size(); ++cInputPos) { inputSlots[cInputPos]->res = Resource::Nothing; }
+    for (; cOutputPos < outputSlots.size(); ++cOutputPos) { outputSlots[cOutputPos]->res = Resource::Nothing; }
     arrow->pawnExpertises = r->reqWorkers;
 }

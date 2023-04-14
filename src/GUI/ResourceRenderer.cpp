@@ -11,20 +11,20 @@
 #include "SFML/Window.hpp"
 
 void ResourceRenderer::drawResource(Resource r, sf::Vector2f pos, float rotation, float sz) {
-    if(r == Resource::DummyNothing) {
+    if(r == Resource::Nothing) {
         return;
     }
     std::vector<sf::Vector2f> vertices;
     std::vector<sf::Vector2f> outerVertices;
     int cnt = 3;
     switch (r) {
-        case Resource::DummyIngot:
+        case Resource::Ingot:
             cnt = 4;
             break;
-        case Resource::DummyOre:
+        case Resource::Ore:
             cnt = 5;
             break;
-        case Resource::DummyWeapon:
+        case Resource::Weapon:
             cnt = 4;
             break;
     }

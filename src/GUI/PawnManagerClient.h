@@ -13,6 +13,7 @@
 #include "ResourceRenderer.h"
 #include "SFML/Graphics/RenderWindow.hpp"
 #include "SFML/Window.hpp"
+#include "../LocalController.h"
 
 class PawnManagerClient {
 public:
@@ -25,7 +26,7 @@ private:
     static BuildingRenderer* buildingRenderer;
 
 public:
-    static ptr<Player> player;
+    static LocalController* controller;
 
 private:
     static double curTime;
