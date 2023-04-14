@@ -5,6 +5,7 @@
 #include "LocalController.h"
 
 #include "Entities/Buildings/Building.h"
+#include "Entities/Buildings/CraftBuilding.h"
 #include "Entities/Pawns/FighterPawn.h"
 #include "Entities/Pawns/WorkerPawn.h"
 
@@ -49,7 +50,21 @@ void LocalController::onPacketReceive(const dlib::Packet& p) {
         rEntity->deserialize(data);
         IDmanager::set(rEntity->id, dynamic_cast<RequiresID*>(rEntity));
     } else if (type == Event::Type::BUILDING_APPEAR) {
-
+        BuildingType buildingType = static_cast<BuildingType>(data[0]);
+        data.erase(data.begin());
+        Building* building = nullptr;
+        switch (buildingType) {
+            case BuildingType::BASE_BUILDING:
+                building = new Building();
+                break;
+            case BuildingType::CRAFT_BUILDING:
+                building = new CraftBuilding();
+                break;
+            default:
+                break;
+        }
+        building->deserialize(data);
+        IDmanager::set(building->id, dynamic_cast<RequiresID*>(building));
     } else if (type == Event::Type::BUILDING_ADD_RES) {
         int id = 0;
         std::memcpy(&id, data.data(), sizeof(int));
@@ -87,6 +102,4 @@ void LocalController::onPacketReceive(const dlib::Packet& p) {
     }
 }
 
-void LocalController::sendPacket(Recipe* recipe, ptr<Building> where) {
-
-}
+void LocalController::sendPacket(Recipe* recipe, ptr<Building> where) {}

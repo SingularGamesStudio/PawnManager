@@ -3,6 +3,7 @@
 //
 
 #include "godobject.h"
+#include "Recipes/Recipe.h"
 
 #ifdef SERVER_SIDE
 dlib::ServerInterface* godObject::global_server = nullptr;
@@ -11,3 +12,7 @@ dlib::ServerInterface* godObject::global_server = nullptr;
 #ifdef CLIENT_SIDE
 LocalController* godObject::local_server = nullptr;
 #endif
+
+size_t godObject::getRecipe(const uint8_t* data, Recipe*& out) {
+
+}

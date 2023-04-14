@@ -15,6 +15,7 @@ struct godObject {
 #ifdef CLIENT_SIDE
     static LocalController* local_server;
 #endif
+    size_t getRecipe(const uint8_t* data, Recipe*& out);
 };
 
 
