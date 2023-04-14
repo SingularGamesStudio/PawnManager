@@ -9,6 +9,7 @@
 #include "ButtonControl.h"
 #include "PawnManagerClient.h"
 #include "SFML/Graphics/Text.hpp"
+#include "../godobject.h"
 
 
 BuildBuildingWindow::BuildBuildingWindow(int id, const sf::Vector2f& pos) : id(id), pos(pos), selectedRecipe(0), shouldClose(false), arrow(nullptr) {
@@ -21,7 +22,7 @@ BuildBuildingWindow::BuildBuildingWindow(int id, const sf::Vector2f& pos) : id(i
         //        PawnManagerClient::player->manager.startRecipe(r, static_cast<ptr<Building>>(p));
         BuildRecipe* rec = dynamic_cast<BuildRecipe*>(BuildingRegisty::database[w->selectedRecipe]->clone());
         rec->pos = {w->pos.x, w->pos.y};
-        PawnManagerClient::controller->mainPlayer->manager.startRecipe(rec, ptr<Building>(w->id));
+        godObject::local_server->mainPlayer->manager.startRecipe(rec, ptr<Building>(w->id));
         delete rec;
         w->shouldClose = true;
         //        PawnManagerClient::winManager.popWindow();
