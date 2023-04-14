@@ -1,6 +1,9 @@
+#ifndef BUILDINGREGISTRY_H
+#define BUILDINGREGISTRY_H
 #include <vector>
 
 class Recipe;
+class BuildRecipe;
 
 struct BuildingIdea {
     std::vector<Recipe*> available;
@@ -11,7 +14,8 @@ struct BuildingIdea {
 
 class BuildingRegisty {
 public:
-    static std::vector<BuildingIdea> database;
+    static std::vector<BuildRecipe*> database;
 
     static void init();
 };
+#endif
