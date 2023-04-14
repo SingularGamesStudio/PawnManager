@@ -2,7 +2,7 @@ project(PawnManager)
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_compile_definitions(SERVER_SIDE CLIENT_SIDE)
+add_compile_definitions(CLIENT_SIDE)
 
 add_library(PawnManager src/Entities/Entity.cpp src/Player.cpp src/Player.cpp src/Task.cpp
         src/Entities/Buildings/Building.cpp src/Entities/Pawns/FighterPawn.cpp src/Entities/Pawns/Pawn.cpp

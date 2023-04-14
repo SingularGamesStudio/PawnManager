@@ -17,19 +17,21 @@ public:
     size_t currentInWay;
     std::set<expertisesID> expertises;
     std::vector<ptr<Building>> onTheWay;
-    #ifdef SERVER_SIDE
     WorkerPawn(int id) { this->id = id; }
+#ifdef SERVER_SIDE
     void create(ptr<Building> placeOfCreation);
     void assignTask(const Task& toAssign) override;
     void moveToBuilding(ptr<Building> dest) override;
     void moveToPosition(std::pair<double, double> toMove) override{};
     void tick(double deltaTime) override;
+#endif
     virtual ~WorkerPawn();
-    #endif
+
     std::vector<uint8_t> serialize() const override;
     size_t deserialize(const std::vector<uint8_t>& data) override;
+
 protected:
     std::vector<uint8_t> serializeSelf() const;
-    size_t deserializeSelf(const std::vector<uint8_t> &data);
+    size_t deserializeSelf(const std::vector<uint8_t>& data);
 };
 #endif//WORKERPAWN_H

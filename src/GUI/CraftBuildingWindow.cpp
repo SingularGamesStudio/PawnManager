@@ -16,6 +16,7 @@ CraftBuildingWindow::CraftBuildingWindow(int id) : id(id), selectedRecipe(0), sh
     controls.push_back(new ButtonControl(*this, sf::IntRect(1, 4, 2, 0), "Assign recipe", [w = this]() {
         ptr<CraftBuilding> p(w->id);
         Recipe* r = p->recipes[w->selectedRecipe];
+        
         PawnManagerClient::player->manager.startRecipe(r, p.dyn_cast<Building>());
         w->shouldClose = true;
         //        PawnManagerClient::winManager.popWindow();
