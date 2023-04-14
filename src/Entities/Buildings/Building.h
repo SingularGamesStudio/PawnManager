@@ -20,6 +20,9 @@ public:
         this->parent = parent;
         this->id = id;
     }
+#ifdef CLIENT_SIDE
+    Building() {}
+#endif
     ptr<Building> parent = ptr<Building>();
     std::set<ptr<Building>> children;
     std::multiset<Resource> resources;

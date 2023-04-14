@@ -2,7 +2,7 @@
 
 class Building;
 class Pawn;
-enum class Resource : uint8_t;
+class Recipe enum class Resource : uint8_t;
 
 class Event {
 private:
@@ -22,11 +22,13 @@ public:
         PLAYER_APPEAR,
         PLAYER_DISAPPEAR,
         RESOURCE_ENTITY_APPEAR,
-        RESOURCE_ENTITY_DISAPPEAR
+        RESOURCE_ENTITY_DISAPPEAR,
+        PLAYER_ACTION
     };
     Event() = delete;
     Event(Type t, int id);
     Event(Type t, int id, Resource res);
-    Event(Type t, int id, std::pair<double, double> pos);
+    Event(Type t, int id, std::pair<double, double> pos, double time);
+    Event(Type t, Recipe* recipe, int id);
     dlib::Packet getPacket();
 };

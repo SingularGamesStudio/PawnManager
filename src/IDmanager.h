@@ -81,6 +81,9 @@ namespace std {
 
 template<typename T, typename... Targs>
 ptr<T> makeptr(Targs... args) {
+#ifdef CLIENT_SIDE
+    throw "must not be called locally";
+#endif
     T* mem = reinterpret_cast<T*>(new char[sizeof(T)]);
     int id = IDmanager::newID();
     new (mem) T(id, args...);

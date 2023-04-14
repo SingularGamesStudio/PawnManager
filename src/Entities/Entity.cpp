@@ -8,7 +8,12 @@
 #ifdef SERVER_SIDE
 void Entity::changeHealth(double delta) {
     hp += delta;
-    if (hp <= 0) { delete this; }
+    if (hp <= 0) {
+        if (owner->hub.id == id) {
+            owner.del();
+        } else
+            delete this;
+    }
 }
 #endif
 
@@ -37,9 +42,7 @@ size_t Entity::deserializeSelf(const std::vector<uint8_t>& data) {
     return curr - data.data();
 }
 #ifdef CLIENT_SIDE
-double getTime() {
-    return clock() / CLOCKS_PER_SEC;
-}
+double getTime() { return clock() / CLOCKS_PER_SEC; }
 void Entity::startMoveToPos(std::pair<double, double> pos, double time) {
     prevPos = getInterpolatedPos();
     this->position = pos;

@@ -29,10 +29,6 @@ void Building::removePawn(ptr<Pawn> pawn) { pawns.erase(pawn); }
 
 Building::~Building() {
 #ifdef SERVER_SIDE
-    if (owner->hub.id == id) {
-        std::cerr << "YOU DIED" << std::endl;
-        exit(0);
-    }
     while (!children.empty()) { (*children.begin()).del(); }
     if (parent) parent->children.erase(ptr<Building>(id));
     while (!pawns.empty()) (*pawns.begin()).del();

@@ -14,6 +14,8 @@ public:
     ptr<Player> mainPlayer;
 
     void onPacketReceive(const dlib::Packet &p) override;
+
+    void sendPacket(Recipe* recipe, ptr<Building> where);
 };
 
 #endif//PAWNMANAGER_LOCALCONTROLLER_H

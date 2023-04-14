@@ -17,6 +17,9 @@ public:
     size_t currentInWay;
     std::set<expertisesID> expertises;
     std::vector<ptr<Building>> onTheWay;
+#ifdef CLIENT_SIDE
+    Pawn() {}
+#endif
     WorkerPawn(int id) { this->id = id; }
 #ifdef SERVER_SIDE
     void create(ptr<Building> placeOfCreation);

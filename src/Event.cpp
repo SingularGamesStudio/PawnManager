@@ -4,9 +4,10 @@
 
 #include "Entities/Buildings/Building.h"
 #include "Entities/Pawns/Pawn.h"
-#include "Player.h"
-#include "IDmanager.h"
 #include "Entities/ResourceEntity.h"
+#include "IDmanager.h"
+#include "Player.h"
+#include "Recipes/Recipe.h"
 
 Event::Event(Event::Type t, int id) : p(dlib::Packet::Type::RAW_MESSAGE) {
     std::set<Event::Type> acceptable_events;
@@ -19,8 +20,7 @@ Event::Event(Event::Type t, int id) : p(dlib::Packet::Type::RAW_MESSAGE) {
     acceptable_events.insert(Event::Type::PLAYER_DISAPPEAR);
     acceptable_events.insert(Event::Type::RESOURCE_ENTITY_APPEAR);
     acceptable_events.insert(Event::Type::RESOURCE_ENTITY_DISAPPEAR);
-    if (!acceptable_events.contains(t))
-        throw std::invalid_argument("Trying to make event with wrong type");
+    if (!acceptable_events.contains(t)) throw std::invalid_argument("Trying to make event with wrong type");
     std::vector<uint8_t> tmp(sizeof(t));
     std::memcpy(tmp.data(), &t, sizeof(t));
     std::vector<uint8_t> curr_data;
@@ -32,10 +32,10 @@ Event::Event(Event::Type t, int id) : p(dlib::Packet::Type::RAW_MESSAGE) {
         curr_data = pw->serialize();
     } else if (t == Event::Type::PLAYER_APPEAR) {
         ptr<Player> pl(id);
-        curr_data = pl->serialize(); // todo
+        curr_data = pl->serialize();// todo
     } else if (t == Event::Type::RESOURCE_ENTITY_APPEAR) {
         ptr<ResourceEntity> pl(id);
-        curr_data = pl->serialize(); // todo
+        curr_data = pl->serialize();// todo
     } else {
         tmp.resize(sizeof(t) + sizeof(id));
         std::memcpy(tmp.data() + sizeof(t), &id, sizeof(id));
@@ -49,8 +49,7 @@ Event::Event(Event::Type t, int id, Resource res) : p(dlib::Packet::Type::RAW_ME
     acceptable_events.insert(Event::Type::BUILDING_ADD_RES);
     acceptable_events.insert(Event::Type::BUILDING_REMOVE_RES);
     acceptable_events.insert(Event::Type::PAWN_TAKE_RES);
-    if (!acceptable_events.contains(t))
-        throw std::invalid_argument("Trying to make event with wrong type");
+    if (!acceptable_events.contains(t)) throw std::invalid_argument("Trying to make event with wrong type");
     std::vector<uint8_t> tmp(sizeof(t) + sizeof(id) + sizeof(res));
     std::memcpy(tmp.data(), &t, sizeof(t));
     std::memcpy(tmp.data() + sizeof(t), &id, sizeof(id));
@@ -58,13 +57,23 @@ Event::Event(Event::Type t, int id, Resource res) : p(dlib::Packet::Type::RAW_ME
     p << tmp;
 }
 
-Event::Event(Event::Type t, int id, std::pair<double, double> pos) : p(dlib::Packet::Type::RAW_MESSAGE) {
-    if (t != Event::Type::PAWN_MOVE)
-        throw std::invalid_argument("Trying to make event with wrong type");
-    std::vector<uint8_t> tmp(sizeof(t) + sizeof(id) + sizeof(pos));
+Event::Event(Event::Type t, int id, std::pair<double, double> pos, double time) : p(dlib::Packet::Type::RAW_MESSAGE) {
+    if (t != Event::Type::PAWN_MOVE) throw std::invalid_argument("Trying to make event with wrong type");
+    std::vector<uint8_t> tmp(sizeof(t) + sizeof(id) + sizeof(pos) + sizeof(time));
     std::memcpy(tmp.data(), &t, sizeof(t));
     std::memcpy(tmp.data() + sizeof(t), &id, sizeof(id));
     std::memcpy(tmp.data() + sizeof(t) + sizeof(id), &pos, sizeof(pos));
+    std::memcpy(tmp.data() + sizeof(t) + sizeof(id) + sizeof(pos), &time, sizeof(time));
+    p << tmp;
+}
+
+Event::Event(Type t, Recipe *recipe, int id) {
+    if (t != Event::Type::PLAYER_ACTION) throw std::invalid_argument("Trying to make event with wrong type");
+    std::vector<uint8_t> tmp(sizeof(t) + sizeof(id));
+    std::memcpy(tmp.data(), &t, sizeof(t));
+    std::memcpy(tmp.data() + sizeof(t), &id, sizeof(id));
+    std::vector<uint8_t> curr_data = recipe->serialize();
+    std::copy(curr_data.begin(), curr_data.end(), std::back_inserter(tmp));
     p << tmp;
 }
 

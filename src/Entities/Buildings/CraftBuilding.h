@@ -17,6 +17,9 @@ public:
         : Building(id, pos, owner, hp, radius, parent),
           Entity(pos, owner, hp, radius),
           current(nullptr) {}
+#ifdef CLIENT_SIDE
+    CraftBuilding() {}
+#endif
     std::vector<Recipe*> recipes;
     Recipe* current;
 #ifdef SERVER_SIDE

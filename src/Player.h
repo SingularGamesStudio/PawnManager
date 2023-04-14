@@ -15,6 +15,10 @@ class Player;
 
 class Player : public RequiresID {
 public:
+#ifdef CLIENT_SIDE
+    Player(){}
+#endif
+
     Player(int id) { this->id = id; }
     ptr<Building> hub;
     std::set<ptr<Pawn>> pawns;
@@ -84,6 +88,8 @@ public:
 
     void tick();
     void attack(ptr<Building> what);
+
+    ~Player();
 #endif
     virtual std::vector<uint8_t> serialize() const;
     virtual size_t deserialize(const std::vector<uint8_t>& data);

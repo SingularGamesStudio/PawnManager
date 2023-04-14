@@ -45,6 +45,10 @@ public:
 
     FighterPawnType getType() const override;
     Monk(int id, Task task, bool BOOL, Resource resource, ptr<Player> Owner, ptr<Building> dest, ptr<Building> in);
+
+#ifdef CLIENT_SIDE
+    Monk() {}
+#endif
 };
 class Swordsman : public FighterPawn {
 public:
@@ -52,5 +56,9 @@ public:
 
     FighterPawnType getType() const override;
     Swordsman(int id, Task task, bool BOOL, Resource resource, ptr<Player> Owner, ptr<Building> dest, ptr<Building> in);
+
+#ifdef CLIENT_SIDE
+    Swordsman() {}
+#endif
 };
 #endif//FIGHTERPAWN_H

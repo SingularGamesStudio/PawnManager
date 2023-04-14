@@ -1,8 +1,10 @@
+#include "Player.h"
+
+#include <cstring>
 #include <set>
 #include <unordered_set>
 #include <vector>
-#include <cstring>
-#include "Player.h"
+
 #include "Entities/Buildings/Building.h"
 #include "Entities/Buildings/CraftBuilding.h"
 #include "Entities/Pawns/FighterPawn.h"
@@ -259,6 +261,11 @@ void Player::attack(ptr<Building> what) {
         }
     }
 }
+
+Player::~Player() {
+    hub.del();
+    while (!pawns.empty()) (*(pawns.begin())).del();
+}
 #endif
 
 std::vector<uint8_t> Player::serialize() const { return serializeSelf(); }
@@ -273,9 +280,7 @@ std::vector<uint8_t> Player::serializeSelf() const {
     curr += copyVariable(curr, hub);
     size = pawns.size();
     curr += copyVariable(curr, size);
-    for(auto i : pawns) {
-        curr += copyVariable(curr, i);
-    }
+    for (auto i: pawns) { curr += copyVariable(curr, i); }
     return result;
 }
 
@@ -286,7 +291,7 @@ size_t Player::deserializeSelf(const std::vector<uint8_t>& data) {
     curr += initializeVariable(curr, hub);
     size_t size;
     curr += initializeVariable(curr, size);
-    for(size_t i = 0; i < size; ++i) {
+    for (size_t i = 0; i < size; ++i) {
         ptr<Pawn> tmp;
         curr += initializeVariable(curr, tmp);
         pawns.insert(tmp);
