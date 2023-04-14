@@ -1,9 +1,23 @@
-#ifdef SERVER_SIDE
-#include "Player.h"
-
 #include <set>
 #include <unordered_set>
 #include <vector>
+#include <cstring>
+#include "Player.h"
+
+template<typename T>
+size_t copyVariable(uint8_t* dst, T src) {
+    std::memcpy(dst, &src, sizeof(src));
+    return sizeof(src);
+}
+
+template<typename T>
+size_t initializeVariable(const uint8_t* src, T& dst) {
+    std::memcpy(&dst, src, sizeof(dst));
+    return sizeof(dst);
+}
+
+
+#ifdef SERVER_SIDE
 
 #include "Entities/Buildings/Building.h"
 #include "Entities/Buildings/CraftBuilding.h"
@@ -261,3 +275,31 @@ void Player::attack(ptr<Building> what) {
     }
 }
 #endif
+
+std::vector<uint8_t> Player::serialize() const {
+    size_t size = sizeof(int) + sizeof(ptr<Building>) + sizeof(size_t) + sizeof(ptr<Pawn>) * ;
+    std::vector<uint8_t> result(size);
+    uint8_t* curr = result.data();
+    curr += copyVariable(curr, id);
+    curr += copyVariable(curr, hub);
+    size = pawns.size();
+    curr += copyVariable(curr, size);
+    for(auto i : pawns) {
+        curr += copyVariable(curr, i);
+    }
+    return result;
+}
+
+size_t Player::deserialize(const std::vector<uint8_t>& data) {
+    const uint8_t* curr = data.data();
+    curr += initializeVariable(curr, id);
+    curr += initializeVariable(curr, hub);
+    size_t size;
+    curr += initializeVariable(curr, size);
+    for(size_t i = 0; i < size; ++i) {
+        ptr<Pawn> tmp;
+        curr += initializeVariable(curr, tmp);
+        pawns.insert(tmp);
+    }
+    return curr - data.data();
+}

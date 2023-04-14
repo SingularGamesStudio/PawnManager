@@ -85,5 +85,7 @@ public:
     void tick();
     void attack(ptr<Building> what);
 #endif
+    std::vector<uint8_t> serialize() const;
+    size_t deserialize(const std::vector<uint8_t>& data);
 };
 #endif//PLAYER_H
