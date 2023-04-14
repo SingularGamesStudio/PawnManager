@@ -2,7 +2,7 @@
 
 class Building;
 class Pawn;
-enum class Resource;
+enum class Resource : uint8_t;
 
 class Event {
 private:

@@ -9,7 +9,6 @@
 #include "../Entities/Pawns/Pawn.h"
 #include "../Entities/Pawns/WorkerPawn.h"
 #include "../Resource.h"
-#include "../testSystem.h"
 
 #ifdef SERVER_SIDE
 

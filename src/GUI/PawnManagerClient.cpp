@@ -15,7 +15,6 @@
 #include "../Entities/Pawns/WorkerPawn.h"
 #include "../Entities/ResourceEntity.h"
 #include "../Recipes/BuildRecipe.h"
-#include "../testSystem.h"
 #include "BuildBuildingWindow.h"
 #include "CraftBuildingWindow.h"
 #include "MainMenuWindow.h"
