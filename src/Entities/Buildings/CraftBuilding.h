@@ -28,7 +28,7 @@ public:
     void tick(double deltaTime) override;
 #endif
     virtual ~CraftBuilding();
-    BuildingType getType() const;
+    BuildingType getType() const override;
     std::vector<uint8_t> serialize() const override;
     size_t deserialize(const std::vector<uint8_t>& data) override;
 

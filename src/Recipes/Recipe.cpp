@@ -149,6 +149,10 @@ Recipe *Recipe::clone() {
     return res;
 }
 
+RecipeType Recipe::getType() const {
+    return RecipeType::BASIC_RECIPE;
+}
+
 std::vector<uint8_t> Recipe::serialize() const { return serializeSelf(); }
 size_t Recipe::deserialize(const std::vector<uint8_t>& data) { return deserializeSelf(data); }
 
@@ -178,6 +182,7 @@ std::vector<uint8_t> Recipe::serializeSelf() const {
     for(auto i : inResources) {
         curr += copyVariable(curr, i);
     }
+    result.insert(result.begin(), static_cast<uint8_t>(getType()));
     return result;
 }
 

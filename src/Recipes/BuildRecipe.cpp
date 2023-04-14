@@ -36,3 +36,30 @@ Recipe* BuildRecipe::cloneSelf() {
     BuildRecipe* res = new BuildRecipe(pos, toBuild);
     return res;
 }
+
+RecipeType BuildRecipe::getType() const {
+    return RecipeType::BUILD_RECIPE;
+}
+
+std::vector<uint8_t> BuildRecipe::serialize() const { return serializeSelf(); }
+size_t BuildRecipe::deserialize(const std::vector<uint8_t>& data) { return deserializeSelf(data); }
+
+std::vector<uint8_t> BuildRecipe::serializeSelf() const {
+    std::vector<uint8_t> result = Recipe::serializeSelf();
+    size_t size = sizeof(double) * 2 + sizeof(toBuild.index);
+    result.resize(result.size() + size);
+    uint8_t* curr = result.data() + result.size() - size;
+    curr += copyVariable(curr, pos);
+    curr += copyVariable(curr, toBuild.index);
+    return result;
+}
+
+size_t BuildRecipe::deserializeSelf(const std::vector<uint8_t>& data) {
+    size_t shift = Recipe::deserializeSelf(data);
+    const uint8_t* curr = data.data() + shift;
+    curr += initializeVariable(curr, pos);
+    int ind;
+    curr += initializeVariable(curr, ind);
+    toBuild = BuildingRegisty::database[ind]->toBuild;
+    return curr - data.data();
+}

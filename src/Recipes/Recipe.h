@@ -51,6 +51,7 @@ public:
     std::vector<Resource> inResources;
 
     double duration;
+    virtual RecipeType getType() const;
     virtual std::vector<uint8_t> serialize() const;
     virtual size_t deserialize(const std::vector<uint8_t>& data);
 
