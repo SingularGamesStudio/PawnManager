@@ -8,9 +8,13 @@ FighterPawnType DummyMonk::getType() const { return FighterPawnType::DummyMonk; 
 FighterPawnType DummySwordsman::getType() const { return FighterPawnType::DummySwordsman; }
 FighterPawnType FighterPawn::getType() const { return FighterPawnType::DummNotFound; };
 
-void FighterPawn::attack(ptr<Entity> attacked) {
+void FighterPawn::attack(ptr<Entity> attacked, double deltaTime) {
     std::cout << "Genuinly attacking " << -atk << " " << attacked->hp << "\n";
-    attacked->changeHealth(-atk);
+    attacked->changeHealth(-atk * deltaTime);
+    if (attacked.dyn_cast<FighterPawn>()){
+        ptr<FighterPawn> fighterPawnAttacked = attacked.dyn_cast<FighterPawn>();
+        changeHealth(-(fighterPawnAttacked->atk) * deltaTime);
+    }
 };
 
 ptr<FighterPawn> FighterPawn::createFighterPawn(FighterPawnType type, ptr<Building> placeOfCreation) {
@@ -66,6 +70,8 @@ void FighterPawn::assignTask(const Task& toAssign) {
             toAttack = true;
             moveToBuilding(toAssign.destination);
             break;
+        case TaskID::Protect:
+            break;
         default:
             throw("Unexpected FighterPawn TaskID: ", toAssign.id);
     }
@@ -105,12 +111,21 @@ void FighterPawn::tick(double deltaTime) {
         currentTask = Task(TaskID::Move, owner->hub);
         return;
     }
+    if (currentTask.id == TaskID::Protect){
+        ptr<Entity> enemy;
+        ///TODO enemy spotted
+        if (enemy){
+            attack(enemy, deltaTime);
+        }
+        else
+            moveToBuilding(currentTask.destination);
+    }
     std::pair<double, double> dest = destinationPosition;
     double deltaX = fabs(position.first - dest.first);
     double deltaY = fabs(position.second - dest.second);
     double wholeDelta = deltaX * deltaX + deltaY * deltaY;
     if (toAttack && wholeDelta <= currentTask.destination->radius) {
-        attack(currentTask.destination.dyn_cast<Entity>());
+        attack(currentTask.destination.dyn_cast<Entity>(), deltaTime);
         return;
     }
     if (travelling) {

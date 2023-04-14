@@ -6,7 +6,7 @@
 
 class Player;
 
-enum class TaskID { Build, Craft, Attack, Move, Get, Idle, Transport, BeProcessed, DropResource };
+enum class TaskID { Build, Craft, Attack, Move, Get, Idle, Transport, BeProcessed, DropResource, Protect };
 
 class Building;
 

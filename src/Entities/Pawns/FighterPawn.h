@@ -12,10 +12,11 @@ class FighterPawn : public Pawn {
 public:
     double atk = 10;
     double speed = 100;
+    double hp = 30;
     bool toAttack = false;
     std::pair<double, double> destinationPosition;
     ptr<Building> destination;
-    virtual void attack(ptr<Entity> attacked);
+    virtual void attack(ptr<Entity> attacked, double deltaTime);
     virtual FighterPawnType getType() const;
     static ptr<FighterPawn> createFighterPawn(FighterPawnType type, ptr<Building> placeOfCreation);
     void moveToResource(ResourceEntity* toGet);
