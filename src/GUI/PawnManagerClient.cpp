@@ -71,7 +71,7 @@ void PawnManagerClient::updateAndRender() {
     std::default_random_engine rng;
     std::uniform_real_distribution<float> dist2(0, std::numbers::pi_v<float>);
     for (ptr<Pawn> p: player->pawns) {
-        auto [x, y] = p->position;
+        auto [x, y] = p->getInterpolatedPos();
         ptr<WorkerPawn> wp = p.dyn_cast<WorkerPawn>();
         ptr<FighterPawn> fp = p.dyn_cast<FighterPawn>();
         if (wp) {
