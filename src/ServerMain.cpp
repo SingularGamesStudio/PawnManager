@@ -10,9 +10,13 @@
 #include "Entities/Buildings/CraftBuilding.h"
 #include "Entities/Pawns/FighterPawn.h"
 #include "Entities/Pawns/WorkerPawn.h"
+#include "Event.h"
+#include "IDmanager.h"
 #include "Player.h"
 #include "Recipes/CraftRecipe.h"
-
+#include "Resource.h"
+#include "godobject.h"
+#ifdef SERVER_SIDE
 using std::string;
 
 int fromString(const string& str) {
@@ -30,7 +34,7 @@ bool GameServer::onConnection(std::shared_ptr<dlib::Connection> client) {
     std::pair<double, double> pos = std::make_pair(rnd() % 300, rnd() % 300);
     std::pair<double, double> pos1 = std::make_pair(pos.first + rnd() % 30, pos.second + rnd() % 30);
     player->hub = makeptr<Building>(pos, player, 100);
-    for (int i = 0; i < 30; i++) { player->hub->addResource(Resource::DummyOre); }
+    for (int i = 0; i < 30; i++) { player->hub->addResource(Resource::Ore); }
     for (int i = 0; i < 5; i++) {
         ptr<WorkerPawn> pawn = makeptr<WorkerPawn>();
         pawn->create(player->hub);
@@ -41,14 +45,14 @@ bool GameServer::onConnection(std::shared_ptr<dlib::Connection> client) {
     player->hub->children.insert(crafter.dyn_cast<Building>());
     crafter->parent = player->hub;
     recipe = new CraftRecipe();
-    recipe->inResources.push_back(Resource::DummyOre);
+    recipe->inResources.push_back(Resource::Ore);
     recipe->reqWorkers.push_back(expertisesID::Smeltery);
-    recipe->outResources.push_back(Resource::DummyIngot);
+    recipe->outResources.push_back(Resource::Ingot);
     recipe->duration = 5;
     crafter->recipes.push_back(recipe);
     recipe = new CraftRecipe();
-    recipe->inResources.push_back(Resource::DummyOre);
-    recipe->outFighters.push_back(FighterPawnType::DummySwordsman);
+    recipe->inResources.push_back(Resource::Ore);
+    recipe->outFighters.push_back(FighterPawnType::Swordsman);
     recipe->duration = 2;
     crafter->recipes.push_back(recipe);
     players[client->getID()] = player;
@@ -56,7 +60,19 @@ bool GameServer::onConnection(std::shared_ptr<dlib::Connection> client) {
 
 void GameServer::onDisconnection(std::shared_ptr<dlib::Connection> client) {}
 
-void GameServer::onPacketReceive(std::shared_ptr<dlib::Connection> client, dlib::Packet p) {}
+void GameServer::onPacketReceive(std::shared_ptr<dlib::Connection> client, dlib::Packet p) {
+    Event::Type type = static_cast<Event::Type>(p.data[0]);
+    std::vector<uint8_t> data = p.data;
+    data.erase(data.begin());
+    if (type == Event::Type::PLAYER_ACTION) {
+        int id = 0;
+        std::memcpy(&id, data.data(), sizeof(int));
+        Recipe* rec = nullptr;
+        godObject::getRecipe(data.data() + sizeof(int), rec);
+        players[client->getID()]->manager.startRecipe(rec, ptr<Building>(id));
+        delete rec;
+    }
+}
 
 void tickBuildings(ptr<Building> place, double deltaTime) {
     place->tick(deltaTime);
@@ -95,3 +111,4 @@ int main(int argc, char** argv) {
     }
     server.stop();
 }
+#endif

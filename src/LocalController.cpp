@@ -102,4 +102,7 @@ void LocalController::onPacketReceive(const dlib::Packet& p) {
     }
 }
 
-void LocalController::sendPacket(Recipe* recipe, ptr<Building> where) {}
+void LocalController::sendPacket(Recipe* recipe, ptr<Building> where) {
+    Event toSend = Event(Event::Type::PLAYER_ACTION, recipe, where.id);
+    send(toSend.getPacket());
+}

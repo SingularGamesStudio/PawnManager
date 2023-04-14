@@ -18,7 +18,7 @@ public:
     std::set<expertisesID> expertises;
     std::vector<ptr<Building>> onTheWay;
 #ifdef CLIENT_SIDE
-    Pawn() {}
+    WorkerPawn() {}
 #endif
     WorkerPawn(int id) { this->id = id; }
 #ifdef SERVER_SIDE
