@@ -112,7 +112,9 @@ void FighterPawn::takePresentResource(ResourceEntity* toTake) {
 }
 void FighterPawn::moveToPosition(std::pair<double, double> pos) {
     IMNotHere();
-    godObject::global_server->sendPacketAll(Event(Event::Type::PAWN_MOVE, id, pos).getPacket());
+    double tim = std::hypot(pos.first - position.first, pos.second - position.second);
+    tim /= speed;
+    godObject::global_server->sendPacketAll(Event(Event::Type::PAWN_MOVE, id, pos, tim).getPacket());
     travelling = true;
     destinationPosition = pos;
 }
@@ -187,7 +189,7 @@ void FighterPawn::tick(double deltaTime) {
 #endif
 std::vector<uint8_t> FighterPawn::serialize() const { return serializeSelf(); }
 
-size_t FighterPawn::deserialize(const std::vector<uint8_t>& data) { return deserializeSelf(data); }
+size_t FighterPawn::deserialize(const uint8_t* data) { return deserializeSelf(data); }
 
 std::vector<uint8_t> FighterPawn::serializeSelf() const {
     std::vector<uint8_t> result = Pawn::serializeSelf();
@@ -202,14 +204,14 @@ std::vector<uint8_t> FighterPawn::serializeSelf() const {
     return result;
 }
 
-size_t FighterPawn::deserializeSelf(const std::vector<uint8_t>& data) {
+size_t FighterPawn::deserializeSelf(const uint8_t* data) {
     size_t shift = Pawn::deserializeSelf(data);
-    const uint8_t* curr = data.data() + shift;
+    const uint8_t* curr = data + shift;
     curr += initializeVariable(curr, atk);
     curr += initializeVariable(curr, speed);
     curr += initializeVariable(curr, toAttack);
     curr += initializeVariable(curr, destinationPosition);
-    return curr - data.data();
+    return curr - data;
 }
 
 FighterPawn::~FighterPawn() {

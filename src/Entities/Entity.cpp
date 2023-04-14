@@ -18,7 +18,7 @@ void Entity::changeHealth(double delta) {
 #endif
 
 std::vector<uint8_t> Entity::serialize() const { return serializeSelf(); }
-size_t Entity::deserialize(const std::vector<uint8_t>& data) { return deserializeSelf(data); }
+size_t Entity::deserialize(const uint8_t* data) { return deserializeSelf(data); }
 
 std::vector<uint8_t> Entity::serializeSelf() const {
     std::vector<uint8_t> result = RequiresID::serializeSelf();
@@ -32,14 +32,14 @@ std::vector<uint8_t> Entity::serializeSelf() const {
     return result;
 }
 
-size_t Entity::deserializeSelf(const std::vector<uint8_t>& data) {
+size_t Entity::deserializeSelf(const uint8_t* data) {
     size_t shift = RequiresID::deserializeSelf(data);
-    const uint8_t* curr = data.data() + shift;
+    const uint8_t* curr = data + shift;
     curr += initializeVariable(curr, hp);
     curr += initializeVariable(curr, owner);
     curr += initializeVariable(curr, position);
     curr += initializeVariable(curr, radius);
-    return curr - data.data();
+    return curr - data;
 }
 #ifdef CLIENT_SIDE
 double getTime() { return clock() / CLOCKS_PER_SEC; }

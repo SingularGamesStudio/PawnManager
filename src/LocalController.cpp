@@ -16,7 +16,7 @@ void LocalController::onPacketReceive(const dlib::Packet& p) {
     data.erase(data.begin());
     if (type == Event::Type::PLAYER_APPEAR) {
         Player* p = new Player();
-        p->deserialize(data);
+        p->deserialize(data.data());
         IDmanager::set(p->id, dynamic_cast<RequiresID*>(p));
     } else if (type == Event::Type::PLAYER_DISAPPEAR) {
         int id = 0;
@@ -43,11 +43,11 @@ void LocalController::onPacketReceive(const dlib::Packet& p) {
             default:
                 break;
         }
-        pawn->deserialize(data);
+        pawn->deserialize(data.data());
         IDmanager::set(pawn->id, dynamic_cast<RequiresID*>(pawn));
     } else if (type == Event::Type::RESOURCE_ENTITY_APPEAR) {
         ResourceEntity* rEntity = new ResourceEntity();
-        rEntity->deserialize(data);
+        rEntity->deserialize(data.data());
         IDmanager::set(rEntity->id, dynamic_cast<RequiresID*>(rEntity));
     } else if (type == Event::Type::BUILDING_APPEAR) {
         BuildingType buildingType = static_cast<BuildingType>(data[0]);
@@ -63,7 +63,7 @@ void LocalController::onPacketReceive(const dlib::Packet& p) {
             default:
                 break;
         }
-        building->deserialize(data);
+        building->deserialize(data.data());
         IDmanager::set(building->id, dynamic_cast<RequiresID*>(building));
     } else if (type == Event::Type::BUILDING_ADD_RES) {
         int id = 0;

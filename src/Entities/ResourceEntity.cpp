@@ -15,7 +15,7 @@ ResourceEntity::ResourceEntity(int id, Resource res, std::pair<double, double> p
 ResourceEntity::~ResourceEntity() { danglingResources.erase(ptr<ResourceEntity>(id)); }
 
 std::vector<uint8_t> ResourceEntity::serialize() const { return serializeSelf(); }
-size_t ResourceEntity::deserialize(const std::vector<uint8_t>& data) { return deserializeSelf(data); }
+size_t ResourceEntity::deserialize(const uint8_t* data) { return deserializeSelf(data); }
 
 std::vector<uint8_t> ResourceEntity::serializeSelf() const {
     std::vector<uint8_t> result = Entity::serializeSelf();
@@ -26,9 +26,9 @@ std::vector<uint8_t> ResourceEntity::serializeSelf() const {
     return result;
 }
 
-size_t ResourceEntity::deserializeSelf(const std::vector<uint8_t>& data) {
+size_t ResourceEntity::deserializeSelf(const uint8_t* data) {
     size_t shift = Entity::deserializeSelf(data);
-    const uint8_t* curr = data.data() + shift;
+    const uint8_t* curr = data + shift;
     curr += initializeVariable(curr, resource);
-    return curr - data.data();
+    return curr - data;
 }

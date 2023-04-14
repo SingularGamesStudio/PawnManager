@@ -269,7 +269,7 @@ Player::~Player() {
 #endif
 
 std::vector<uint8_t> Player::serialize() const { return serializeSelf(); }
-size_t Player::deserialize(const std::vector<uint8_t>& data) { return deserializeSelf(data); }
+size_t Player::deserialize(const uint8_t* data) { return deserializeSelf(data); }
 
 std::vector<uint8_t> Player::serializeSelf() const {
     std::vector<uint8_t> result = RequiresID::serializeSelf();
@@ -284,9 +284,9 @@ std::vector<uint8_t> Player::serializeSelf() const {
     return result;
 }
 
-size_t Player::deserializeSelf(const std::vector<uint8_t>& data) {
+size_t Player::deserializeSelf(const uint8_t* data) {
     size_t shift = RequiresID::deserializeSelf(data);
-    const uint8_t* curr = data.data() + shift;
+    const uint8_t* curr = data + shift;
     curr += initializeVariable(curr, id);
     curr += initializeVariable(curr, hub);
     size_t size;
@@ -296,5 +296,5 @@ size_t Player::deserializeSelf(const std::vector<uint8_t>& data) {
         curr += initializeVariable(curr, tmp);
         pawns.insert(tmp);
     }
-    return curr - data.data();
+    return curr - data;
 }

@@ -44,7 +44,7 @@ RecipeType CraftRecipe::getType() const {
 }
 
 std::vector<uint8_t> CraftRecipe::serialize() const { return serializeSelf(); }
-size_t CraftRecipe::deserialize(const std::vector<uint8_t>& data) { return deserializeSelf(data); }
+size_t CraftRecipe::deserialize(const uint8_t* data) { return deserializeSelf(data); }
 
 std::vector<uint8_t> CraftRecipe::serializeSelf() const {
     std::vector<uint8_t> result = Recipe::serializeSelf();
@@ -57,10 +57,10 @@ std::vector<uint8_t> CraftRecipe::serializeSelf() const {
     return result;
 }
 
-size_t CraftRecipe::deserializeSelf(const std::vector<uint8_t>& data) {
+size_t CraftRecipe::deserializeSelf(const uint8_t* data) {
     size_t shift = Recipe::deserializeSelf(data);
-    const uint8_t* curr = data.data() + shift;
+    const uint8_t* curr = data + shift;
     curr += initializeVector(curr, outFighters);
     curr += initializeVector(curr, outResources);
-    return curr - data.data();
+    return curr - data;
 }

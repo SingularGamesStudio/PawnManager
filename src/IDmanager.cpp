@@ -23,7 +23,7 @@ void IDmanager::set(int id, RequiresID* data) {
 }
 
 std::vector<uint8_t> RequiresID::serialize() const { return serializeSelf(); }
-size_t RequiresID::deserialize(const std::vector<uint8_t>& data) { return deserializeSelf(data); }
+size_t RequiresID::deserialize(const uint8_t* data) { return deserializeSelf(data); }
 
 std::vector<uint8_t> RequiresID::serializeSelf() const {
     size_t size = sizeof(int);
@@ -33,8 +33,8 @@ std::vector<uint8_t> RequiresID::serializeSelf() const {
     return result;
 }
 
-size_t RequiresID::deserializeSelf(const std::vector<uint8_t>& data) {
-    const uint8_t* curr = data.data();
+size_t RequiresID::deserializeSelf(const uint8_t* data) {
+    const uint8_t* curr = data;
     curr += initializeVariable(curr, id);
-    return curr - data.data();
+    return curr - data;
 }

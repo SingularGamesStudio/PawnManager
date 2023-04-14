@@ -33,7 +33,7 @@ BuildingType CraftBuilding::getType() const {
 }
 
 std::vector<uint8_t> CraftBuilding::serialize() const { return serializeSelf(); }
-size_t CraftBuilding::deserialize(const std::vector<uint8_t>& data) { return deserializeSelf(data); }
+size_t CraftBuilding::deserialize(const uint8_t* data) { return deserializeSelf(data); }
 
 std::vector<uint8_t> CraftBuilding::serializeSelf() const {
     std::vector<uint8_t> result = Building::serializeSelf();
@@ -46,14 +46,14 @@ std::vector<uint8_t> CraftBuilding::serializeSelf() const {
     return result;
 }
 
-size_t CraftBuilding::deserializeSelf(const std::vector<uint8_t>& data) {
+size_t CraftBuilding::deserializeSelf(const uint8_t* data) {
     size_t shift = Building::deserializeSelf(data);
-    const uint8_t* curr = data.data() + shift;
+    const uint8_t* curr = data + shift;
     size_t size;
     curr += initializeVariable(curr, size);
     recipes.resize(size);
     for(size_t i = 0; i < size; ++i) {
         curr += godObject::getRecipe(curr, recipes[i]);
     }
-    return curr - data.data();
+    return curr - data;
 }

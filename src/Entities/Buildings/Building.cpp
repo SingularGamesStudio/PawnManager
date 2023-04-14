@@ -56,7 +56,7 @@ BuildingType Building::getType() const {
 }
 
 std::vector<uint8_t> Building::serialize() const { return serializeSelf(); }
-size_t Building::deserialize(const std::vector<uint8_t>& data) { return deserializeSelf(data); }
+size_t Building::deserialize(const uint8_t* data) { return deserializeSelf(data); }
 
 std::vector<uint8_t> Building::serializeSelf() const {
     std::vector<uint8_t> result = Entity::serializeSelf();
@@ -75,13 +75,13 @@ std::vector<uint8_t> Building::serializeSelf() const {
     return result;
 }
 
-size_t Building::deserializeSelf(const std::vector<uint8_t>& data) {
+size_t Building::deserializeSelf(const uint8_t* data) {
     size_t shift = Entity::deserializeSelf(data);
-    const uint8_t* curr = data.data() + shift;
+    const uint8_t* curr = data + shift;
     curr += initializeVariable(curr, parent);
     curr += initializeSet(curr, children);
     curr += initializeSet(curr, resources);
     curr += initializeSet(curr, reservedResources);
     curr += initializeSet(curr, pawns);
-    return curr - data.data();
+    return curr - data;
 }
