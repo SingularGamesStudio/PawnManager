@@ -178,8 +178,7 @@ void PawnManagerClient::init() {
     fontManager = FontManager();
 
     godObject::local_server = new LocalController();
-    godObject::local_server->connect("127.0.0.1", 57179);
-    godObject::local_server->init();
+    godObject::local_server->init("127.0.0.1", 57179);
 }
 
 void PawnManagerClient::shutdown() {

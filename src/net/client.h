@@ -53,6 +53,18 @@ namespace dlib {
             if (isConnected()) connectionPtr->send(p);
         }
 
+        template<typename Callback>
+        void awaitPacket(Callback process, size_t count = 1) {
+            while(count) {
+                if(!inQueue.empty()) {
+                    auto [p, client] = inQueue.front();
+                    inQueue.pop();
+                    process(p);
+                    --count;
+                }
+            }
+        }
+
         void respond(size_t limit = -1) {
             size_t processed = 0;
             while (!inQueue.empty() && processed < limit) {

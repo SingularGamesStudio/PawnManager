@@ -106,3 +106,13 @@ void LocalController::sendPacket(Recipe* recipe, ptr<Building> where) {
     Event toSend = Event(Event::Type::PLAYER_ACTION, recipe, where.id);
     send(toSend.getPacket());
 }
+
+void LocalController::init(std::string host, uint16_t port) {
+    connect(host, port);
+    awaitPacket([this](const dlib::Packet& pack) {
+        Player* p = new Player();
+        p->deserialize(pack.data.data() + 1);
+        IDmanager::set(p->id, dynamic_cast<RequiresID*>(p));
+        mainPlayer = ptr<Player>(p->id);
+    });
+}
