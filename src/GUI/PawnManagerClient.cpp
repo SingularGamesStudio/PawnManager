@@ -95,6 +95,9 @@ void PawnManagerClient::updateAndRender() {
 }
 
 void PawnManagerClient::buildingRenderDfs(ptr<Building> b, sf::Vector2f center) {
+    if(!b) {
+        return;
+    }
     auto [x, y] = b->position;
     for (ptr<Building> ob: b->children) {
         buildingRenderer->drawEdge(b, ob, center);
@@ -146,6 +149,9 @@ void PawnManagerClient::onMouseClick(int x, int y, sf::Mouse::Button b) {
 }
 
 bool PawnManagerClient::onBuildingMouseClick(ptr<Building> b, sf::Vector2f pos, sf::Mouse::Button button) {
+    if(!b) {
+        return false;
+    }
     auto [x, y] = b->position;
     sf::Vector2f delta = sf::Vector2f(x, y) - pos;
     if (delta.x * delta.x + delta.y * delta.y <= b->radius * b->radius) {
