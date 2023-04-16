@@ -18,7 +18,7 @@ CraftBuildingWindow::CraftBuildingWindow(int id) : id(id), selectedRecipe(0), sh
         ptr<CraftBuilding> p(w->id);
         Recipe* r = p->recipes[w->selectedRecipe];
         
-        godObject::local_server->mainPlayer->manager.startRecipe(r, p.dyn_cast<Building>());
+        godObject::local_server->mainPlayer->localStart(r, p.dyn_cast<Building>());
         w->shouldClose = true;
         //        PawnManagerClient::winManager.popWindow();
     }));

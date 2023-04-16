@@ -18,7 +18,6 @@ public:
     ptr<Building> destination;
 
     virtual FighterPawnType getType() const;
-
     #ifdef SERVER_SIDE
     virtual void attack(ptr<Entity> attacked, double deltaTime);
     static ptr<FighterPawn> createFighterPawn(FighterPawnType type, ptr<Building> placeOfCreation);

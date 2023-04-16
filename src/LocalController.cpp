@@ -1,6 +1,7 @@
 //
 // Created by ME on 14.04.2023.
 //
+#ifdef CLIENT_SIDE
 
 #include "LocalController.h"
 
@@ -9,13 +10,12 @@
 #include "Entities/Pawns/FighterPawn.h"
 #include "Entities/Pawns/WorkerPawn.h"
 
-
 void LocalController::onPacketReceive(const dlib::Packet& p) {
     Event::Type type = static_cast<Event::Type>(p.data[0]);
     std::vector<uint8_t> data = p.data;
     data.erase(data.begin());
     if (type == Event::Type::PLAYER_APPEAR) {
-        Player* p = new Player();
+        Player* p = new Player(-1);
         p->deserialize(data.data());
         IDmanager::set(p->id, dynamic_cast<RequiresID*>(p));
     } else if (type == Event::Type::PLAYER_DISAPPEAR) {
@@ -102,11 +102,6 @@ void LocalController::onPacketReceive(const dlib::Packet& p) {
     }
 }
 
-void LocalController::sendPacket(Recipe* recipe, ptr<Building> where) {
-    Event toSend = Event(Event::Type::PLAYER_ACTION, recipe, where.id);
-    send(toSend.getPacket());
-}
-
 void LocalController::init(std::string host, uint16_t port) {
     connect(host, port);
     awaitPacket([this](const dlib::Packet& pack) {
@@ -116,3 +111,5 @@ void LocalController::init(std::string host, uint16_t port) {
         mainPlayer = ptr<Player>(p->id);
     });
 }
+
+#endif

@@ -163,7 +163,8 @@ bool PawnManagerClient::onBuildingMouseClick(ptr<Building> b, sf::Vector2f pos, 
             if (cb && !cb->recipes.empty()) { winManager.pushWindow(new CraftBuildingWindow(c->id)); }
         } else if (button == sf::Mouse::Middle) {
             //b.del();
-            godObject::local_server->mainPlayer->attack(b);
+
+            godObject::local_server->mainPlayer->localAttack(b);
         }
         return true;
     }

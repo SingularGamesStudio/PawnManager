@@ -90,7 +90,7 @@ class Player;
 
 class Entity : public RequiresID {
 public:
-    Entity() {}
+    Entity(){}
     Entity(std::pair<double, double> pos, ptr<Player> owner, double hp, double radius) : position(pos), owner(owner), hp(hp), radius(radius) {}
     double hp;
     ptr<Player> owner;

@@ -10,6 +10,8 @@
 #include "Entities/Pawns/FighterPawn.h"
 #include "Entities/Pawns/WorkerPawn.h"
 #include "Recipes/BuildRecipe.h"
+#include "Event.h"
+#include "godobject.h"
 
 #ifdef SERVER_SIDE
 
@@ -265,6 +267,16 @@ void Player::attack(ptr<Building> what) {
 Player::~Player() {
     hub.del();
     while (!pawns.empty()) (*(pawns.begin())).del();
+}
+#endif
+
+#ifdef CLIENT_SIDE
+void Player::localAttack(ptr<Building> what) {
+    /// TODO
+}
+void Player::localStart(Recipe* recipe, ptr<Building> where) {
+    Event recipeStarted(Event::Type::PLAYER_ACTION, recipe, where.id);
+    godObject::local_server->send(recipeStarted.getPacket());
 }
 #endif
 

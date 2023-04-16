@@ -91,6 +91,10 @@ public:
 
     ~Player();
 #endif
+#ifdef CLIENT_SIDE
+    void localAttack(ptr<Building> what);
+    void localStart(Recipe* recipe, ptr<Building> where);
+#endif
     virtual std::vector<uint8_t> serialize() const;
     virtual size_t deserialize(const uint8_t* data);
 
