@@ -71,10 +71,34 @@ void CraftBuildingWindow::updateAndRender() {
     int cOutputPos = 0;
     CraftRecipe* cr = dynamic_cast<CraftRecipe*>(r);
     if (cr) {
-        for (Resource res: cr->inResources) { inputSlots[cInputPos++]->res = res; }
-        for (Resource res: cr->outResources) { outputSlots[cOutputPos++]->res = res; }
+        for (Resource res: cr->inResources) {
+            inputSlots[cInputPos]->drawType = 0;
+            inputSlots[cInputPos++]->res = res;
+        }
+        for (Resource res: cr->outResources) {
+            outputSlots[cOutputPos]->drawType = 0;
+            outputSlots[cOutputPos++]->res = res;
+        }
+        for(expertisesID res : cr->inWorkers) {
+            inputSlots[cInputPos]->drawType = 1;
+            inputSlots[cInputPos++]->pawnExpertiese = {res};
+        }
+        for(FighterPawnType f : cr->inFighters) {
+            inputSlots[cInputPos]->drawType = 2;
+            inputSlots[cInputPos++]->fighterPawnType = f;
+        }
+        for(FighterPawnType f : cr->outFighters) {
+            outputSlots[cOutputPos]->drawType = 2;
+            outputSlots[cOutputPos++]->fighterPawnType = f;
+        }
     }
-    for (; cInputPos < inputSlots.size(); ++cInputPos) { inputSlots[cInputPos]->res = Resource::Nothing; }
-    for (; cOutputPos < outputSlots.size(); ++cOutputPos) { outputSlots[cOutputPos]->res = Resource::Nothing; }
+    for (; cInputPos < inputSlots.size(); ++cInputPos) {
+        inputSlots[cInputPos]->drawType = 0;
+        inputSlots[cInputPos++]->res = Resource::Nothing;
+    }
+    for (; cOutputPos < outputSlots.size(); ++cOutputPos) {
+        outputSlots[cOutputPos]->drawType = 0;
+        outputSlots[cOutputPos]->res = Resource::Nothing;
+    }
     arrow->pawnExpertises = r->reqWorkers;
 }
