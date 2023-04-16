@@ -27,14 +27,28 @@ int fromString(const string& str) {
 
 bool GameServer::onConnection(std::shared_ptr<dlib::Connection> client) {
     ptr<Player> player = makeptr<Player>();
-    ptr<Building> hub = makeptr<Building>(std::pair<double, double>{IDs * 90, IDs * 90}, player, 100.0);
-    player->hub = hub;
+    ptr<CraftBuilding> hub = makeptr<CraftBuilding>(std::pair<double, double>{IDs * 90, IDs * 90}, player, 100.0);
+    for(size_t i = 0 ; i < 30; ++i)
+        hub->resources.insert(Resource::Ore);
+    player->hub = static_cast<ptr<Building>>(hub);
+    for(size_t i = 0; i < 2; ++i) {
+        ptr<WorkerPawn> pawn = makeptr<WorkerPawn>();
+        pawn->create(player->hub);
+        pawn->expertises.insert(expertisesID::Smeltery);
+        player->pawns.insert(pawn.dyn_cast<Pawn>());
+    }
     Event plA(Event::Type::PLAYER_APPEAR, player->id);
     Event hubA(Event::Type::BUILDING_APPEAR, hub->id);
     sendPacketClient(client, plA.getPacket());
     sendPacketClient(client, hubA.getPacket());
     sendPacketAll(plA.getPacket());
     sendPacketAll(hubA.getPacket());
+    for(auto i : player->pawns) {
+        Event workerA(Event::Type::PAWN_APPEAR, i.id);
+        sendPacketClient(client, workerA.getPacket());
+        sendPacketAll(workerA.getPacket());
+    }
+    return true;
 }
 
 void GameServer::onDisconnection(std::shared_ptr<dlib::Connection> client) {}
