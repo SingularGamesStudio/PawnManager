@@ -49,12 +49,12 @@ ptr<FighterPawn> FighterPawn::createFighterPawn(FighterPawnType type, ptr<Buildi
     switch (type) {
         case FighterPawnType::Monk:
             newborn = (makeptr<Monk>(Task(TaskID::Idle, placeOfCreation), false, Resource::Nothing, placeOfCreation->owner, placeOfCreation,
-                                          placeOfCreation))
+                                     placeOfCreation))
                               .dyn_cast<FighterPawn>();
             break;
         case FighterPawnType::Swordsman:
-            newborn = (makeptr<Swordsman>(Task(TaskID::Idle, placeOfCreation), false, Resource::Nothing, placeOfCreation->owner,
-                                               placeOfCreation, placeOfCreation))
+            newborn = (makeptr<Swordsman>(Task(TaskID::Idle, placeOfCreation), false, Resource::Nothing, placeOfCreation->owner, placeOfCreation,
+                                          placeOfCreation))
                               .dyn_cast<FighterPawn>();
             break;
         default:
@@ -62,7 +62,7 @@ ptr<FighterPawn> FighterPawn::createFighterPawn(FighterPawnType type, ptr<Buildi
     }
     placeOfCreation->owner->pawns.insert(newborn->id);
     newborn->IMHere(placeOfCreation);
-    godObject::global_server->sendPacketAll(Event(Event::Type::PAWN_APPEAR, newborn->id).getPacket());
+    //godObject::global_server->sendPacketAll(Event(Event::Type::PAWN_APPEAR, newborn->id).getPacket());
 }
 void FighterPawn::getResource(ResourceEntity* toGet) {
     if (positionBuilding) IMNotHere();

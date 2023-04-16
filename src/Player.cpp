@@ -9,8 +9,8 @@
 #include "Entities/Buildings/CraftBuilding.h"
 #include "Entities/Pawns/FighterPawn.h"
 #include "Entities/Pawns/WorkerPawn.h"
-#include "Recipes/BuildRecipe.h"
 #include "Event.h"
+#include "Recipes/BuildRecipe.h"
 #include "godobject.h"
 
 #ifdef SERVER_SIDE
@@ -63,6 +63,7 @@ bool Player::checkRecipe(Recipe* recipe) {
 
 ptr<CraftBuilding> Player::placeBlueprint(std::pair<double, double> pos, ptr<Building> parent, double r) {
     ptr<CraftBuilding> blueprint = makeptr<CraftBuilding>(pos, ptr<Player>(id), 100, r, parent);
+    godObject::global_server->sendPacketAll(Event(Event::Type::RESOURCE_ENTITY_APPEAR, blueprint.id).getPacket());
     parent->children.insert(blueprint.dyn_cast<Building>());
     return blueprint;
 }

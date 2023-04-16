@@ -19,13 +19,12 @@ void Building::addResource(Resource resource) {
 #endif
 }
 
-Building::Building(int id, std::pair<double, double> pos, ptr<Player> owner, double hp, double radius,
-         ptr<Building> parent) : Entity(pos, owner, hp, radius)
-        {
+Building::Building(int id, std::pair<double, double> pos, ptr<Player> owner, double hp, double radius, ptr<Building> parent)
+    : Entity(pos, owner, hp, radius) {
     this->parent = parent;
     this->id = id;
 #ifdef SERVER_SIDE
-    godObject::global_server->sendPacketAll(Event(Event::Type::BUILDING_APPEAR, id).getPacket());
+    //godObject::global_server->sendPacketAll(Event(Event::Type::BUILDING_APPEAR, id).getPacket());
 #endif
 }
 
@@ -65,7 +64,8 @@ Building::~Building() {
         std::pair<double, double> pos = position;
         pos.first += x * radius;
         pos.second += x * radius;
-        makeptr<ResourceEntity>(r, pos);
+        auto send = makeptr<ResourceEntity>(r, pos);
+        godObject::global_server->sendPacketAll(Event(Event::Type::RESOURCE_ENTITY_APPEAR, send.id).getPacket());
     }
     godObject::global_server->sendPacketAll(Event(Event::Type::BUILDING_DISAPPEAR, id).getPacket());
 #endif

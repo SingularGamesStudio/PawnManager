@@ -27,8 +27,8 @@ int fromString(const string& str) {
 
 bool GameServer::onConnection(std::shared_ptr<dlib::Connection> client) {
     ptr<Player> player = makeptr<Player>();
-    ptr<Building> hub = makeptr<Building>(std::pair<double, double>{IDs * 90, IDs * 90},
-                                          player, 100.0);
+    ptr<Building> hub = makeptr<Building>(std::pair<double, double>{IDs * 90, IDs * 90}, player, 100.0);
+    player->hub = hub;
     Event plA(Event::Type::PLAYER_APPEAR, player->id);
     Event hubA(Event::Type::BUILDING_APPEAR, hub->id);
     sendPacketClient(client, plA.getPacket());

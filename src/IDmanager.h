@@ -30,6 +30,8 @@ struct RequiresID {
 
     std::vector<uint8_t> serializeSelf() const;
     size_t deserializeSelf(const uint8_t* data);
+
+    virtual void send();
 };
 
 template<typename T>

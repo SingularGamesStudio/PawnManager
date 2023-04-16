@@ -4,6 +4,7 @@
 
 #include "../Entities/Buildings/CraftBuilding.h"
 #include "../Entities/Pawns/FighterPawn.h"
+#include "../godobject.h"
 
 template<typename T>// parses vector of simple objects inty byte array
 std::vector<uint8_t> parseVector(const std::vector<T>& v) {
@@ -26,7 +27,8 @@ unsigned int unparseVector(const uint8_t* v, std::vector<T>& result) {
 void CraftRecipe::finish() {
     for (ptr<Pawn> p: procPawns) { p.del(); }
 
-    for (FighterPawnType t: outFighters) { FighterPawn::createFighterPawn(t, place.dyn_cast<Building>()).dyn_cast<Pawn>(); }
+    for (FighterPawnType t: outFighters) { auto send = FighterPawn::createFighterPawn(t, place.dyn_cast<Building>()).dyn_cast<Pawn>();
+        godObject::global_server->sendPacketAll(Event(Event::Type::RESOURCE_ENTITY_APPEAR, send.id).getPacket());}
     for (Resource t: outResources) { place->addResource(t); }
     cleanup();
 }

@@ -13,7 +13,7 @@ ResourceEntity::ResourceEntity(int id, Resource res, std::pair<double, double> p
     godObject::local_server->danglingResources.insert(ptr<ResourceEntity>(id));
 #endif
 #ifdef SERVER_SIDE
-    godObject::global_server->sendPacketAll(Event(Event::Type::RESOURCE_ENTITY_APPEAR, id).getPacket());
+    //godObject::global_server->sendPacketAll(Event(Event::Type::RESOURCE_ENTITY_APPEAR, id).getPacket());
 #endif
 }
 

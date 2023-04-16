@@ -20,7 +20,8 @@ void Pawn::drop(ptr<Building> in, std::pair<double, double> pos) {
     }
     if (holding != Resource::Nothing) {
         // TODO godObject::global_server->sendPacketAll(Event(Event::Type::RESOURCE_ENTITY_ADD, holding).getPacket());
-        makeptr<ResourceEntity>(holding, pos);
+        auto send = makeptr<ResourceEntity>(holding, pos);
+        godObject::global_server->sendPacketAll(Event(Event::Type::RESOURCE_ENTITY_APPEAR, send.id).getPacket());
     }
 }
 void Pawn::IMNotHere() {

@@ -20,7 +20,7 @@ void WorkerPawn::create(ptr<Building> placeOfCreation) {
     needed = Resource::Nothing;
     owner = placeOfCreation->owner;
     IMHere(placeOfCreation);
-    godObject::global_server->sendPacketAll(Event(Event::Type::PAWN_APPEAR, id).getPacket());
+    //godObject::global_server->sendPacketAll(Event(Event::Type::PAWN_APPEAR, id).getPacket());
 }
 void WorkerPawn::assignTask(const Task& toAssign) {
     currentTask = toAssign;
@@ -91,8 +91,7 @@ void WorkerPawn::tick(double deltaTime) {
                 double tim = std::hypot(tmp.first - position.first, tmp.second - position.second);
                 tim /= speed;
 
-                godObject::global_server->sendPacketAll(
-                        Event(Event::Type::PAWN_MOVE, id, onTheWay[currentInWay]->position, tim).getPacket());
+                godObject::global_server->sendPacketAll(Event(Event::Type::PAWN_MOVE, id, onTheWay[currentInWay]->position, tim).getPacket());
             }
         }
     } else {
