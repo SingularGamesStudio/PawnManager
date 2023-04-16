@@ -12,6 +12,7 @@
 #include "Entities/Pawns/WorkerPawn.h"
 
 void LocalController::onPacketReceive(const dlib::Packet& p) {
+    std::cerr << "Packet received" << std::endl;
     Event::Type type = static_cast<Event::Type>(p.data[0]);
     std::vector<uint8_t> data = p.data;
     data.erase(data.begin());
