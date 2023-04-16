@@ -27,35 +27,14 @@ int fromString(const string& str) {
 
 bool GameServer::onConnection(std::shared_ptr<dlib::Connection> client) {
     ptr<Player> player = makeptr<Player>();
-    CraftRecipe* recipe;
-    ptr<CraftBuilding> crafter;
-    player->manager.owner = player;
-    BuildingRegisty::init();
-    std::pair<double, double> pos = std::make_pair(rnd() % 300, rnd() % 300);
-    std::pair<double, double> pos1 = std::make_pair(pos.first + rnd() % 30, pos.second + rnd() % 30);
-    player->hub = makeptr<Building>(pos, player, 100);
-    for (int i = 0; i < 30; i++) { player->hub->addResource(Resource::Ore); }
-    for (int i = 0; i < 5; i++) {
-        ptr<WorkerPawn> pawn = makeptr<WorkerPawn>();
-        pawn->create(player->hub);
-        pawn->expertises.insert(expertisesID::Smeltery);
-        player->pawns.insert(pawn.dyn_cast<Pawn>());
-    }
-    crafter = makeptr<CraftBuilding>(pos1, player, 100);
-    player->hub->children.insert(crafter.dyn_cast<Building>());
-    crafter->parent = player->hub;
-    recipe = new CraftRecipe();
-    recipe->inResources.push_back(Resource::Ore);
-    recipe->reqWorkers.push_back(expertisesID::Smeltery);
-    recipe->outResources.push_back(Resource::Ingot);
-    recipe->duration = 5;
-    crafter->recipes.push_back(recipe);
-    recipe = new CraftRecipe();
-    recipe->inResources.push_back(Resource::Ore);
-    recipe->outFighters.push_back(FighterPawnType::Swordsman);
-    recipe->duration = 2;
-    crafter->recipes.push_back(recipe);
-    players[client->getID()] = player;
+    ptr<Building> hub = makeptr<Building>(std::pair<double, double>{IDs * 90, IDs * 90},
+                                          player, 100.0);
+    Event plA(Event::Type::PLAYER_APPEAR, player->id);
+    Event hubA(Event::Type::BUILDING_APPEAR, hub->id);
+    sendPacketClient(client, plA.getPacket());
+    sendPacketClient(client, hubA.getPacket());
+    sendPacketAll(plA.getPacket());
+    sendPacketAll(hubA.getPacket());
 }
 
 void GameServer::onDisconnection(std::shared_ptr<dlib::Connection> client) {}
