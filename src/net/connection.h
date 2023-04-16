@@ -73,12 +73,15 @@ namespace dlib {
             acceptHeader();
         }
         void acceptHeader() {
+            if(!isConnected())
+                return;
             boost::asio::mutable_buffer headerBuffer(new char[9], 9);
             boost::asio::async_read(soc, headerBuffer, [this, headerBuffer](std::error_code ec, size_t len) {
                 if (ec) {
                     std::cerr << "failed to read header ID: " << id << "\n";
                     tmpPacket.clear();
-                    acceptHeader();
+                    //acceptHeader();
+                    disconnect();
                     return;
                 }
                 tmpPacket.parseHeader((uint8_t*) headerBuffer.data());
