@@ -14,15 +14,15 @@
 #include "../Entities/Pawns/FighterPawn.h"
 #include "../Entities/Pawns/WorkerPawn.h"
 #include "../Entities/ResourceEntity.h"
+#include "../IDmanager.h"
+#include "../LocalController.h"
 #include "../Recipes/BuildRecipe.h"
+#include "../godobject.h"
 #include "BuildBuildingWindow.h"
 #include "CraftBuildingWindow.h"
 #include "MainMenuWindow.h"
 #include "SFML/Graphics/Text.hpp"
 #include "SFML/Window.hpp"
-#include "../IDmanager.h"
-#include "../LocalController.h"
-#include "../godobject.h"
 
 
 sf::RenderWindow* PawnManagerClient::window;
@@ -64,11 +64,11 @@ void PawnManagerClient::run() {
 
 void PawnManagerClient::updateAndRender() {
     double newTime = clock();
-//    tick((newTime - curTime) / CLOCKS_PER_SEC);
+    //    tick((newTime - curTime) / CLOCKS_PER_SEC);
     curTime = newTime;
     window->clear(sf::Color::White);
     sf::Vector2f center = ((sf::Vector2f) window->getSize()) * 0.5f;
-    for(ptr<Player> player : godObject::local_server->players) {
+    for (ptr<Player> player: godObject::local_server->players) {
         buildingRenderDfs(player->hub, center);
         std::default_random_engine rng;
         std::uniform_real_distribution<float> dist2(0, std::numbers::pi_v<float>);
@@ -87,7 +87,7 @@ void PawnManagerClient::updateAndRender() {
             }
         }
     }
-    for (ptr<ResourceEntity> res : godObject::local_server->danglingResources) {
+    for (ptr<ResourceEntity> res: godObject::local_server->danglingResources) {
         resourceRenderer->drawResource(res->resource, sf::Vector2f(res->position.first, res->position.second) * renderScale + center,
                                        std::numbers::pi_v<float> / 4.0f);
     }
@@ -95,9 +95,7 @@ void PawnManagerClient::updateAndRender() {
 }
 
 void PawnManagerClient::buildingRenderDfs(ptr<Building> b, sf::Vector2f center) {
-    if(!b) {
-        return;
-    }
+    if (!b) { return; }
     auto [x, y] = b->position;
     for (ptr<Building> ob: b->children) {
         buildingRenderer->drawEdge(b, ob, center);
@@ -149,9 +147,7 @@ void PawnManagerClient::onMouseClick(int x, int y, sf::Mouse::Button b) {
 }
 
 bool PawnManagerClient::onBuildingMouseClick(ptr<Building> b, sf::Vector2f pos, sf::Mouse::Button button) {
-    if(!b) {
-        return false;
-    }
+    if (!b) { return false; }
     auto [x, y] = b->position;
     sf::Vector2f delta = sf::Vector2f(x, y) - pos;
     if (delta.x * delta.x + delta.y * delta.y <= b->radius * b->radius) {
@@ -175,6 +171,8 @@ bool PawnManagerClient::onBuildingMouseClick(ptr<Building> b, sf::Vector2f pos, 
 }
 
 void PawnManagerClient::init() {
+    BuildingRegisty::init();
+    std::cout << BuildingRegisty::database[0]->inResources.size() << std::endl;
     window = new sf::RenderWindow(sf::VideoMode(800, 600), "Pawn Manager");
     view = window->getDefaultView();
     winManager = GameWindowManager();
@@ -183,7 +181,6 @@ void PawnManagerClient::init() {
     resourceRenderer = new ResourceRenderer(*window);
     selectedBuilding = -1;
     fontManager = FontManager();
-
     godObject::local_server = new LocalController();
     godObject::local_server->init("127.0.0.1", 57179);
 }
