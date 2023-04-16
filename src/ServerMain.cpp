@@ -31,6 +31,13 @@ bool GameServer::onConnection(std::shared_ptr<dlib::Connection> client) {
     for(size_t i = 0 ; i < 30; ++i)
         hub->resources.insert(Resource::Ore);
     player->hub = static_cast<ptr<Building>>(hub);
+    auto recipe = new CraftRecipe();
+    recipe->inResources.push_back(Resource::Ore);
+    recipe->reqWorkers.push_back(expertisesID::Smeltery);
+    recipe->outResources.push_back(Resource::Ingot);
+    recipe->duration = 5;
+    hub->recipes.push_back(recipe);
+
     for(size_t i = 0; i < 2; ++i) {
         ptr<WorkerPawn> pawn = makeptr<WorkerPawn>();
         pawn->create(player->hub);

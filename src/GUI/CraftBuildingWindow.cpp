@@ -70,6 +70,7 @@ void CraftBuildingWindow::updateAndRender() {
     int cInputPos = 0;
     int cOutputPos = 0;
     CraftRecipe* cr = dynamic_cast<CraftRecipe*>(r);
+    std::cout << cr->inResources.size() << std::endl;
     if (cr) {
         for (Resource res: cr->inResources) { inputSlots[cInputPos++]->res = res; }
         for (Resource res: cr->outResources) { outputSlots[cOutputPos++]->res = res; }
