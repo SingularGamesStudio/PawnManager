@@ -67,8 +67,22 @@ void BuildBuildingWindow::updateAndRender() {
     int cInputPos = 0;
     BuildRecipe* cr = BuildingRegisty::database[selectedRecipe];
     if (cr) {
-        for (Resource res: cr->inResources) { inputSlots[cInputPos++]->res = res; }
+        for (Resource res: cr->inResources) {
+            inputSlots[cInputPos]->drawType = 0;
+            inputSlots[cInputPos++]->res = res;
+        }
+        for(expertisesID res : cr->inWorkers) {
+            inputSlots[cInputPos]->drawType = 1;
+            inputSlots[cInputPos++]->pawnExpertiese = {res};
+        }
+        for(FighterPawnType f : cr->inFighters) {
+            inputSlots[cInputPos]->drawType = 2;
+            inputSlots[cInputPos++]->fighterPawnType = f;
+        }
     }
-    for (; cInputPos < inputSlots.size(); ++cInputPos) { inputSlots[cInputPos]->res = Resource::DummyNothing; }
+    while (cInputPos < inputSlots.size()) {
+        inputSlots[cInputPos]->drawType = 0;
+        inputSlots[cInputPos++]->res = Resource::DummyNothing;
+    }
     arrow->pawnExpertises = cr->reqWorkers;
 }
