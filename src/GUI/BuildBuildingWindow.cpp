@@ -6,10 +6,10 @@
 
 #include "../Entities/Buildings/BuildingRegisty.h"
 #include "../Recipes/BuildRecipe.h"
+#include "../godobject.h"
 #include "ButtonControl.h"
 #include "PawnManagerClient.h"
 #include "SFML/Graphics/Text.hpp"
-#include "../godobject.h"
 
 
 BuildBuildingWindow::BuildBuildingWindow(int id, const sf::Vector2f& pos) : id(id), pos(pos), selectedRecipe(0), shouldClose(false), arrow(nullptr) {
@@ -68,7 +68,10 @@ void BuildBuildingWindow::updateAndRender() {
     int cInputPos = 0;
     BuildRecipe* cr = BuildingRegisty::database[selectedRecipe];
     if (cr) {
-        for (Resource res: cr->inResources) { inputSlots[cInputPos++]->res = res; }
+        for (Resource res: cr->inResources) {
+            inputSlots[cInputPos++]->res = res;
+            //s
+        }
     }
     for (; cInputPos < inputSlots.size(); ++cInputPos) { inputSlots[cInputPos]->res = Resource::Nothing; }
     arrow->pawnExpertises = cr->reqWorkers;

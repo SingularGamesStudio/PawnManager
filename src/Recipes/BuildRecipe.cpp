@@ -3,7 +3,6 @@
 #include "../Entities/Buildings/Building.h"
 #include "../Entities/Buildings/CraftBuilding.h"
 #include "../Entities/Pawns/Pawn.h"
-#include "../godobject.h"
 #ifdef SERVER_SIDE
 void BuildRecipe::finish() {
     for (ptr<Pawn> p: procPawns) { p.del(); }
@@ -14,7 +13,6 @@ void BuildRecipe::finish() {
     } else {
         res = makeptr<Building>(place->position, place->owner, 100, place->radius, place->parent);
     }
-    godObject::global_server->sendPacketAll(Event(Event::Type::RESOURCE_ENTITY_APPEAR, res.id).getPacket());
     res->children = place->children;
     res->pawns = place->pawns;
     res->resources = place->resources;

@@ -6,6 +6,7 @@
 #include "LocalController.h"
 
 #include "Entities/Buildings/Building.h"
+#include "Entities/Buildings/BuildingRegisty.h"
 #include "Entities/Buildings/CraftBuilding.h"
 #include "Entities/Pawns/FighterPawn.h"
 #include "Entities/Pawns/WorkerPawn.h"
@@ -18,6 +19,7 @@ void LocalController::onPacketReceive(const dlib::Packet& p) {
         Player* p = new Player(-1);
         p->deserialize(data.data());
         IDmanager::set(p->id, dynamic_cast<RequiresID*>(p));
+        players.insert(ptr<Player>(p->id));
     } else if (type == Event::Type::PLAYER_DISAPPEAR) {
         int id = 0;
         std::memcpy(&id, data.data(), sizeof(int));
@@ -109,6 +111,7 @@ void LocalController::init(std::string host, uint16_t port) {
         p->deserialize(pack.data.data() + 1);
         IDmanager::set(p->id, dynamic_cast<RequiresID*>(p));
         mainPlayer = ptr<Player>(p->id);
+        players.insert(ptr<Player>(p->id));
     });
 }
 
