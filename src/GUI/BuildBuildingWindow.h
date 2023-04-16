@@ -6,6 +6,7 @@
 #define PAWNMANAGER_BUILDBUILDINGWINDOW_H
 
 #include "ArrowControl.h"
+#include "BuildingResultControl.h"
 #include "GameWindow.h"
 #include "SlotControl.h"
 class BuildBuildingWindow : public GameWindow {
@@ -14,6 +15,7 @@ class BuildBuildingWindow : public GameWindow {
     int selectedRecipe;
     bool shouldClose;
     std::vector<SlotControl*> inputSlots;
+    BuildingResultControl* result;
     ArrowControl* arrow;
 
 public:
