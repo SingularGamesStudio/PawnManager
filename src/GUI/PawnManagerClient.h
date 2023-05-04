@@ -20,6 +20,8 @@ public:
     static sf::View view;
     static ResourceRenderer* resourceRenderer;
     static PawnRenderer* pawnRenderer;
+
+private:
     static BuildingRenderer* buildingRenderer;
 
 public:

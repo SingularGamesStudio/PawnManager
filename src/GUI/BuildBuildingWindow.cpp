@@ -13,7 +13,7 @@
 
 BuildBuildingWindow::BuildBuildingWindow(int id, const sf::Vector2f& pos) : id(id), pos(pos), selectedRecipe(0), shouldClose(false), arrow(nullptr) {
 
-    slotCounts = sf::Vector2i(7, 5);
+    slotCounts = sf::Vector2i(5, 5);
     controls.push_back(new ButtonControl(*this, sf::IntRect(1, 4, 2, 0), "Build", [w = this]() {
         //TODO
         //        ptr<CraftBuilding> p(w->id);
@@ -46,7 +46,6 @@ BuildBuildingWindow::BuildBuildingWindow(int id, const sf::Vector2f& pos) : id(i
         inputSlots.push_back(sc);
     }
     controls.push_back(arrow = new ArrowControl(*this, sf::IntRect(1, 2, 2, 0)));
-    controls.push_back(result = new BuildingResultControl(*this, sf::IntRect(4, 2, 2, 0)));
 }
 
 void BuildBuildingWindow::updateAndRender() {
@@ -68,23 +67,8 @@ void BuildBuildingWindow::updateAndRender() {
     int cInputPos = 0;
     BuildRecipe* cr = BuildingRegisty::database[selectedRecipe];
     if (cr) {
-        for (Resource res: cr->inResources) {
-            inputSlots[cInputPos]->drawType = 0;
-            inputSlots[cInputPos++]->res = res;
-        }
-        for(expertisesID res : cr->inWorkers) {
-            inputSlots[cInputPos]->drawType = 1;
-            inputSlots[cInputPos++]->pawnExpertiese = {res};
-        }
-        for(FighterPawnType f : cr->inFighters) {
-            inputSlots[cInputPos]->drawType = 2;
-            inputSlots[cInputPos++]->fighterPawnType = f;
-        }
+        for (Resource res: cr->inResources) { inputSlots[cInputPos++]->res = res; }
     }
-    while (cInputPos < inputSlots.size()) {
-        inputSlots[cInputPos]->drawType = 0;
-        inputSlots[cInputPos++]->res = Resource::DummyNothing;
-    }
+    for (; cInputPos < inputSlots.size(); ++cInputPos) { inputSlots[cInputPos]->res = Resource::DummyNothing; }
     arrow->pawnExpertises = cr->reqWorkers;
-    result->idea = &cr->toBuild;
 }

@@ -4,7 +4,6 @@ set(CMAKE_CXX_STANDARD 20)
 
 set(BOOST_INCLUDE_LIBRARIES asio system)
 set(BOOST_ENABLE_CMAKE ON)
-add_compile_definitions(CLIENT_SIDE SERVER_SIDE)
 
 include(FetchContent)
 
