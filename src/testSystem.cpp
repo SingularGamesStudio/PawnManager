@@ -19,8 +19,11 @@ ptr<Player> initTest() {
     ptr<CraftBuilding> crafter;
     player = makeptr<Player>();
     player->manager.owner = player;
+    ptr<Player> enemy = makeptr<Player>();
+    God::da_players.push_back(enemy);
     BuildingRegisty::init();
     player->hub = makeptr<Building>(std::make_pair(80, -120), player, 100);
+    ptr<FighterPawn> ThePawn = FighterPawn::createFighterPawn(FighterPawnType::DummySwordsman, player->hub);
     for (int i = 0; i < 30; i++) { player->hub->addResource(Resource::DummyOre); }
     for (int i = 0; i < 5; i++) {
         ptr<WorkerPawn> pawn = makeptr<WorkerPawn>();

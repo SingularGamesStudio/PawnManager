@@ -8,6 +8,7 @@
 #include <set>
 
 #include "Player.h"
+#include "godobject.h"
 
 ptr<Player> initTest();
 

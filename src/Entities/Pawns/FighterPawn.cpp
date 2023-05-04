@@ -121,7 +121,18 @@ void FighterPawn::tick(double deltaTime) {
     }
     if (currentTask.id == TaskID::Protect) {
         ptr<Entity> enemy;
-        ///TODO enemy spotted
+        for(auto player:God::da_players){
+            if(player == owner)
+                continue;
+            for (auto pawn:player->pawns){
+                double distance = (currentTask.destination->position.first - pawn->position.first) * (currentTask.destination->position.first - pawn->position.first) +
+                                  (currentTask.destination->position.second - pawn->position.second) * (currentTask.destination->position.second - pawn->position.second);
+                distance = sqrt(distance);
+                if (distance < awarenessRadius){
+                    enemy = pawn.dyn_cast<Entity>();
+                }
+            }
+        }
         if (enemy) {
             attack(enemy, deltaTime);
         } else

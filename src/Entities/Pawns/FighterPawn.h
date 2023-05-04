@@ -4,6 +4,7 @@
 #include <cmath>
 #include <vector>
 
+#include "../../godobject.h"
 #include "Pawn.h"
 enum class FighterPawnType : uint8_t { DummyMonk, DummySwordsman, DummNotFound };
 class Entity;
@@ -11,6 +12,7 @@ class ResourceEntity;
 class FighterPawn : public Pawn {
 public:
     double atk = 10;
+    double awarenessRadius = 10;
     double speed = 100;
     double hp = 30;
     bool toAttack = false;
