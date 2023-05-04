@@ -180,7 +180,6 @@ void PawnManagerClient::init() {
     resourceRenderer = new ResourceRenderer(*window);
     selectedBuilding = -1;
     fontManager = FontManager();
-    winManager.pushWindow(new MainMenuWindow());
 }
 
 void PawnManagerClient::shutdown() {
