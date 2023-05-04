@@ -13,7 +13,7 @@
 
 BuildBuildingWindow::BuildBuildingWindow(int id, const sf::Vector2f& pos) : id(id), pos(pos), selectedRecipe(0), shouldClose(false), arrow(nullptr) {
 
-    slotCounts = sf::Vector2i(7, 5);
+    slotCounts = sf::Vector2i(5, 5);
     controls.push_back(new ButtonControl(*this, sf::IntRect(1, 4, 2, 0), "Build", [w = this]() {
         //TODO
         //        ptr<CraftBuilding> p(w->id);
@@ -46,7 +46,6 @@ BuildBuildingWindow::BuildBuildingWindow(int id, const sf::Vector2f& pos) : id(i
         inputSlots.push_back(sc);
     }
     controls.push_back(arrow = new ArrowControl(*this, sf::IntRect(1, 2, 2, 0)));
-    controls.push_back(result = new BuildingResultControl(*this, sf::IntRect(4, 2, 2, 0)));
 }
 
 void BuildBuildingWindow::updateAndRender() {
@@ -86,5 +85,4 @@ void BuildBuildingWindow::updateAndRender() {
         inputSlots[cInputPos++]->res = Resource::DummyNothing;
     }
     arrow->pawnExpertises = cr->reqWorkers;
-    result->idea = &cr->toBuild;
 }

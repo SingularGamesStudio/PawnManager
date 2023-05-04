@@ -6,13 +6,11 @@
 #define PAWNMANAGER_BUILDINGRESULTCONTROL_H
 
 
-#include "../Entities/Buildings/BuildingRegisty.h"
 #include "Control.h"
 
 
 class BuildingResultControl : public Control {
 public:
-    BuildingIdea* idea;
     BuildingResultControl(GameWindow &win, const sf::IntRect &rect);
     void updateAndRender() override;
 };
