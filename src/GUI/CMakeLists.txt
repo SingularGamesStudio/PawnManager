@@ -23,12 +23,12 @@ FetchContent_MakeAvailable(SFML)
 
 add_compile_definitions(BOOST_ASIO_STANDALONE)
 
-add_executable(PawnManagerGUI BuildingRenderer.cpp CraftBuildingWindow.cpp FontManager.cpp GameWindow.cpp
+add_executable(PawnManagerGUI ClientMain.cpp BuildingRenderer.cpp CraftBuildingWindow.cpp FontManager.cpp GameWindow.cpp
         GameWindowManager.cpp MainMenuWindow.cpp PawnManagerClient.cpp PawnRenderer.cpp ResourceRenderer.cpp
-        ClientMain.cpp Control.cpp ButtonControl.cpp SlotControl.cpp ArrowControl.cpp BuildBuildingWindow.cpp
+        Control.cpp ButtonControl.cpp SlotControl.cpp ArrowControl.cpp BuildBuildingWindow.cpp
         BuildingResultControl.cpp)
 
-target_compile_definitions(PawnManagerGUI PUBLIC CLIENT_SIDE SERVER_SIDE BOOST_ASIO_STANDALONE)
+target_compile_definitions(PawnManagerGUI PUBLIC CLIENT_SIDE BOOST_ASIO_STANDALONE)
 target_include_directories(PawnManagerGUI PRIVATE ${Boost_SOURCE_DIR}/libs/asio/include)
 target_link_libraries(PawnManagerGUI PRIVATE sfml-graphics PawnManagerClient)
 target_link_libraries(PawnManagerGUI PRIVATE Boost::system)
