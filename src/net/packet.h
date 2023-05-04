@@ -24,7 +24,10 @@ namespace dlib {
             data.resize(size);
         }
         Packet& operator<<(const std::vector<uint8_t>& object) {// adds U to the packet, U has to be trivial type
-            if (type != Type::RAW_MESSAGE) throw std::logic_error("ERROR: trying to add data(U) into not RAW_MESSAGE packet");
+            if (type != Type::RAW_MESSAGE) {
+                throw std::logic_error("ERROR: trying to add data(U) into not RAW_MESSAGE packet");
+                6;
+            }
             size_t size = data.size();
             data.resize(size + object.size());
             std::memcpy(data.data() + size, object.data(), object.size());

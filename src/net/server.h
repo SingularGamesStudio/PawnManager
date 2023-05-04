@@ -80,9 +80,11 @@ namespace dlib {
                     std::cout << socket.remote_endpoint() << " connected to the SERVER\n";
                     std::shared_ptr<Connection> newConnection =
                             std::make_shared<Connection>(Connection::Owner::SERVER, serverContext, std::move(socket), inQueue);
+                    newConnection->setID(IDs++);
                     if (onConnection(newConnection)) {
                         connections.push_back(std::move(newConnection));
-                        connections.back()->connectToClient(IDs++);
+                        connections.back()->connectToClient(IDs);
+                        afterConnection(connections.back());
                         std::cout << "SERVER has accepted connection" << connections.back()->getID() << "\n";
                     } else {
                         std::cout << "SERVER has denied connection\n";
@@ -93,6 +95,7 @@ namespace dlib {
         }
         uint32_t IDs = 0;
         virtual bool onConnection(std::shared_ptr<Connection> client) { return true; }
+        virtual void afterConnection(std::shared_ptr<Connection> client) {}
         virtual void onDisconnection(std::shared_ptr<Connection> client) {}
         virtual void onPacketReceive(std::shared_ptr<Connection> client, Packet p) {}
     };

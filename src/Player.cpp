@@ -12,6 +12,7 @@
 #include "Event.h"
 #include "Recipes/BuildRecipe.h"
 #include "godobject.h"
+#include <iostream>
 
 #ifdef SERVER_SIDE
 
@@ -63,12 +64,13 @@ bool Player::checkRecipe(Recipe* recipe) {
 
 ptr<CraftBuilding> Player::placeBlueprint(std::pair<double, double> pos, ptr<Building> parent, double r) {
     ptr<CraftBuilding> blueprint = makeptr<CraftBuilding>(pos, ptr<Player>(id), 100, r, parent);
-    godObject::global_server->sendPacketAll(Event(Event::Type::RESOURCE_ENTITY_APPEAR, blueprint.id).getPacket());
+    godObject::global_server->sendPacketAll(Event(Event::Type::BUILDING_APPEAR, blueprint.id).getPacket());
     parent->children.insert(blueprint.dyn_cast<Building>());
     return blueprint;
 }
 
 bool Player::TaskManager::startRecipe(Recipe* recipe, ptr<Building> where) {
+    std::cerr << owner.id << std::endl;
     if (!owner->checkRecipe(recipe)) return false;
     if (dynamic_cast<BuildRecipe*>(recipe) != nullptr) {
         BuildRecipe* brecipe = dynamic_cast<BuildRecipe*>(recipe);

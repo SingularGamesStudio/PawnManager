@@ -9,7 +9,7 @@ enum class Resource : uint8_t;
 
 class Event {
 private:
-    dlib::Packet p;
+    dlib::Packet p = dlib::Packet(dlib::Packet::Type::RAW_MESSAGE);
 
 public:
     enum class Type : uint8_t {
@@ -26,7 +26,8 @@ public:
         PLAYER_DISAPPEAR,
         RESOURCE_ENTITY_APPEAR,
         RESOURCE_ENTITY_DISAPPEAR,
-        PLAYER_ACTION
+        PLAYER_ACTION,
+        SYNC_PULSE
     };
     Event() = delete;
     Event(Type t, int id);

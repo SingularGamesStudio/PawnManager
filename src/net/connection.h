@@ -31,11 +31,12 @@ namespace dlib {
         virtual ~Connection() { disconnect(); }
 
         uint32_t getID() const { return id; }
+        void setID(uint32_t clID) { id = clID; }
 
         void connectToClient(uint32_t clID) {
             if (owner != Owner::SERVER) return;
             if (soc.is_open()) {
-                id = clID;
+                //id = clID;
                 acceptHeader();
             }
         }

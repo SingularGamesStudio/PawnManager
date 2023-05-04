@@ -12,6 +12,7 @@ public:
     std::mt19937 rnd;
     GameServer(uint16_t port) : dlib::ServerInterface(port) {}
     virtual bool onConnection(std::shared_ptr<dlib::Connection> client) override;
+    virtual void afterConnection(std::shared_ptr<dlib::Connection> client) override;
     virtual void onDisconnection(std::shared_ptr<dlib::Connection> client) override;
     virtual void onPacketReceive(std::shared_ptr<dlib::Connection> client, dlib::Packet p) override;
 

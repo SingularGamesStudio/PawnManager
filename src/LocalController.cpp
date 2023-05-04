@@ -12,8 +12,8 @@
 #include "Entities/Pawns/WorkerPawn.h"
 
 void LocalController::onPacketReceive(const dlib::Packet& p) {
-    std::cerr << "Packet received" << std::endl;
     Event::Type type = static_cast<Event::Type>(p.data[0]);
+    std::cerr << "Packet received " << int(type) << std::endl;
     std::vector<uint8_t> data = p.data;
     data.erase(data.begin());
     if (type == Event::Type::PLAYER_APPEAR) {
@@ -100,7 +100,7 @@ void LocalController::onPacketReceive(const dlib::Packet& p) {
         ptr<Entity>(id)->startMoveToPos(pos, time);
     } else {
         int id = 0;
-        std::memcpy(data.data(), &id, sizeof(int));
+        std::memcpy(&id, data.data(), sizeof(int));
         ptr<RequiresID>(id).del();
     }
 }

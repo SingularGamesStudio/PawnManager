@@ -3,6 +3,7 @@
 #include "../Entities/Buildings/Building.h"
 #include "../Entities/Buildings/CraftBuilding.h"
 #include "../Entities/Pawns/Pawn.h"
+#include "../godobject.h"
 #ifdef SERVER_SIDE
 void BuildRecipe::finish() {
     for (ptr<Pawn> p: procPawns) { p.del(); }
@@ -29,6 +30,7 @@ void BuildRecipe::finish() {
     IDmanager::set(res.id, nullptr);
     res.id = newid;
     res->id = newid;
+    godObject::global_server->sendPacketAll(Event(Event::Type::BUILDING_APPEAR, res.id).getPacket());
     cleanup(res);
 }
 #endif

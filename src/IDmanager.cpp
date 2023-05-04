@@ -16,9 +16,9 @@ RequiresID* IDmanager::get(int id) { return all[id]; }
 
 void IDmanager::set(int id, RequiresID* data) {
     all[id] = data;
+    std::cerr << "id set is " << id << " and type is " << typeid(data).name() << std::endl;
     if (id == 0 && data == nullptr) {
-        throw "aboba";
-        std::cout << "a";
+        throw std::logic_error("aboba");
     }
 }
 

@@ -16,6 +16,7 @@
 #include "Recipes/CraftRecipe.h"
 #include "Resource.h"
 #include "godobject.h"
+#include "Entities/Buildings/BuildingRegisty.h"
 #ifdef SERVER_SIDE
 using std::string;
 
@@ -27,6 +28,7 @@ int fromString(const string& str) {
 
 bool GameServer::onConnection(std::shared_ptr<dlib::Connection> client) {
     ptr<Player> player = makeptr<Player>();
+    player->manager.owner = player;
     ptr<CraftBuilding> hub = makeptr<CraftBuilding>(std::pair<double, double>{IDs * 90, IDs * 90}, player, 100.0);
     for(size_t i = 0 ; i < 30; ++i)
         hub->resources.insert(Resource::Ore);
@@ -55,7 +57,11 @@ bool GameServer::onConnection(std::shared_ptr<dlib::Connection> client) {
         sendPacketClient(client, workerA.getPacket());
         sendPacketAll(workerA.getPacket());
     }
+    players[client->getID()] = player;
     return true;
+}
+
+void GameServer::afterConnection(std::shared_ptr<dlib::Connection> client) {
 }
 
 void GameServer::onDisconnection(std::shared_ptr<dlib::Connection> client) {}
@@ -71,6 +77,10 @@ void GameServer::onPacketReceive(std::shared_ptr<dlib::Connection> client, dlib:
         godObject::getRecipe(data.data() + sizeof(int), rec);
         players[client->getID()]->manager.startRecipe(rec, ptr<Building>(id));
         delete rec;
+        return;
+    }
+    if (type == Event::Type::SYNC_PULSE) {
+
     }
 }
 
@@ -101,12 +111,14 @@ int main(int argc, char** argv) {
     }
     GameServer server(params["port"]);
     server.start();
+    godObject::global_server = &server;
     server.rnd = std::mt19937(42);
-    auto currTime = std::chrono::steady_clock::now();
+    double currTime = clock();
+    BuildingRegisty::init();
     while (1) {
-        auto dTime = std::chrono::steady_clock::now() - currTime;
+        double dTime = clock() - currTime;
         currTime += dTime;
-        server.tick(dTime.count());
+        server.tick( dTime / CLOCKS_PER_SEC);
         server.respond();
     }
     server.stop();
