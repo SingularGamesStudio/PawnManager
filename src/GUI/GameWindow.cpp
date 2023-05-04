@@ -13,7 +13,9 @@ void GameWindow::updateAndRender() {
     updateAndRenderControls();
 }
 
-GameWindow::GameWindow() = default;
+GameWindow::GameWindow() : selectedControl(nullptr) {
+
+}
 
 void GameWindow::drawBackground() {
     sf::VertexArray arr;
@@ -100,5 +102,17 @@ sf::FloatRect GameWindow::getGridRectangle(sf::IntRect rect) {
 }
 
 void GameWindow::onMouseClick(int x, int y, sf::Mouse::Button b) {
-    for (Control* c: controls) { c->onMouseClick(x, y, b); }
+    for (Control* c: controls) {
+        if (c->mouseOver()) {
+            selectedControl = c;
+            c->onMouseClick(x, y, b);
+            return;
+        }
+    }
+    selectedControl = nullptr;
+}
+void GameWindow::onCharInput(int ch) {
+    if(selectedControl) {
+        selectedControl->onCharInput(ch);
+    }
 }

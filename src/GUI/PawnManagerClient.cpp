@@ -53,6 +53,11 @@ void PawnManagerClient::run() {
                     if (winManager.windowCount() > 0) { winManager.popWindow(); }
                 }
             }
+            if(evt.type == sf::Event::TextEntered) {
+                if(winManager.windowCount() > 0) {
+                    winManager.onCharInput(evt.text.unicode);
+                }
+            }
         }
         updateAndRender();
         window->display();
@@ -173,6 +178,7 @@ void PawnManagerClient::init() {
     resourceRenderer = new ResourceRenderer(*window);
     selectedBuilding = -1;
     fontManager = FontManager();
+    winManager.pushWindow(new MainMenuWindow());
 }
 
 void PawnManagerClient::shutdown() {

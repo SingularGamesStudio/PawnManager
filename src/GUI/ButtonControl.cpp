@@ -33,13 +33,7 @@ void ButtonControl::updateAndRender() {
     PawnManagerClient::window->draw(t);
 }
 
-bool ButtonControl::mouseOver() {
-    sf::FloatRect r = win.getGridRectangle(rect);
-    sf::Vector2f mousePos = static_cast<sf::Vector2f>(sf::Mouse::getPosition(*PawnManagerClient::window));
-    return r.contains(mousePos);
-}
-
 void ButtonControl::onMouseClick(int x, int y, sf::Mouse::Button b) {
     Control::onMouseClick(x, y, b);
-    if (mouseOver() && b == sf::Mouse::Button::Left) { callback(); }
+    if (b == sf::Mouse::Button::Left) { callback(); }
 }
