@@ -14,6 +14,7 @@ public:
     TextInputControl(GameWindow &win, const sf::IntRect &rect);
     void updateAndRender() override;
     void onCharInput(int ch) override;
+    void onKeyInput(sf::Keyboard::Key k) override;
 };
 
 

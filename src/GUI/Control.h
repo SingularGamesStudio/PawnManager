@@ -6,7 +6,7 @@
 #define PAWNMANAGER_CONTROL_H
 
 #include "SFML/Graphics/Rect.hpp"
-#include "SFML/Window/Mouse.hpp"
+#include "SFML/Window.hpp"
 
 class GameWindow;
 
@@ -17,6 +17,7 @@ public:
     virtual void updateAndRender();
     virtual void onMouseClick(int x, int y, sf::Mouse::Button b);
     virtual void onCharInput(int ch);
+    virtual void onKeyInput(sf::Keyboard::Key k);
 
     bool mouseOver();
 

@@ -19,3 +19,4 @@ bool Control::mouseOver() {
     return r.contains(mousePos);
 }
 void Control::onCharInput(int ch) {}
+void Control::onKeyInput(sf::Keyboard::Key k) {}

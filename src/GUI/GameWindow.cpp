@@ -116,3 +116,8 @@ void GameWindow::onCharInput(int ch) {
         selectedControl->onCharInput(ch);
     }
 }
+void GameWindow::onKeyInput(sf::Keyboard::Key k) {
+    if(selectedControl) {
+        selectedControl->onKeyInput(k);
+    }
+}
