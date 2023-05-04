@@ -2,11 +2,11 @@
 
 class Building;
 class Pawn;
-enum class Resource : uint8_t;
+enum class Resource;
 
 class Event {
 private:
-    dlib::Packet p;
+    Packet p;
 
 public:
     enum class Type : uint8_t {
@@ -18,11 +18,7 @@ public:
         PAWN_DISAPPEAR,
         PAWN_MOVE,
         PAWN_TAKE_RES,
-        PAWN_LET_RES,
-        PLAYER_APPEAR,
-        PLAYER_DISAPPEAR,
-        RESOURCE_ENTITY_APPEAR,
-        RESOURCE_ENTITY_DISAPPEAR
+        PAWN_LET_RES
     };
     Event() = delete;
     Event(Type t, int id);

@@ -15,7 +15,7 @@ add_executable(PawnManagerGUI BuildingRenderer.cpp CraftBuildingWindow.cpp FontM
         ClientMain.cpp Control.cpp ButtonControl.cpp SlotControl.cpp ArrowControl.cpp BuildBuildingWindow.cpp
         BuildingResultControl.cpp)
 
-target_link_libraries(PawnManagerGUI PRIVATE sfml-graphics PawnManagerClient)
+target_link_libraries(PawnManagerGUI PRIVATE sfml-graphics PawnManager)
 target_compile_features(PawnManagerGUI PRIVATE cxx_std_20)
 
 if (WIN32 AND BUILD_SHARED_LIBS)

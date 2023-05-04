@@ -34,13 +34,13 @@ void PawnRenderer::drawWorkerPawn(const std::set<expertisesID>& expertises, sf::
         } else {
             int expertiseIndex = (i * static_cast<int>(expertisesVec.size())) / cnt;
             switch (expertisesVec[expertiseIndex]) {
-                case expertisesID::Smeltery:
+                case expertisesID::DummySmeltery:
                     col = sf::Color::Red;
                     break;
-                case expertisesID::Trainership:
+                case expertisesID::DummyTrainership:
                     col = sf::Color::Green;
                     break;
-                case expertisesID::Metalworking:
+                case expertisesID::DummyMetalworking:
                     col = sf::Color::White;
                     break;
             }

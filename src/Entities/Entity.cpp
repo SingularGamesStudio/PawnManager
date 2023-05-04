@@ -34,19 +34,3 @@ size_t Entity::deserializeSelf(const std::vector<uint8_t>& data) {
     curr += initializeVariable(curr, radius);
     return curr - data.data();
 }
-#ifdef CLIENT_SIDE
-double getTime() {
-    return clock() / CLOCKS_PER_SEC;
-}
-void Entity::startMoveToPos(std::pair<double, double> pos, double time) {
-    prevPos = getInterpolatedPos();
-    this->position = pos;
-    posReachTime = time;
-    beginTime = getTime();
-}
-std::pair<double, double> Entity::getInterpolatedPos() {
-    double progress = std::min((getTime() - beginTime) / posReachTime, 1.0);
-    return {position.first * progress + prevPos.first * (1 - progress), position.second * progress - prevPos.second * (1 - progress)};
-}
-
-#endif

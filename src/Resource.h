@@ -2,5 +2,5 @@
 #define RESOURCE_H
 #include <iostream>
 ///misha does not believe in me  :(
-enum class Resource : uint8_t { Ore, Ingot, Weapon, Nothing };
+enum class Resource : uint8_t { DummyOre, DummyIngot, DummyWeapon, DummyNothing };
 #endif//RESOURCE_H

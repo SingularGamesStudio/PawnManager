@@ -1,18 +1,16 @@
 #include "FighterPawn.h"
 
-#include "../../Event.h"
 #include "../../Player.h"
-#include "../../godobject.h"
 #include "../Buildings/Building.h"
 #include "../Entity.h"
 #include "../ResourceEntity.h"
 
 
-FighterPawnType Monk::getType() const { return FighterPawnType::Monk; }
-FighterPawnType Swordsman::getType() const { return FighterPawnType::Swordsman; }
+FighterPawnType DummyMonk::getType() const { return FighterPawnType::DummyMonk; }
+FighterPawnType DummySwordsman::getType() const { return FighterPawnType::DummySwordsman; }
 FighterPawnType FighterPawn::getType() const { return FighterPawnType::DummNotFound; };
 
-Monk::Monk(int id, Task task, bool BOOL, Resource resource, ptr<Player> Owner, ptr<Building> dest, ptr<Building> in) {
+DummyMonk::DummyMonk(int id, Task task, bool BOOL, Resource resource, ptr<Player> Owner, ptr<Building> dest, ptr<Building> in) {
     this->id = id;
     currentTask = task;
     travelling = BOOL;
@@ -23,7 +21,7 @@ Monk::Monk(int id, Task task, bool BOOL, Resource resource, ptr<Player> Owner, p
     IMHere(in);
 #endif
 }
-Swordsman::Swordsman(int id, Task task, bool BOOL, Resource resource, ptr<Player> Owner, ptr<Building> dest, ptr<Building> in) {
+DummySwordsman::DummySwordsman(int id, Task task, bool BOOL, Resource resource, ptr<Player> Owner, ptr<Building> dest, ptr<Building> in) {
     this->id = id;
     currentTask = task;
     travelling = BOOL;
@@ -47,13 +45,13 @@ void FighterPawn::attack(ptr<Entity> attacked, double deltaTime) {
 ptr<FighterPawn> FighterPawn::createFighterPawn(FighterPawnType type, ptr<Building> placeOfCreation) {
     ptr<FighterPawn> newborn;
     switch (type) {
-        case FighterPawnType::Monk:
-            newborn = (makeptr<Monk>(Task(TaskID::Idle, placeOfCreation), false, Resource::Nothing, placeOfCreation->owner, placeOfCreation,
+        case FighterPawnType::DummyMonk:
+            newborn = (makeptr<DummyMonk>(Task(TaskID::Idle, placeOfCreation), false, Resource::DummyNothing, placeOfCreation->owner, placeOfCreation,
                                           placeOfCreation))
                               .dyn_cast<FighterPawn>();
             break;
-        case FighterPawnType::Swordsman:
-            newborn = (makeptr<Swordsman>(Task(TaskID::Idle, placeOfCreation), false, Resource::Nothing, placeOfCreation->owner,
+        case FighterPawnType::DummySwordsman:
+            newborn = (makeptr<DummySwordsman>(Task(TaskID::Idle, placeOfCreation), false, Resource::DummyNothing, placeOfCreation->owner,
                                                placeOfCreation, placeOfCreation))
                               .dyn_cast<FighterPawn>();
             break;
@@ -62,7 +60,6 @@ ptr<FighterPawn> FighterPawn::createFighterPawn(FighterPawnType type, ptr<Buildi
     }
     placeOfCreation->owner->pawns.insert(newborn->id);
     newborn->IMHere(placeOfCreation);
-    godObject::global_server->sendPacketAll(Event(Event::Type::PAWN_APPEAR, newborn->id).getPacket());
 }
 void FighterPawn::getResource(ResourceEntity* toGet) {
     if (positionBuilding) IMNotHere();
@@ -112,7 +109,6 @@ void FighterPawn::takePresentResource(ResourceEntity* toTake) {
 }
 void FighterPawn::moveToPosition(std::pair<double, double> pos) {
     IMNotHere();
-    godObject::global_server->sendPacketAll(Event(Event::Type::PAWN_MOVE, id, pos).getPacket());
     travelling = true;
     destinationPosition = pos;
 }
@@ -173,7 +169,7 @@ void FighterPawn::tick(double deltaTime) {
         if (toTake) {
             toTake = false;
             holding = needed;
-            needed = Resource::Nothing;
+            needed = Resource::DummyNothing;
             ///TODO removeFromExistence needed
             if (!toDrop) currentTask = TaskID::Idle;
         }
@@ -215,8 +211,10 @@ size_t FighterPawn::deserializeSelf(const std::vector<uint8_t>& data) {
 FighterPawn::~FighterPawn() {
 #ifdef SERVER_SIDE
     owner->manager.cancelTask(currentTask, ptr<Pawn>(id));
-    drop(positionBuilding);
-    godObject::global_server->sendPacketAll(Event(Event::Type::PAWN_DISAPPEAR, id).getPacket());
+    if (holding != Resource::DummyNothing)
+        if (positionBuilding) positionBuilding->addResource(holding);
+        else
+            makeptr<ResourceEntity>(holding, position);
     IMNotHere();
 #endif
 }

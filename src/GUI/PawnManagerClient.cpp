@@ -15,12 +15,12 @@
 #include "../Entities/Pawns/WorkerPawn.h"
 #include "../Entities/ResourceEntity.h"
 #include "../Recipes/BuildRecipe.h"
+#include "../testSystem.h"
 #include "BuildBuildingWindow.h"
 #include "CraftBuildingWindow.h"
 #include "MainMenuWindow.h"
 #include "SFML/Graphics/Text.hpp"
 #include "SFML/Window.hpp"
-#include "../IDmanager.h"
 
 
 sf::RenderWindow* PawnManagerClient::window;
@@ -37,7 +37,7 @@ FontManager PawnManagerClient::fontManager;
 
 void PawnManagerClient::run() {
     init();
-    player = ptr<Player>();
+    player = initTest();
     while (window->isOpen()) {
         sf::Event evt{};
         while (window->pollEvent(evt)) {
@@ -63,7 +63,7 @@ void PawnManagerClient::run() {
 
 void PawnManagerClient::updateAndRender() {
     double newTime = clock();
-//    tick((newTime - curTime) / CLOCKS_PER_SEC);
+    tick((newTime - curTime) / CLOCKS_PER_SEC);
     curTime = newTime;
     window->clear(sf::Color::White);
     sf::Vector2f center = ((sf::Vector2f) window->getSize()) * 0.5f;
@@ -71,7 +71,7 @@ void PawnManagerClient::updateAndRender() {
     std::default_random_engine rng;
     std::uniform_real_distribution<float> dist2(0, std::numbers::pi_v<float>);
     for (ptr<Pawn> p: player->pawns) {
-        auto [x, y] = p->getInterpolatedPos();
+        auto [x, y] = p->position;
         ptr<WorkerPawn> wp = p.dyn_cast<WorkerPawn>();
         ptr<FighterPawn> fp = p.dyn_cast<FighterPawn>();
         if (wp) {

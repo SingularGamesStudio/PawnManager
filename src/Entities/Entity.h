@@ -30,13 +30,6 @@ public:
     double hp;
     ptr<Player> owner;
     std::pair<double, double> position;
-#ifdef CLIENT_SIDE
-    std::pair<double, double> prevPos;
-    double posReachTime;
-    double beginTime;
-    void startMoveToPos(std::pair<double, double> pos, double time);
-    std::pair<double, double> getInterpolatedPos();
-#endif
     double radius;
 #ifdef SERVER_SIDE
     void changeHealth(double delta);
