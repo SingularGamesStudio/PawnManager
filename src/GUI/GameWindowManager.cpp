@@ -31,3 +31,6 @@ void GameWindowManager::onMouseClick(int x, int y, sf::Mouse::Button button) { w
 void GameWindowManager::onCharInput(int ch) {
     windows.back()->onCharInput(ch);
 }
+void GameWindowManager::onKeyInput(sf::Keyboard::Key key) {
+    windows.back()->onKeyInput(key);
+}
