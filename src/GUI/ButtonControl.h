@@ -16,8 +16,6 @@ public:
 
     void updateAndRender() override;
 
-    bool mouseOver();
-
     void onMouseClick(int x, int y, sf::Mouse::Button b) override;
 
 private:

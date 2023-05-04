@@ -51,6 +51,13 @@ void PawnManagerClient::run() {
             if (evt.type == sf::Event::KeyPressed) {
                 if (evt.key.code == sf::Keyboard::Escape) {
                     if (winManager.windowCount() > 0) { winManager.popWindow(); }
+                } else if(winManager.windowCount() > 0) {
+                    winManager.onKeyInput(evt.key.code);
+                }
+            }
+            if(evt.type == sf::Event::TextEntered) {
+                if(winManager.windowCount() > 0) {
+                    winManager.onCharInput(evt.text.unicode);
                 }
             }
         }
