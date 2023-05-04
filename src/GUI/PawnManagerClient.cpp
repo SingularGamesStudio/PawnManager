@@ -54,6 +54,11 @@ void PawnManagerClient::run() {
                     if (winManager.windowCount() > 0) { winManager.popWindow(); }
                 }
             }
+            if(evt.type == sf::Event::TextEntered) {
+                if(winManager.windowCount() > 0) {
+                    winManager.onCharInput(evt.text.unicode);
+                }
+            }
         }
         updateAndRender();
         window->display();
@@ -185,6 +190,7 @@ void PawnManagerClient::init() {
     fontManager = FontManager();
     godObject::local_server = new LocalController();
     godObject::local_server->init("127.0.0.1", 57179);
+    winManager.pushWindow(new MainMenuWindow());
 }
 
 void PawnManagerClient::shutdown() {

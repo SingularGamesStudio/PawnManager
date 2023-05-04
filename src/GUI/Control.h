@@ -16,6 +16,9 @@ public:
     Control(GameWindow& win, sf::IntRect rect);
     virtual void updateAndRender();
     virtual void onMouseClick(int x, int y, sf::Mouse::Button b);
+    virtual void onCharInput(int ch);
+
+    bool mouseOver();
 
 protected:
     GameWindow& win;

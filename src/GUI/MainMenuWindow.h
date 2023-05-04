@@ -7,7 +7,10 @@
 
 #include "GameWindow.h"
 
-class MainMenuWindow : public GameWindow {};
+class MainMenuWindow : public GameWindow {
+public:
+    MainMenuWindow();
+};
 
 
 #endif//PAWNMANAGER_MAINMENUWINDOW_H

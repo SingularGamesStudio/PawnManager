@@ -22,6 +22,7 @@ public:
     size_t windowCount();
     void updateAndRender();
     void onMouseClick(int x, int y, sf::Mouse::Button button);
+    void onCharInput(int ch);
 };
 
 

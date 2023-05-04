@@ -20,6 +20,7 @@ public:
     constexpr static float gridCellSize = 64;
     constexpr static float gridCellPadding = 8;
     constexpr static float windowSizeExtension = 16;
+    Control* selectedControl;
     GameWindow();
     ~GameWindow();
 
@@ -34,6 +35,7 @@ public:
     void drawRect(sf::FloatRect rect, sf::Color c);
     void drawBorderedRect(sf::FloatRect rect, float borderSize, sf::Color c, sf::Color border);
     void onMouseClick(int x, int y, sf::Mouse::Button b);
+    void onCharInput(int ch);
 
 protected:
     std::vector<Control*> controls;
