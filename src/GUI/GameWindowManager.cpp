@@ -28,3 +28,9 @@ void GameWindowManager::updateAndRender() {
 }
 
 void GameWindowManager::onMouseClick(int x, int y, sf::Mouse::Button button) { windows.back()->onMouseClick(x, y, button); }
+void GameWindowManager::onCharInput(int ch) {
+    windows.back()->onCharInput(ch);
+}
+void GameWindowManager::onKeyInput(sf::Keyboard::Key key) {
+    windows.back()->onKeyInput(key);
+}
