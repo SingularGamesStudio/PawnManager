@@ -43,6 +43,7 @@ bool GameServer::onConnection(std::shared_ptr<dlib::Connection> client) {
     for(size_t i = 0; i < 2; ++i) {
         ptr<WorkerPawn> pawn = makeptr<WorkerPawn>();
         pawn->create(player->hub);
+        pawn->expertises.insert(expertisesID::Nitwit);
         pawn->expertises.insert(expertisesID::Smeltery);
         player->pawns.insert(pawn.dyn_cast<Pawn>());
     }
