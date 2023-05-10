@@ -6,6 +6,7 @@
 
 #include <cmath>
 #include <numbers>
+#include <iostream>
 
 #include "../Entities/Pawns/FighterPawn.h"
 #include "../Entities/Pawns/WorkerPawn.h"
@@ -26,6 +27,10 @@ void PawnRenderer::drawWorkerPawn(const std::set<expertisesID>& expertises, sf::
     sf::VertexArray arr;
     sf::Transform t;
     std::vector<expertisesID> expertisesVec(expertises.begin(), expertises.end());
+    if(expertisesVec.empty()) {
+        std::cerr << "Worker pawn has empty expertises" << std::endl;
+    }
+    expertisesVec.resize(std::remove(expertisesVec.begin(), expertisesVec.end(), expertisesID::Nitwit) - expertisesVec.begin());
     arr.setPrimitiveType(sf::PrimitiveType::Triangles);
     for (int i = 0; i < vertices.size(); ++i) {
         sf::Color col;
