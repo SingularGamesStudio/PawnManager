@@ -37,6 +37,7 @@ public:
     PawnManagerClient() = delete;
     PawnManagerClient(const PawnManagerClient& o) = delete;
     PawnManagerClient& operator=(const PawnManagerClient& other) = delete;
+    static void connect(std::string address, int port);
 
 private:
     static void init();

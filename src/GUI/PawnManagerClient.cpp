@@ -39,7 +39,7 @@ FontManager PawnManagerClient::fontManager;
 void PawnManagerClient::run() {
     init();
     while (window->isOpen()) {
-        godObject::local_server->respond();
+        if(godObject::local_server) { godObject::local_server->respond(); }
         sf::Event evt{};
         while (window->pollEvent(evt)) {
             if (evt.type == sf::Event::Closed) { window->close(); }
@@ -51,7 +51,7 @@ void PawnManagerClient::run() {
             if (evt.type == sf::Event::MouseButtonPressed) { onMouseClick(evt.mouseButton.x, evt.mouseButton.y, evt.mouseButton.button); }
             if (evt.type == sf::Event::KeyPressed) {
                 if (evt.key.code == sf::Keyboard::Escape) {
-                    if (winManager.windowCount() > 0) { winManager.popWindow(); }
+                    if ((winManager.windowCount() > 0 && godObject::local_server) || winManager.windowCount() > 1) { winManager.popWindow(); }
                 } else if(winManager.windowCount() > 0) {
                     winManager.onKeyInput(evt.key.code);
                 }
@@ -74,30 +74,32 @@ void PawnManagerClient::updateAndRender() {
     //    tick((newTime - curTime) / CLOCKS_PER_SEC);
     curTime = newTime;
     window->clear(sf::Color::White);
-    sf::Vector2f center = ((sf::Vector2f) window->getSize()) * 0.5f;
-    for (ptr<Player> player: godObject::local_server->players) {
-        buildingRenderDfs(player->hub, center);
-        std::default_random_engine rng;
-        std::uniform_real_distribution<float> dist2(0, std::numbers::pi_v<float>);
-        for (ptr<Pawn> p: player->pawns) {
-            if (!p) continue;
-            auto [x, y] = p->getInterpolatedPos();
-            ptr<WorkerPawn> wp = p.dyn_cast<WorkerPawn>();
-            ptr<FighterPawn> fp = p.dyn_cast<FighterPawn>();
-            if (wp) {
-                pawnRenderer->drawWorkerPawn(wp->expertises, sf::Vector2f(x, y) * renderScale + center);
-                if (wp->holding != Resource::Nothing) {
-                    float rotation = dist2(rng);
-                    resourceRenderer->drawResource(wp->holding, sf::Vector2f(x, y) * renderScale + center, rotation);
+    if(godObject::local_server) {
+        sf::Vector2f center = ((sf::Vector2f) window->getSize()) * 0.5f;
+        for (ptr<Player> player: godObject::local_server->players) {
+            buildingRenderDfs(player->hub, center);
+            std::default_random_engine rng;
+            std::uniform_real_distribution<float> dist2(0, std::numbers::pi_v<float>);
+            for (ptr<Pawn> p: player->pawns) {
+                if (!p) continue;
+                auto [x, y] = p->getInterpolatedPos();
+                ptr<WorkerPawn> wp = p.dyn_cast<WorkerPawn>();
+                ptr<FighterPawn> fp = p.dyn_cast<FighterPawn>();
+                if (wp) {
+                    pawnRenderer->drawWorkerPawn(wp->expertises, sf::Vector2f(x, y) * renderScale + center);
+                    if (wp->holding != Resource::Nothing) {
+                        float rotation = dist2(rng);
+                        resourceRenderer->drawResource(wp->holding, sf::Vector2f(x, y) * renderScale + center, rotation);
+                    }
+                } else if (fp) {
+                    pawnRenderer->drawFighterPawn(fp->getType(), sf::Vector2f(x, y) * renderScale + center);
                 }
-            } else if (fp) {
-                pawnRenderer->drawFighterPawn(fp->getType(), sf::Vector2f(x, y) * renderScale + center);
             }
         }
-    }
-    for (ptr<ResourceEntity> res: godObject::local_server->danglingResources) {
-        resourceRenderer->drawResource(res->resource, sf::Vector2f(res->position.first, res->position.second) * renderScale + center,
-                                       std::numbers::pi_v<float> / 4.0f);
+        for (ptr<ResourceEntity> res: godObject::local_server->danglingResources) {
+            resourceRenderer->drawResource(res->resource, sf::Vector2f(res->position.first, res->position.second) * renderScale + center,
+                                           std::numbers::pi_v<float> / 4.0f);
+        }
     }
     winManager.updateAndRender();
 }
@@ -141,6 +143,9 @@ void PawnManagerClient::buildingRenderDfs(ptr<Building> b, sf::Vector2f center) 
 void PawnManagerClient::onMouseClick(int x, int y, sf::Mouse::Button b) {
     if (winManager.windowCount() > 0) {
         winManager.onMouseClick(x, y, b);
+        return;
+    }
+    if(!godObject::local_server) {
         return;
     }
     sf::Vector2f center = ((sf::Vector2f) window->getSize()) * 0.5f;
@@ -188,8 +193,7 @@ void PawnManagerClient::init() {
     resourceRenderer = new ResourceRenderer(*window);
     selectedBuilding = -1;
     fontManager = FontManager();
-    godObject::local_server = new LocalController();
-    godObject::local_server->init("127.0.0.1", 57179);
+    godObject::local_server = nullptr;
     winManager.pushWindow(new MainMenuWindow());
 }
 
@@ -199,5 +203,9 @@ void PawnManagerClient::shutdown() {
     delete buildingRenderer;
     delete pawnRenderer;
     delete window;
-    delete godObject::local_server;
+    if(godObject::local_server) { delete godObject::local_server; }
+}
+void PawnManagerClient::connect(std::string address, int port) {
+    godObject::local_server = new LocalController();
+    godObject::local_server->init(address, port);
 }
