@@ -6,18 +6,18 @@
 
 #include "../Entities/Buildings/CraftBuilding.h"
 #include "../Recipes/CraftRecipe.h"
+#include "../godobject.h"
 #include "ArrowControl.h"
 #include "ButtonControl.h"
 #include "PawnManagerClient.h"
 #include "SFML/Graphics/Text.hpp"
-#include "../godobject.h"
 
 CraftBuildingWindow::CraftBuildingWindow(int id) : id(id), selectedRecipe(0), shouldClose(false) {
     slotCounts = sf::Vector2i(5, 5);
     controls.push_back(new ButtonControl(*this, sf::IntRect(1, 4, 2, 0), "Assign recipe", [w = this]() {
         ptr<CraftBuilding> p(w->id);
         Recipe* r = p->recipes[w->selectedRecipe];
-        
+
         godObject::local_server->mainPlayer->localStart(r, p.dyn_cast<Building>());
         w->shouldClose = true;
         //        PawnManagerClient::winManager.popWindow();
@@ -70,7 +70,6 @@ void CraftBuildingWindow::updateAndRender() {
     int cInputPos = 0;
     int cOutputPos = 0;
     CraftRecipe* cr = dynamic_cast<CraftRecipe*>(r);
-    std::cout << cr->inResources.size() << std::endl;
     if (cr) {
         for (Resource res: cr->inResources) { inputSlots[cInputPos++]->res = res; }
         for (Resource res: cr->outResources) { outputSlots[cOutputPos++]->res = res; }

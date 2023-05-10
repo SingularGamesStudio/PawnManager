@@ -73,8 +73,7 @@ void PawnManagerClient::updateAndRender() {
         std::default_random_engine rng;
         std::uniform_real_distribution<float> dist2(0, std::numbers::pi_v<float>);
         for (ptr<Pawn> p: player->pawns) {
-            if(!p)
-                continue;
+            if (!p) continue;
             auto [x, y] = p->getInterpolatedPos();
             ptr<WorkerPawn> wp = p.dyn_cast<WorkerPawn>();
             ptr<FighterPawn> fp = p.dyn_cast<FighterPawn>();
@@ -174,7 +173,6 @@ bool PawnManagerClient::onBuildingMouseClick(ptr<Building> b, sf::Vector2f pos, 
 
 void PawnManagerClient::init() {
     BuildingRegisty::init();
-    std::cout << BuildingRegisty::database[0]->inResources.size() << std::endl;
     window = new sf::RenderWindow(sf::VideoMode(800, 600), "Pawn Manager");
     view = window->getDefaultView();
     winManager = GameWindowManager();

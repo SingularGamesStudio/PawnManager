@@ -1,6 +1,6 @@
 #include "Entity.h"
-#include <chrono>
 
+#include <chrono>
 #include <cstring>
 
 #include "../Player.h"
@@ -60,9 +60,6 @@ void Entity::startMoveToPos(std::pair<double, double> pos, double time) {
 }
 std::pair<double, double> Entity::getInterpolatedPos() {
     double progress = std::min((getTime() - beginTime) / posReachTime, 1.0);
-//    if(progress > 0.1 && progress < 0.9) {
-        std::cout << progress  << std::endl;
-//    }
     return {position.first * progress + prevPos.first * (1 - progress), position.second * progress + prevPos.second * (1 - progress)};
 }
 

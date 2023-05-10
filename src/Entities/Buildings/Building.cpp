@@ -46,9 +46,9 @@ void Building::addPawn(ptr<Pawn> pawn) {
 void Building::removePawn(ptr<Pawn> pawn) { pawns.erase(pawn); }
 
 Building::~Building() {
+    if (parent) parent->children.erase(ptr<Building>(id));
 #ifdef SERVER_SIDE
     while (!children.empty()) { (*children.begin()).del(); }
-    if (parent) parent->children.erase(ptr<Building>(id));
     while (!pawns.empty()) (*pawns.begin()).del();
     for (Resource r: reservedResources) { resources.insert(r); }
     std::default_random_engine rng;
@@ -95,6 +95,7 @@ size_t Building::deserializeSelf(const uint8_t* data) {
     size_t shift = Entity::deserializeSelf(data);
     const uint8_t* curr = data + shift;
     curr += initializeVariable(curr, parent);
+    if (parent) parent->children.insert(ptr<Building>(id));
     curr += initializeSet(curr, children);
     curr += initializeSet(curr, resources);
     curr += initializeSet(curr, reservedResources);
