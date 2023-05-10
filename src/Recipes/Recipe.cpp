@@ -136,8 +136,8 @@ void Recipe::cancel() {
 #endif
 
 
-Recipe *Recipe::clone() {
-    Recipe *res = cloneSelf();
+Recipe* Recipe::clone() {
+    Recipe* res = cloneSelf();
 #ifdef SERVER_SIDE
     res->progress = 0;
 #endif
@@ -149,39 +149,29 @@ Recipe *Recipe::clone() {
     return res;
 }
 
-RecipeType Recipe::getType() const {
-    return RecipeType::BASIC_RECIPE;
-}
+RecipeType Recipe::getType() const { return RecipeType::BASIC_RECIPE; }
 
 std::vector<uint8_t> Recipe::serialize() const { return serializeSelf(); }
 size_t Recipe::deserialize(const uint8_t* data) { return deserializeSelf(data); }
 
 std::vector<uint8_t> Recipe::serializeSelf() const {
-    size_t size = sizeof(double) + sizeof(size_t) * 4 + sizeof(uint8_t) * (reqWorkers.size() +
-            inFighters.size() + inWorkers.size() + inResources.size());
+    size_t size =
+            sizeof(double) + sizeof(size_t) * 4 + sizeof(uint8_t) * (reqWorkers.size() + inFighters.size() + inWorkers.size() + inResources.size());
     std::vector<uint8_t> result(size);
     uint8_t* curr = result.data();
     curr += copyVariable(curr, duration);
 
     curr += copyVariable(curr, reqWorkers.size());
-    for(auto i : reqWorkers) {
-        curr += copyVariable(curr, i);
-    }
+    for (auto i: reqWorkers) { curr += copyVariable(curr, i); }
 
     curr += copyVariable(curr, inFighters.size());
-    for(auto i : inFighters) {
-        curr += copyVariable(curr, i);
-    }
+    for (auto i: inFighters) { curr += copyVariable(curr, i); }
 
     curr += copyVariable(curr, inWorkers.size());
-    for(auto i : inWorkers) {
-        curr += copyVariable(curr, i);
-    }
+    for (auto i: inWorkers) { curr += copyVariable(curr, i); }
 
     curr += copyVariable(curr, inResources.size());
-    for(auto i : inResources) {
-        curr += copyVariable(curr, i);
-    }
+    for (auto i: inResources) { curr += copyVariable(curr, i); }
     result.insert(result.begin(), static_cast<uint8_t>(getType()));
     return result;
 }
@@ -193,26 +183,18 @@ size_t Recipe::deserializeSelf(const uint8_t* data) {
 
     curr += initializeVariable(curr, size);
     reqWorkers.resize(size);
-    for(auto& i : reqWorkers){
-        curr += initializeVariable(curr, i);
-    }
+    for (auto& i: reqWorkers) { curr += initializeVariable(curr, i); }
 
     curr += initializeVariable(curr, size);
     inFighters.resize(size);
-    for(auto& i : inFighters){
-        curr += initializeVariable(curr, i);
-    }
+    for (auto& i: inFighters) { curr += initializeVariable(curr, i); }
 
     curr += initializeVariable(curr, size);
     inWorkers.resize(size);
-    for(auto& i : inWorkers){
-        curr += initializeVariable(curr, i);
-    }
+    for (auto& i: inWorkers) { curr += initializeVariable(curr, i); }
 
     curr += initializeVariable(curr, size);
     inResources.resize(size);
-    for(auto& i : inResources){
-        curr += initializeVariable(curr, i);
-    }
+    for (auto& i: inResources) { curr += initializeVariable(curr, i); }
     return curr - data;
 }

@@ -59,7 +59,7 @@ void BuildingRegisty::init() {
         ore->reqWorkers.push_back(expertisesID::Nitwit);
         ore->reqWorkers.push_back(expertisesID::Nitwit);
         ore->outResources.push_back(Resource::Ore);
-        mine.available.push_back(ore);
+        mine.available.push_back(fastOre);
 
         BuildRecipe* createMine = new BuildRecipe({0, 0}, mine);
         createMine->inResources.push_back(Resource::Ore);
@@ -118,5 +118,4 @@ void BuildingRegisty::init() {
         createTemple->reqWorkers.push_back(expertisesID::Nitwit);
         database.push_back(createTemple);
     }
-
 }
