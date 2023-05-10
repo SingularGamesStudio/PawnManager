@@ -26,7 +26,8 @@ size_t godObject::getRecipe(const uint8_t* data, Recipe*& out) {
             out = new CraftRecipe();
             break;
         default:
+            throw std::logic_error("Recipe is pure virtual, no BASE_RECIPE allowed");
             break;
     }
-    return out->deserialize(data + 1);
+    return out->deserialize(data + 1) + 1;
 }
