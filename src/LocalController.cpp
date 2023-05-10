@@ -13,7 +13,7 @@
 
 void LocalController::onPacketReceive(const dlib::Packet& p) {
     Event::Type type = static_cast<Event::Type>(p.data[0]);
-    //std::cerr << "Packet received " << int(type) << std::endl;
+    std::cerr << "Packet received " << int(type) << std::endl;
     std::vector<uint8_t> data = p.data;
     data.erase(data.begin());
     if (type == Event::Type::PLAYER_APPEAR) {

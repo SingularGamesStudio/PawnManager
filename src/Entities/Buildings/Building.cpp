@@ -14,6 +14,7 @@
 
 void Building::addResource(Resource resource) {
     resources.insert(resource);
+    std::cout << "added" << std::endl;
 #ifdef SERVER_SIDE
     godObject::global_server->sendPacketAll(Event(Event::Type::BUILDING_ADD_RES, id, resource).getPacket());
 #endif

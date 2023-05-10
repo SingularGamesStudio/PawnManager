@@ -106,7 +106,7 @@ void WorkerPawn::tick(double deltaTime) {
         }
         if (toTake) {
             if (positionBuilding->removeResource(needed)) {
-                godObject::global_server->sendPacketAll(Event(Event::Type::BUILDING_REMOVE_RES, positionBuilding->id, needed).getPacket());
+                //godObject::global_server->sendPacketAll(Event(Event::Type::BUILDING_REMOVE_RES, positionBuilding->id, needed).getPacket());
                 toTake = false;
                 holding = needed;
                 needed = Resource::Nothing;
