@@ -15,7 +15,7 @@
 BuildBuildingWindow::BuildBuildingWindow(int id, const sf::Vector2f& pos) : id(id), pos(pos), selectedRecipe(0), shouldClose(false), arrow(nullptr) {
 
     slotCounts = sf::Vector2i(7, 5);
-    controls.push_back(new ButtonControl(*this, sf::IntRect(1, 4, 2, 0), "Build", [w = this]() {
+    controls.push_back(new ButtonControl(*this, sf::IntRect(1, 4, 4, 0), "Build", [w = this]() {
         //TODO
         //        ptr<CraftBuilding> p(w->id);
         //        Recipe* r = p->recipes[w->selectedRecipe];
@@ -34,7 +34,7 @@ BuildBuildingWindow::BuildBuildingWindow(int id, const sf::Vector2f& pos) : id(i
             --selectedRecipe;
         }
     }));
-    controls.push_back(new ButtonControl(*this, sf::IntRect(4, 4, 0, 0), ">", [id = id, &selectedRecipe = selectedRecipe]() {
+    controls.push_back(new ButtonControl(*this, sf::IntRect(6, 4, 0, 0), ">", [id = id, &selectedRecipe = selectedRecipe]() {
         if (selectedRecipe == BuildingRegisty::database.size() - 1) {
             selectedRecipe = 0;
         } else {
