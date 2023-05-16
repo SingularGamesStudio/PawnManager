@@ -1,9 +1,9 @@
 #include "BuildRecipe.h"
 
+#include "../Core/godobject.h"
 #include "../Entities/Buildings/Building.h"
 #include "../Entities/Buildings/CraftBuilding.h"
 #include "../Entities/Pawns/Pawn.h"
-#include "../godobject.h"
 #ifdef SERVER_SIDE
 void BuildRecipe::finish() {
     for (ptr<Pawn> p: procPawns) { p.del(); }

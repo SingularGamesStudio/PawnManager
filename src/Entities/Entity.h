@@ -3,11 +3,18 @@
 /// misha does not believe in me  :(
 #include <cstring>
 #include <iostream>
+#include <set>
 #include <utility>
 #include <vector>
-#include <set>
 
-#include "../IDmanager.h"
+#include "../Core/IDmanager.h"
+
+struct Position {
+    double x;
+    double y;
+    Position(double x, double y) : x(x), y(y) {}
+    Position() : Position(0, 0) {}
+};
 
 template<typename T>
 size_t copyVariable(uint8_t* dst, T src) {
@@ -25,9 +32,7 @@ size_t initializeVariable(const uint8_t* src, T& dst) {
 template<typename T>
 size_t copyVector(uint8_t* dst, const std::vector<T>& src) {
     dst += copyVariable(dst, src.size());
-    for(const T& i : src) {
-        dst += copyVariable(dst, i);
-    }
+    for (const T& i: src) { dst += copyVariable(dst, i); }
     return sizeof(size_t) + sizeof(T) * src.size();
 }
 
@@ -36,9 +41,7 @@ size_t initializeVector(const uint8_t* src, std::vector<T>& dst) {
     size_t size;
     src += initializeVariable(src, size);
     dst.resize(size);
-    for(T& i : dst) {
-        src += initializeVariable(src, i);
-    }
+    for (T& i: dst) { src += initializeVariable(src, i); }
     return sizeof(size_t) + sizeof(T) * size;
 }
 
@@ -46,9 +49,7 @@ size_t initializeVector(const uint8_t* src, std::vector<T>& dst) {
 template<typename T>
 size_t copySet(uint8_t* dst, const std::set<T>& src) {
     dst += copyVariable(dst, src.size());
-    for(const T& i : src) {
-        dst += copyVariable(dst, i);
-    }
+    for (const T& i: src) { dst += copyVariable(dst, i); }
     return sizeof(size_t) + sizeof(T) * src.size();
 }
 
@@ -56,7 +57,7 @@ template<typename T>
 size_t initializeSet(const uint8_t* src, std::set<T>& dst) {
     size_t size;
     src += initializeVariable(src, size);
-    for(size_t i = 0; i < size; ++i) {
+    for (size_t i = 0; i < size; ++i) {
         T tmp;
         src += initializeVariable(src, tmp);
         dst.insert(tmp);
@@ -68,9 +69,7 @@ size_t initializeSet(const uint8_t* src, std::set<T>& dst) {
 template<typename T>
 size_t copySet(uint8_t* dst, const std::multiset<T>& src) {
     dst += copyVariable(dst, src.size());
-    for(const T& i : src) {
-        dst += copyVariable(dst, i);
-    }
+    for (const T& i: src) { dst += copyVariable(dst, i); }
     return sizeof(size_t) + sizeof(T) * src.size();
 }
 
@@ -78,7 +77,7 @@ template<typename T>
 size_t initializeSet(const uint8_t* src, std::multiset<T>& dst) {
     size_t size;
     src += initializeVariable(src, size);
-    for(size_t i = 0; i < size; ++i) {
+    for (size_t i = 0; i < size; ++i) {
         T tmp;
         src += initializeVariable(src, tmp);
         dst.insert(tmp);
@@ -90,17 +89,17 @@ class Player;
 
 class Entity : public RequiresID {
 public:
-    Entity(){}
-    Entity(std::pair<double, double> pos, ptr<Player> owner, double hp, double radius) : position(pos), owner(owner), hp(hp), radius(radius) {}
+    Entity() {}
+    Entity(Position pos, ptr<Player> owner, double hp, double radius) : position(pos), owner(owner), hp(hp), radius(radius) {}
     double hp;
     ptr<Player> owner;
-    std::pair<double, double> position;
+    Position position;
 #ifdef CLIENT_SIDE
-    std::pair<double, double> prevPos;
+    Position prevPos;
     double posReachTime;
     double beginTime;
-    void startMoveToPos(std::pair<double, double> pos, double time);
-    std::pair<double, double> getInterpolatedPos();
+    void startMoveToPos(Position pos, double time);
+    Position getInterpolatedPos();
 #endif
     double radius;
 #ifdef SERVER_SIDE

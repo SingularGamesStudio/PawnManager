@@ -5,11 +5,11 @@
 
 #include "LocalController.h"
 
-#include "Entities/Buildings/Building.h"
-#include "Entities/Buildings/BuildingRegisty.h"
-#include "Entities/Buildings/CraftBuilding.h"
-#include "Entities/Pawns/FighterPawn.h"
-#include "Entities/Pawns/WorkerPawn.h"
+#include "../Entities/Buildings/Building.h"
+#include "../Entities/Buildings/BuildingRegisty.h"
+#include "../Entities/Buildings/CraftBuilding.h"
+#include "../Entities/Pawns/FighterPawn.h"
+#include "../Entities/Pawns/WorkerPawn.h"
 
 void LocalController::onPacketReceive(const dlib::Packet& p) {
     Event::Type type = static_cast<Event::Type>(p.data[0]);
@@ -93,7 +93,7 @@ void LocalController::onPacketReceive(const dlib::Packet& p) {
     } else if (type == Event::Type::PAWN_MOVE) {
         int id = 0;
         std::memcpy(&id, data.data(), sizeof(int));
-        std::pair<double, double> pos;
+        Position pos;
         std::memcpy(&pos, data.data() + sizeof(int), sizeof(pos));
         double time;
         std::memcpy(&time, data.data() + sizeof(int) + sizeof(pos), sizeof(time));

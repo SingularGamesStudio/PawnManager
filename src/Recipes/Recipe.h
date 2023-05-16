@@ -6,7 +6,7 @@
 #include <string>
 #include <vector>
 
-#include "../IDmanager.h"
+#include "../Core/IDmanager.h"
 
 class CraftBuilding;
 class Building;

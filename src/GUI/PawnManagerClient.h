@@ -5,7 +5,8 @@
 #ifndef PAWNMANAGER_PAWNMANAGERCLIENT_H
 #define PAWNMANAGER_PAWNMANAGERCLIENT_H
 
-#include "../Player.h"
+#include "../Core/LocalController.h"
+#include "../Core/Player.h"
 #include "BuildingRenderer.h"
 #include "FontManager.h"
 #include "GameWindowManager.h"
@@ -13,7 +14,6 @@
 #include "ResourceRenderer.h"
 #include "SFML/Graphics/RenderWindow.hpp"
 #include "SFML/Window.hpp"
-#include "../LocalController.h"
 
 class PawnManagerClient {
 public:

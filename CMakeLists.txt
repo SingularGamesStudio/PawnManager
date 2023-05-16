@@ -15,11 +15,11 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(boost)
 
-add_library(PawnManagerClient src/Entities/Entity.cpp src/Player.cpp src/Player.cpp src/Task.cpp
+add_library(PawnManagerClient src/Entities/Entity.cpp src/Core/Player.cpp src/Core/Player.cpp src/Core/Task.cpp
         src/Entities/Buildings/Building.cpp src/Entities/Pawns/FighterPawn.cpp src/Entities/Pawns/Pawn.cpp
         src/Recipes/Recipe.cpp src/Entities/ResourceEntity.cpp src/Entities/Pawns/WorkerPawn.cpp
-        src/Entities/Buildings/CraftBuilding.cpp src/IDmanager.cpp src/Entities/Buildings/BuildingRegisty.cpp
-        src/Recipes/CraftRecipe.cpp src/Recipes/BuildRecipe.cpp src/Event.cpp src/godobject.cpp src/LocalController.cpp)
+        src/Entities/Buildings/CraftBuilding.cpp src/Core/IDmanager.cpp src/Entities/Buildings/BuildingRegisty.cpp
+        src/Recipes/CraftRecipe.cpp src/Recipes/BuildRecipe.cpp src/Core/Event.cpp src/Core/godobject.cpp src/Core/LocalController.cpp)
 target_include_directories(PawnManagerClient PRIVATE ${Boost_SOURCE_DIR}/libs/asio/include)
 
 target_compile_definitions(PawnManagerClient PUBLIC CLIENT_SIDE BOOST_ASIO_STANDALONE)
@@ -34,11 +34,11 @@ else ()
     target_link_libraries(PawnManagerClient PRIVATE pthread)
 endif ()
 
-add_executable(PawnManagerServer src/Entities/Entity.cpp src/Player.cpp src/Player.cpp src/Task.cpp
+add_executable(PawnManagerServer src/Entities/Entity.cpp src/Core/Player.cpp src/Core/Player.cpp src/Core/Task.cpp
         src/Entities/Buildings/Building.cpp src/Entities/Pawns/FighterPawn.cpp src/Entities/Pawns/Pawn.cpp
         src/Recipes/Recipe.cpp src/Entities/ResourceEntity.cpp src/Entities/Pawns/WorkerPawn.cpp
-        src/Entities/Buildings/CraftBuilding.cpp src/IDmanager.cpp src/Entities/Buildings/BuildingRegisty.cpp
-        src/Recipes/CraftRecipe.cpp src/Recipes/BuildRecipe.cpp src/ServerMain.cpp src/Event.cpp src/godobject.cpp src/LocalController.cpp)
+        src/Entities/Buildings/CraftBuilding.cpp src/Core/IDmanager.cpp src/Entities/Buildings/BuildingRegisty.cpp
+        src/Recipes/CraftRecipe.cpp src/Recipes/BuildRecipe.cpp src/Core/ServerMain.cpp src/Core/Event.cpp src/Core/godobject.cpp src/Core/LocalController.cpp)
 
 target_include_directories(PawnManagerServer PRIVATE ${Boost_SOURCE_DIR}/libs/asio/include)
 

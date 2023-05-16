@@ -4,11 +4,12 @@
 
 #ifndef PAWNMANAGER_SLOTCONTROL_H
 #define PAWNMANAGER_SLOTCONTROL_H
-#include "Control.h"
-#include "../Resource.h"
 #include <set>
-#include "../Entities/Pawns/WorkerPawn.h"
+
+#include "../Core/Resource.h"
 #include "../Entities/Pawns/FighterPawn.h"
+#include "../Entities/Pawns/WorkerPawn.h"
+#include "Control.h"
 
 class SlotControl : public Control {
 public:
@@ -22,4 +23,4 @@ public:
 };
 
 
-#endif //PAWNMANAGER_SLOTCONTROL_H
+#endif//PAWNMANAGER_SLOTCONTROL_H

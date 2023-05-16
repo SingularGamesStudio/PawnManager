@@ -1,7 +1,8 @@
 #include <utility>
 
+#include "../Core/Resource.h"
 #include "../Entities/Buildings/BuildingRegisty.h"
-#include "../Resource.h"
+#include "../Entities/Entity.h"
 #include "Recipe.h"
 
 class BuildRecipe : public Recipe {
@@ -9,11 +10,11 @@ protected:
     Recipe* cloneSelf() override;
 
 public:
-    std::pair<double, double> pos;
+    Position pos;
     BuildingIdea toBuild;
     BuildRecipe() : toBuild(BuildingRegisty::database[0]->toBuild) {}
 
-    BuildRecipe(std::pair<double, double> pos, BuildingIdea toBuild) : pos(pos), toBuild(toBuild) {}
+    BuildRecipe(Position pos, BuildingIdea toBuild) : pos(pos), toBuild(toBuild) {}
 
 #ifdef SERVER_SIDE
     void finish() override;

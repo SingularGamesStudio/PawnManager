@@ -5,9 +5,9 @@
 #include <set>
 #include <vector>
 
-#include "../../Player.h"
-#include "../../Resource.h"
-#include "../../godobject.h"
+#include "../../Core/Player.h"
+#include "../../Core/Resource.h"
+#include "../../Core/godobject.h"
 #include "../Entity.h"
 #include "../Pawns/Pawn.h"
 #include "../ResourceEntity.h"
@@ -20,8 +20,7 @@ void Building::addResource(Resource resource) {
 #endif
 }
 
-Building::Building(int id, std::pair<double, double> pos, ptr<Player> owner, double hp, double radius, ptr<Building> parent)
-    : Entity(pos, owner, hp, radius) {
+Building::Building(int id, Position pos, ptr<Player> owner, double hp, double radius, ptr<Building> parent) : Entity(pos, owner, hp, radius) {
     this->parent = parent;
     this->id = id;
 #ifdef SERVER_SIDE
@@ -62,9 +61,9 @@ Building::~Building() {
             x = dist(rng);
             y = dist(rng);
         }
-        std::pair<double, double> pos = position;
-        pos.first += x * radius;
-        pos.second += x * radius;
+        Position pos = position;
+        pos.x += x * radius;
+        pos.y += x * radius;
         auto send = makeptr<ResourceEntity>(r, pos);
         godObject::global_server->sendPacketAll(Event(Event::Type::RESOURCE_ENTITY_APPEAR, send.id).getPacket());
     }

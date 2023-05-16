@@ -15,8 +15,8 @@ BuildingRenderer::BuildingRenderer(sf::RenderWindow& window) : window(window) {}
 
 void BuildingRenderer::drawBuilding(ptr<Building> b, sf::Vector2f pos) {
     ptr<CraftBuilding> cb = b.dyn_cast<CraftBuilding>();
-    if(cb) {
-        if(cb->recipes.size() == 0) {
+    if (cb) {
+        if (cb->recipes.size() == 0) {
             drawBuilding(cb->radius * PawnManagerClient::renderScale, sf::Color::Blue, pos);
         } else {
             drawBuilding(cb->radius * PawnManagerClient::renderScale, sf::Color::Green, pos);
@@ -27,8 +27,8 @@ void BuildingRenderer::drawBuilding(ptr<Building> b, sf::Vector2f pos) {
 }
 
 void BuildingRenderer::drawEdge(ptr<Building> a, ptr<Building> b, sf::Vector2f center, float size) {
-    sf::Vector2f aPos = sf::Vector2f(a->position.first, a->position.second) * PawnManagerClient::renderScale + center;
-    sf::Vector2f bPos = sf::Vector2f(b->position.first, b->position.second) * PawnManagerClient::renderScale + center;
+    sf::Vector2f aPos = sf::Vector2f(a->position.x, a->position.y) * PawnManagerClient::renderScale + center;
+    sf::Vector2f bPos = sf::Vector2f(b->position.x, b->position.y) * PawnManagerClient::renderScale + center;
     sf::Vector2f delta = bPos - aPos;
     sf::Vector2f orth(delta.y, -delta.x);
     orth *= (size / sqrtf(orth.x * orth.x + orth.y * orth.y));
@@ -74,7 +74,7 @@ void BuildingRenderer::drawBuilding(float radius, sf::Color col, sf::Vector2f po
 }
 
 void BuildingRenderer::drawBuilding(BuildingIdea& idea, sf::Vector2f pos) {
-    if(idea.available.empty()) {
+    if (idea.available.empty()) {
         drawBuilding(idea.radius * 1.5, sf::Color::Green, pos);
     } else {
         drawBuilding(idea.radius * 1.5, sf::Color::White, pos);

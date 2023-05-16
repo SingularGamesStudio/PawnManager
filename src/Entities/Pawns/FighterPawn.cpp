@@ -1,8 +1,8 @@
 #include "FighterPawn.h"
 
-#include "../../Event.h"
-#include "../../Player.h"
-#include "../../godobject.h"
+#include "../../Core/Event.h"
+#include "../../Core/Player.h"
+#include "../../Core/godobject.h"
 #include "../Buildings/Building.h"
 #include "../Entity.h"
 #include "../ResourceEntity.h"
@@ -110,9 +110,9 @@ void FighterPawn::takePresentResource(ResourceEntity* toTake) {
     holding = toTake->resource;
     //toTake->destroy();
 }
-void FighterPawn::moveToPosition(std::pair<double, double> pos) {
+void FighterPawn::moveToPosition(Position pos) {
     IMNotHere();
-    double tim = std::hypot(pos.first - position.first, pos.second - position.second);
+    double tim = std::hypot(pos.x - position.x, pos.y - position.y);
     tim /= speed;
     godObject::global_server->sendPacketAll(Event(Event::Type::PAWN_MOVE, id, pos, tim).getPacket());
     travelling = true;
@@ -133,17 +133,17 @@ void FighterPawn::tick(double deltaTime) {
         } else
             moveToBuilding(currentTask.destination);
     }
-    std::pair<double, double> dest = destinationPosition;
-    double deltaX = fabs(position.first - dest.first);
-    double deltaY = fabs(position.second - dest.second);
+    Position dest = destinationPosition;
+    double deltaX = fabs(position.x - dest.x);
+    double deltaY = fabs(position.y - dest.y);
     double wholeDelta = deltaX * deltaX + deltaY * deltaY;
     if (toAttack && wholeDelta <= currentTask.destination->radius) {
         attack(currentTask.destination.dyn_cast<Entity>(), deltaTime);
         return;
     }
     if (travelling) {
-        double signX = position.first - dest.first;
-        double signY = position.second - dest.second;
+        double signX = position.x - dest.x;
+        double signY = position.y - dest.y;
         if (signX < -1e-2) {
             signX = -1;
         } else if (signX > 1e-2) {
@@ -157,12 +157,12 @@ void FighterPawn::tick(double deltaTime) {
         } else
             signY = 0;
         if (wholeDelta > 1e-7) {
-            position.first += -signX * (deltaX / sqrt(wholeDelta)) * speed * deltaTime;
-            position.second += -signY * (deltaY / sqrt(wholeDelta)) * speed * deltaTime;
+            position.x += -signX * (deltaX / sqrt(wholeDelta)) * speed * deltaTime;
+            position.y += -signY * (deltaY / sqrt(wholeDelta)) * speed * deltaTime;
         }
-        //std::cerr<< position.first <<' '<< position.second <<'\n';
-        //std::cerr<< dest->position.first <<' '<< dest->position.second <<'\n';
-        if (signX * (position.first - dest.first) <= 1 && signY * (position.second - dest.second) <= 1) {
+        //std::cerr<< position.x <<' '<< position.y <<'\n';
+        //std::cerr<< dest->position.x <<' '<< dest->position.y <<'\n';
+        if (signX * (position.x - dest.x) <= 1 && signY * (position.y - dest.y) <= 1) {
             travelling = false;
             position = dest;
         }
@@ -194,7 +194,7 @@ size_t FighterPawn::deserialize(const uint8_t* data) { return deserializeSelf(da
 std::vector<uint8_t> FighterPawn::serializeSelf() const {
     std::vector<uint8_t> result = Pawn::serializeSelf();
     result.insert(result.begin(), static_cast<uint8_t>(getType()));
-    size_t size = sizeof(double) * 2 + sizeof(bool) + sizeof(std::pair<double, double>);
+    size_t size = sizeof(double) * 2 + sizeof(bool) + sizeof(Position);
     result.resize(result.size() + size);
     uint8_t* curr = result.data() + result.size() - size;
     curr += copyVariable(curr, atk);

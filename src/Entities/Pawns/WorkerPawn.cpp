@@ -4,9 +4,9 @@
 #include <cstring>
 #include <iostream>
 
-#include "../../Event.h"
-#include "../../Player.h"
-#include "../../godobject.h"
+#include "../../Core/Event.h"
+#include "../../Core/Player.h"
+#include "../../Core/godobject.h"
 #include "../Buildings/Building.h"
 #include "../ResourceEntity.h"
 
@@ -62,10 +62,10 @@ void WorkerPawn::tick(double deltaTime) {
             assignTask(Task(TaskID::DropResource));
             return;
         }
-        double signX = position.first - dest->position.first;
-        double deltaX = fabs(position.first - dest->position.first);
-        double signY = position.second - dest->position.second;
-        double deltaY = fabs(position.second - dest->position.second);
+        double signX = position.x - dest->position.x;
+        double deltaX = fabs(position.x - dest->position.x);
+        double signY = position.y - dest->position.y;
+        double deltaY = fabs(position.y - dest->position.y);
         double wholeDelta = deltaX * deltaX + deltaY * deltaY;
         if (signX < -1e-2) {
             signX = -1;
@@ -80,15 +80,15 @@ void WorkerPawn::tick(double deltaTime) {
         } else
             signY = 0;
         if (wholeDelta > 1e-7) {
-            position.first += -signX * (deltaX / sqrt(wholeDelta)) * speed * deltaTime;
-            position.second += -signY * (deltaY / sqrt(wholeDelta)) * speed * deltaTime;
+            position.x += -signX * (deltaX / sqrt(wholeDelta)) * speed * deltaTime;
+            position.y += -signY * (deltaY / sqrt(wholeDelta)) * speed * deltaTime;
         }
-        if (signX * (position.first - dest->position.first) <= 1 && signY * (position.second - dest->position.second) <= 1) {
+        if (signX * (position.x - dest->position.x) <= 1 && signY * (position.y - dest->position.y) <= 1) {
             IMHere(dest);
             ++currentInWay;
             if (currentInWay < onTheWay.size()) {
                 auto tmp = onTheWay[currentInWay]->position;
-                double tim = std::hypot(tmp.first - position.first, tmp.second - position.second);
+                double tim = std::hypot(tmp.x - position.x, tmp.y - position.y);
                 tim /= speed;
 
                 godObject::global_server->sendPacketAll(Event(Event::Type::PAWN_MOVE, id, onTheWay[currentInWay]->position, tim).getPacket());

@@ -25,7 +25,7 @@ public:
     void create(ptr<Building> placeOfCreation);
     void assignTask(const Task& toAssign) override;
     void moveToBuilding(ptr<Building> dest) override;
-    void moveToPosition(std::pair<double, double> toMove) override{};
+    void moveToPosition(Position toMove) override{};
     void tick(double deltaTime) override;
 #endif
     virtual ~WorkerPawn();

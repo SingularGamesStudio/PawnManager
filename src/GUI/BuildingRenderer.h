@@ -5,9 +5,9 @@
 #ifndef PAWNMANAGER_BUILDINGRENDERER_H
 #define PAWNMANAGER_BUILDINGRENDERER_H
 
-#include "../IDmanager.h"
-#include "SFML/Graphics/RenderWindow.hpp"
+#include "../Core/IDmanager.h"
 #include "../Entities/Buildings/BuildingRegisty.h"
+#include "SFML/Graphics/RenderWindow.hpp"
 
 class Building;
 

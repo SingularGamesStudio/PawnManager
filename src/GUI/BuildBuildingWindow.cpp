@@ -4,9 +4,9 @@
 
 #include "BuildBuildingWindow.h"
 
+#include "../Core/godobject.h"
 #include "../Entities/Buildings/BuildingRegisty.h"
 #include "../Recipes/BuildRecipe.h"
-#include "../godobject.h"
 #include "ButtonControl.h"
 #include "PawnManagerClient.h"
 #include "SFML/Graphics/Text.hpp"
@@ -73,11 +73,11 @@ void BuildBuildingWindow::updateAndRender() {
             inputSlots[cInputPos]->drawType = 0;
             inputSlots[cInputPos++]->res = res;
         }
-        for(expertisesID res : cr->inWorkers) {
+        for (expertisesID res: cr->inWorkers) {
             inputSlots[cInputPos]->drawType = 1;
             inputSlots[cInputPos++]->pawnExpertiese = {res};
         }
-        for(FighterPawnType f : cr->inFighters) {
+        for (FighterPawnType f: cr->inFighters) {
             inputSlots[cInputPos]->drawType = 2;
             inputSlots[cInputPos++]->fighterPawnType = f;
         }

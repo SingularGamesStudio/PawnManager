@@ -4,8 +4,8 @@
 #include <utility>
 #include <vector>
 
-#include "../../Resource.h"
-#include "../../Task.h"
+#include "../../Core/Resource.h"
+#include "../../Core/Task.h"
 #include "../Entity.h"
 class Building;
 class Pawn : public Entity {
@@ -20,11 +20,11 @@ public:
     bool toTake;
 
 #ifdef SERVER_SIDE
-    void drop(ptr<Building> in, std::pair<double, double> pos = {0, 0});
+    void drop(ptr<Building> in, Position pos = {0, 0});
     void IMNotHere();
     void IMHere(ptr<Building> to);
     virtual void moveToBuilding(ptr<Building> toMove) = 0;
-    virtual void moveToPosition(std::pair<double, double> toMove) = 0;
+    virtual void moveToPosition(Position toMove) = 0;
     virtual void assignTask(const Task& toAssign) = 0;
     void stopBeingIngridient();
     virtual void tick(double deltaTime);

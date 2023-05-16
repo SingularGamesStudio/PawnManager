@@ -2,9 +2,9 @@
 
 #include <cstring>
 
+#include "../Core/godobject.h"
 #include "../Entities/Buildings/CraftBuilding.h"
 #include "../Entities/Pawns/FighterPawn.h"
-#include "../godobject.h"
 
 template<typename T>// parses vector of simple objects inty byte array
 std::vector<uint8_t> parseVector(const std::vector<T>& v) {
@@ -27,8 +27,10 @@ unsigned int unparseVector(const uint8_t* v, std::vector<T>& result) {
 void CraftRecipe::finish() {
     for (ptr<Pawn> p: procPawns) { p.del(); }
 
-    for (FighterPawnType t: outFighters) { auto send = FighterPawn::createFighterPawn(t, place.dyn_cast<Building>()).dyn_cast<Pawn>();
-        godObject::global_server->sendPacketAll(Event(Event::Type::RESOURCE_ENTITY_APPEAR, send.id).getPacket());}
+    for (FighterPawnType t: outFighters) {
+        auto send = FighterPawn::createFighterPawn(t, place.dyn_cast<Building>()).dyn_cast<Pawn>();
+        godObject::global_server->sendPacketAll(Event(Event::Type::RESOURCE_ENTITY_APPEAR, send.id).getPacket());
+    }
     for (Resource t: outResources) { place->addResource(t); }
     cleanup();
 }
@@ -41,17 +43,14 @@ Recipe* CraftRecipe::cloneSelf() {
     return res;
 }
 
-RecipeType CraftRecipe::getType() const {
-    return RecipeType::CRAFT_RECIPE;
-}
+RecipeType CraftRecipe::getType() const { return RecipeType::CRAFT_RECIPE; }
 
 std::vector<uint8_t> CraftRecipe::serialize() const { return serializeSelf(); }
 size_t CraftRecipe::deserialize(const uint8_t* data) { return deserializeSelf(data); }
 
 std::vector<uint8_t> CraftRecipe::serializeSelf() const {
     std::vector<uint8_t> result = Recipe::serializeSelf();
-    size_t size = sizeof(size_t) * 2 +
-            sizeof(uint8_t) * (outFighters.size() + outResources.size());
+    size_t size = sizeof(size_t) * 2 + sizeof(uint8_t) * (outFighters.size() + outResources.size());
     result.resize(result.size() + size);
     uint8_t* curr = result.data() + result.size() - size;
     curr += copyVector(curr, outFighters);

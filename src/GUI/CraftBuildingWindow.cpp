@@ -4,9 +4,9 @@
 
 #include "CraftBuildingWindow.h"
 
+#include "../Core/godobject.h"
 #include "../Entities/Buildings/CraftBuilding.h"
 #include "../Recipes/CraftRecipe.h"
-#include "../godobject.h"
 #include "ArrowControl.h"
 #include "ButtonControl.h"
 #include "PawnManagerClient.h"
@@ -16,19 +16,16 @@ CraftBuildingWindow::CraftBuildingWindow(int id) : id(id), selectedRecipe(0), sh
     slotCounts = sf::Vector2i(5, 5);
     {
         ptr<CraftBuilding> p(id);
-        if(p->current) {
-            selectedRecipe = p->recipes.size();
-        }
+        if (p->current) { selectedRecipe = p->recipes.size(); }
     }
-    controls.push_back(assignButton = new ButtonControl(*this, sf::IntRect(1, 4, 2, 0),
-                                                        "Assign recipe", [w = this]() {
-        ptr<CraftBuilding> p(w->id);
-        Recipe* r = w->getRecipe();
+    controls.push_back(assignButton = new ButtonControl(*this, sf::IntRect(1, 4, 2, 0), "Assign recipe", [w = this]() {
+                           ptr<CraftBuilding> p(w->id);
+                           Recipe* r = w->getRecipe();
 
-        godObject::local_server->mainPlayer->localStart(r, p.dyn_cast<Building>());
-        w->shouldClose = true;
-        //        PawnManagerClient::winManager.popWindow();
-    }));
+                           godObject::local_server->mainPlayer->localStart(r, p.dyn_cast<Building>());
+                           w->shouldClose = true;
+                           //        PawnManagerClient::winManager.popWindow();
+                       }));
     controls.push_back(new ButtonControl(*this, sf::IntRect(0, 4, 0, 0), "<", [this]() {
         if (selectedRecipe == 0) {
             selectedRecipe = getRecipeCount() - 1;
@@ -85,15 +82,15 @@ void CraftBuildingWindow::updateAndRender() {
             outputSlots[cOutputPos]->drawType = 0;
             outputSlots[cOutputPos++]->res = res;
         }
-        for(expertisesID res : cr->inWorkers) {
+        for (expertisesID res: cr->inWorkers) {
             inputSlots[cInputPos]->drawType = 1;
             inputSlots[cInputPos++]->pawnExpertiese = {res};
         }
-        for(FighterPawnType f : cr->inFighters) {
+        for (FighterPawnType f: cr->inFighters) {
             inputSlots[cInputPos]->drawType = 2;
             inputSlots[cInputPos++]->fighterPawnType = f;
         }
-        for(FighterPawnType f : cr->outFighters) {
+        for (FighterPawnType f: cr->outFighters) {
             outputSlots[cOutputPos]->drawType = 2;
             outputSlots[cOutputPos++]->fighterPawnType = f;
         }
@@ -113,16 +110,12 @@ int CraftBuildingWindow::getRecipeCount() {
     return p->recipes.size() + (p->current ? 1 : 0);
 }
 Recipe* CraftBuildingWindow::getRecipe() {
-    if(selectedRecipe >= getRecipeCount()) {
-        selectedRecipe = getRecipeCount() - 1;
-    }
+    if (selectedRecipe >= getRecipeCount()) { selectedRecipe = getRecipeCount() - 1; }
     ptr<CraftBuilding> p(id);
-    if(p->recipes.size() == selectedRecipe) {
-        return p->current;
-    }
+    if (p->recipes.size() == selectedRecipe) { return p->current; }
     return p->recipes[selectedRecipe];
 }
 bool CraftBuildingWindow::isRecipeCurrent() {
     ptr<CraftBuilding> p(id);
-    return selectedRecipe ==  p->recipes.size();
+    return selectedRecipe == p->recipes.size();
 }

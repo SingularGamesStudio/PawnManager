@@ -2,11 +2,11 @@
 
 #include <utility>
 
-#include "../Resource.h"
-#include "../godobject.h"
+#include "../Core/Resource.h"
+#include "../Core/godobject.h"
 #include "Entity.h"
 
-ResourceEntity::ResourceEntity(int id, Resource res, std::pair<double, double> pos) : Entity(pos, ptr<Player>(), 1, 1) {
+ResourceEntity::ResourceEntity(int id, Resource res, Position pos) : Entity(pos, ptr<Player>(), 1, 1) {
     resource = res;
     this->id = id;
 #ifdef CLIENT_SIDE
