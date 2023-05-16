@@ -21,6 +21,7 @@ Event::Event(Event::Type t, int id) {
     acceptable_events.insert(Event::Type::PLAYER_DISAPPEAR);
     acceptable_events.insert(Event::Type::RESOURCE_ENTITY_APPEAR);
     acceptable_events.insert(Event::Type::RESOURCE_ENTITY_DISAPPEAR);
+    acceptable_events.insert(Event::Type::ATTACK);
 #ifdef SERVER_SIDE
     acceptable_events.insert(Event::Type::SYNC_PULSE);
 #endif
