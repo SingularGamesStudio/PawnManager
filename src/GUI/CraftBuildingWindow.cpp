@@ -14,25 +14,29 @@
 
 CraftBuildingWindow::CraftBuildingWindow(int id) : id(id), selectedRecipe(0), shouldClose(false) {
     slotCounts = sf::Vector2i(5, 5);
+    {
+        ptr<CraftBuilding> p(id);
+        if(p->current) {
+            selectedRecipe = p->recipes.size();
+        }
+    }
     controls.push_back(new ButtonControl(*this, sf::IntRect(1, 4, 2, 0), "Assign recipe", [w = this]() {
         ptr<CraftBuilding> p(w->id);
-        Recipe* r = p->recipes[w->selectedRecipe];
+        Recipe* r = w->getRecipe();
 
         godObject::local_server->mainPlayer->localStart(r, p.dyn_cast<Building>());
         w->shouldClose = true;
         //        PawnManagerClient::winManager.popWindow();
     }));
-    controls.push_back(new ButtonControl(*this, sf::IntRect(0, 4, 0, 0), "<", [id = id, &selectedRecipe = selectedRecipe]() {
-        ptr<CraftBuilding> p(id);
+    controls.push_back(new ButtonControl(*this, sf::IntRect(0, 4, 0, 0), "<", [this]() {
         if (selectedRecipe == 0) {
-            selectedRecipe = p->recipes.size() - 1;
+            selectedRecipe = getRecipeCount() - 1;
         } else {
             --selectedRecipe;
         }
     }));
-    controls.push_back(new ButtonControl(*this, sf::IntRect(4, 4, 0, 0), ">", [id = id, &selectedRecipe = selectedRecipe]() {
-        ptr<CraftBuilding> p(id);
-        if (selectedRecipe == p->recipes.size() - 1) {
+    controls.push_back(new ButtonControl(*this, sf::IntRect(4, 4, 0, 0), ">", [this]() {
+        if (selectedRecipe == getRecipeCount() - 1) {
             selectedRecipe = 0;
         } else {
             ++selectedRecipe;
@@ -60,13 +64,13 @@ void CraftBuildingWindow::updateAndRender() {
     }
     GameWindow::updateAndRender();
     sf::FloatRect fr = getWindowRectangle();
-    sf::Text t(std::string("Craft Building ") + std::to_string(selectedRecipe), PawnManagerClient::fontManager.f);
+    sf::Text t(std::string("Craft Building ") + (isRecipeCurrent() ? "Current recipe" : std::to_string(selectedRecipe)),
+               PawnManagerClient::fontManager.f);
     t.setCharacterSize(20);
     t.setFillColor(sf::Color(0, 0, 0));
     t.setPosition(fr.getPosition() + sf::Vector2f(10, 10));
     PawnManagerClient::window->draw(t);
-    ptr<CraftBuilding> cb(id);
-    Recipe* r = cb->recipes[selectedRecipe];
+    Recipe* r = getRecipe();
     int cInputPos = 0;
     int cOutputPos = 0;
     CraftRecipe* cr = dynamic_cast<CraftRecipe*>(r);
@@ -101,4 +105,22 @@ void CraftBuildingWindow::updateAndRender() {
         outputSlots[cOutputPos]->res = Resource::Nothing;
     }
     arrow->pawnExpertises = r->reqWorkers;
+}
+int CraftBuildingWindow::getRecipeCount() {
+    ptr<CraftBuilding> p(id);
+    return p->recipes.size() + (p->current ? 1 : 0);
+}
+Recipe* CraftBuildingWindow::getRecipe() {
+    if(selectedRecipe >= getRecipeCount()) {
+        selectedRecipe = getRecipeCount() - 1;
+    }
+    ptr<CraftBuilding> p(id);
+    if(p->recipes.size() == selectedRecipe) {
+        return p->current;
+    }
+    return p->recipes[selectedRecipe];
+}
+bool CraftBuildingWindow::isRecipeCurrent() {
+    ptr<CraftBuilding> p(id);
+    return selectedRecipe ==  p->recipes.size();
 }
