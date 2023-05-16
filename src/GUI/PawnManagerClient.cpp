@@ -166,6 +166,11 @@ void PawnManagerClient::onMouseClick(int x, int y, sf::Mouse::Button b) {
             selectedBuilding = -1;
         }
     }
+    for(ptr<Player> plr:godObject::local_server->players) {
+        if(b != sf::Mouse::Button::Middle)
+            break;
+        onBuildingMouseClick(plr->hub, pos, b);
+    }
 }
 
 bool PawnManagerClient::onBuildingMouseClick(ptr<Building> b, sf::Vector2f pos, sf::Mouse::Button button) {
