@@ -22,13 +22,14 @@ public:
     static ResourceRenderer* resourceRenderer;
     static PawnRenderer* pawnRenderer;
     static BuildingRenderer* buildingRenderer;
+    static sf::Vector2f playerPos;
 
 private:
     static double curTime;
     static int selectedBuilding;
 
 public:
-    static constexpr float renderScale = 1.5f;
+    static float renderScale;
     static GameWindowManager winManager;
     static FontManager fontManager;
     static void run();
@@ -40,6 +41,7 @@ public:
 private:
     static void init();
     static void updateAndRender();
+    static sf::Vector2f getRenderOrigin();
     static void buildingRenderDfs(ptr<Building> b, sf::Vector2f center);
     static void onMouseClick(int x, int y, sf::Mouse::Button b);
     static bool onBuildingMouseClick(ptr<Building> b, sf::Vector2f pos, sf::Mouse::Button button);

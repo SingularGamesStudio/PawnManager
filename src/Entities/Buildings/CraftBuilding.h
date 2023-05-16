@@ -18,7 +18,7 @@ public:
           Entity(pos, owner, hp, radius),
           current(nullptr) {}
 #ifdef CLIENT_SIDE
-    CraftBuilding() {}
+    CraftBuilding() : current(nullptr) {}
 #endif
     std::vector<Recipe*> recipes;
     Recipe* current;

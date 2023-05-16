@@ -55,10 +55,10 @@ void BuildingRegisty::init() {
         mine.available.push_back(ore);
 
         CraftRecipe* fastOre = new CraftRecipe();
-        ore->duration = 1;
-        ore->reqWorkers.push_back(expertisesID::Nitwit);
-        ore->reqWorkers.push_back(expertisesID::Nitwit);
-        ore->outResources.push_back(Resource::Ore);
+        fastOre->duration = 1;
+        fastOre->reqWorkers.push_back(expertisesID::Nitwit);
+        fastOre->reqWorkers.push_back(expertisesID::Nitwit);
+        fastOre->outResources.push_back(Resource::Ore);
         mine.available.push_back(fastOre);
 
         BuildRecipe* createMine = new BuildRecipe({0, 0}, mine);

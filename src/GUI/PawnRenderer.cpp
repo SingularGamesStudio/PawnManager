@@ -5,8 +5,8 @@
 #include "PawnRenderer.h"
 
 #include <cmath>
-#include <numbers>
 #include <iostream>
+#include <numbers>
 
 #include "../Entities/Pawns/FighterPawn.h"
 #include "../Entities/Pawns/WorkerPawn.h"
@@ -27,10 +27,10 @@ void PawnRenderer::drawWorkerPawn(const std::set<expertisesID>& expertises, sf::
     sf::VertexArray arr;
     sf::Transform t;
     std::vector<expertisesID> expertisesVec(expertises.begin(), expertises.end());
-    if(expertisesVec.empty()) {
-        std::cerr << "Worker pawn has empty expertises" << std::endl;
-    }
+    if (expertisesVec.empty()) { std::cerr << "Worker pawn has empty expertises" << std::endl; }
+    int sz0 = expertisesVec.size();
     expertisesVec.resize(std::remove(expertisesVec.begin(), expertisesVec.end(), expertisesID::Nitwit) - expertisesVec.begin());
+    if (sz0 == expertisesVec.size()) { std::cerr << "Pawn is not a nitwit" << std::endl; }
     arr.setPrimitiveType(sf::PrimitiveType::Triangles);
     for (int i = 0; i < vertices.size(); ++i) {
         sf::Color col;

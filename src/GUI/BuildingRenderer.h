@@ -19,7 +19,7 @@ public:
     void drawBuilding(ptr<Building> b, sf::Vector2f pos);
     void drawBuilding(float radius, sf::Color color, sf::Vector2f pos);
     void drawBuilding(BuildingIdea& idea, sf::Vector2f pos);
-    void drawEdge(ptr<Building> a, ptr<Building> b, sf::Vector2f center);
+    void drawEdge(ptr<Building> a, ptr<Building> b, sf::Vector2f center, float size);
 };
 
 

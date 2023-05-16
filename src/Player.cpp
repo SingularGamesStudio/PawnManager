@@ -1,6 +1,7 @@
 #include "Player.h"
 
 #include <cstring>
+#include <iostream>
 #include <set>
 #include <unordered_set>
 #include <vector>
@@ -12,7 +13,6 @@
 #include "Event.h"
 #include "Recipes/BuildRecipe.h"
 #include "godobject.h"
-#include <iostream>
 
 #ifdef SERVER_SIDE
 
@@ -127,19 +127,40 @@ void Player::TaskManager::tick() {//TODO:rewrite to mincost
             rec->needResources = newNeed;
         } else if (rec->movedResources.empty()) {
             if (!rec->needPawns.empty()) {
+                std::vector<std::pair<ptr<Pawn>, PawnReq*>> found;
+                bool ok = true;
                 for (PawnReq* p: rec->needPawns) {
                     ptr<Pawn> pawn = p->find(owner);
                     if (!pawn) {
-                        std::cerr << "no pawn found, cancelling recipe"
-                                  << "\n";
-                        toClose.push_back({rec, false});
+                        ok = false;
                         break;
                     }
-                    pawn->assignTask(Task(TaskID::BeProcessed, rec->place, ptr<Building>(), Resource::Nothing, rec->ID));
-                    rec->movedPawns.insert(pawn);
-                    rec->backupNeeds[pawn] = p;
+                    found.push_back({pawn, p});
+                    pawn->currentTask.id = TaskID::Craft;
                 }
-                rec->needPawns.clear();
+                if (ok) {
+                    for (auto z: found) {
+                        ptr<Pawn> pawn = z.first;
+                        PawnReq* p = z.second;
+                        pawn->assignTask(Task(TaskID::BeProcessed, rec->place, ptr<Building>(), Resource::Nothing, rec->ID));
+                        rec->movedPawns.insert(pawn);
+                        rec->backupNeeds[pawn] = p;
+                    }
+                    rec->needPawns.clear();
+                } else {
+                    for (auto z: found) { z.first->currentTask.id = TaskID::Idle; }
+                    for (ptr<Pawn> pawn: rec->movedPawns) {
+                        rec->needPawns.push_back(rec->backupNeeds[pawn]);
+                        pawn->assignTask(Task(TaskID::Idle));
+                    }
+                    for (ptr<Pawn> pawn: rec->donePawns) {
+                        rec->needPawns.push_back(rec->backupNeeds[pawn]);
+                        pawn->assignTask(Task(TaskID::Idle));
+                    }
+                    rec->movedPawns.clear();
+                    rec->donePawns.clear();
+                    rec->backupNeeds.clear();
+                }
             } else if (rec->movedPawns.empty()) {
                 ptr<CraftBuilding> crafter = rec->place.dyn_cast<CraftBuilding>();
                 if (crafter->current == nullptr && !busy.contains(crafter)) {
@@ -177,6 +198,7 @@ Player::TaskManager::PendingRecipe::~PendingRecipe() {
     }
     for (ptr<Pawn> p: donePawns) {
         if (p) p->assignTask(Task(TaskID::Idle));
+        delete backupNeeds[p];
     }
     if (place) {
         for (Resource r: doneResources) {
@@ -233,7 +255,6 @@ void Player::TaskManager::finishTask(Task task, ptr<Pawn> pawn) {
             break;
         case TaskID::BeProcessed:
             pr->movedPawns.erase(pawn);
-            pr->backupNeeds.erase(pawn);
             pr->donePawns.push_back(pawn);
             break;
         default:
