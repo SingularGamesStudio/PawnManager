@@ -35,11 +35,14 @@ int PawnManagerClient::selectedBuilding;
 GameWindowManager PawnManagerClient::winManager;
 FontManager PawnManagerClient::fontManager;
 float PawnManagerClient::renderScale = 1.5f;
+sf::Vector2f PawnManagerClient::playerPos = sf::Vector2f(0, 0);
 
 
 void PawnManagerClient::run() {
+    sf::Clock clock;
     init();
     while (window->isOpen()) {
+        float delta = clock.restart().asSeconds();
         if(godObject::local_server) { godObject::local_server->respond(); }
         sf::Event evt{};
         while (window->pollEvent(evt)) {
@@ -68,6 +71,20 @@ void PawnManagerClient::run() {
                 }
             }
         }
+        if(winManager.windowCount() == 0) {
+            if(sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
+                playerPos -= sf::Vector2f(0, 80 * delta / renderScale);
+            }
+            if(sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
+                playerPos -= sf::Vector2f(80 * delta / renderScale, 0);
+            }
+            if(sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
+                playerPos += sf::Vector2f(0, 80 * delta / renderScale);
+            }
+            if(sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+                playerPos += sf::Vector2f(80 * delta / renderScale, 0);
+            }
+        }
         updateAndRender();
         window->display();
     }
@@ -81,7 +98,7 @@ void PawnManagerClient::updateAndRender() {
     curTime = newTime;
     window->clear(sf::Color::White);
     if(godObject::local_server) {
-        sf::Vector2f center = ((sf::Vector2f) window->getSize()) * 0.5f;
+        sf::Vector2f center = getRenderOrigin();
         for (ptr<Player> player: godObject::local_server->players) {
             buildingRenderDfs(player->hub, center);
             std::default_random_engine rng;
@@ -154,7 +171,7 @@ void PawnManagerClient::onMouseClick(int x, int y, sf::Mouse::Button b) {
     if(!godObject::local_server) {
         return;
     }
-    sf::Vector2f center = ((sf::Vector2f) window->getSize()) * 0.5f;
+    sf::Vector2f center = getRenderOrigin();
     sf::Vector2f pos = (sf::Vector2f(x, y) - center) / renderScale;
     if (!onBuildingMouseClick(godObject::local_server->mainPlayer->hub, pos, b)) {
         ptr<Building> building = ptr<Building>(selectedBuilding);
@@ -215,3 +232,4 @@ void PawnManagerClient::connect(std::string address, int port) {
     godObject::local_server = new LocalController();
     godObject::local_server->init(address, port);
 }
+sf::Vector2f PawnManagerClient::getRenderOrigin() { return ((sf::Vector2f) window->getSize()) * 0.5f - playerPos * renderScale; }
