@@ -40,6 +40,24 @@ After running these commands the resulting build files should be in project root
 are put into directory as well as libgcc_s_seh-1.dll, libstdc++-6.dll and libwinpthread-1 are required to be in same
 directory as the game in order to run it.
 
+## Gameplay
+
+After running server, and connecting to it with client:
+
+Your base is composed of big Circles connected into a tree
+
+Each building contains resources.
+
+Also you have pawns - workers, that haul resources, and craft stuff (round ones), and fighters(triangles)
+
+## Controls
+
+RMB on a green building - craft menu
+
+LMB on any building, and then on unoccupied space - build menu
+
+MMB on a building - all your fighters will go and attack it
+
 ## Structure
 
 Entity <- Pawn, Building, ResourceEntity
