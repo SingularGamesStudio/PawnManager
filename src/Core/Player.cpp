@@ -296,7 +296,8 @@ Player::~Player() {
 
 #ifdef CLIENT_SIDE
 void Player::localAttack(ptr<Building> what) {
-    /// TODO
+    Event attack(Event::Type::ATTACK, what.id);
+    godObject::local_server->send(attack.getPacket());
 }
 void Player::localStart(Recipe* recipe, ptr<Building> where) {
     Event recipeStarted(Event::Type::PLAYER_ACTION, recipe, where.id);

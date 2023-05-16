@@ -76,6 +76,17 @@ void GameServer::onPacketReceive(std::shared_ptr<dlib::Connection> client, dlib:
         players[client->getID()]->manager.startRecipe(rec, ptr<Building>(id));
         delete rec;
         return;
+    } else if (type == Event::Type::ATTACK) {
+        int id = 0;
+        std::memcpy(&id, data.data(), sizeof(int));
+        ptr<Building> toAttack(id);
+        for (ptr<Pawn> p: players[client->getID()]->pawns) {
+            if (p.dyn_cast<FighterPawn>()) {
+                ptr<FighterPawn> f = p.dyn_cast<FighterPawn>();
+                f->assignTask(Task(TaskID::Attack, toAttack));
+            }
+        }
+
     }
     if (type == Event::Type::SYNC_PULSE) {}
 }

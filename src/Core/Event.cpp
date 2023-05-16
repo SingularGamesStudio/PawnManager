@@ -21,6 +21,7 @@ Event::Event(Event::Type t, int id) {
     acceptable_events.insert(Event::Type::RESOURCE_ENTITY_APPEAR);
     acceptable_events.insert(Event::Type::RESOURCE_ENTITY_DISAPPEAR);
     acceptable_events.insert(Event::Type::UPDATE_RESOURCES);
+    acceptable_events.insert(Event::Type::ATTACK);
     if (!acceptable_events.contains(t)) throw std::invalid_argument("Trying to make event with wrong type");
     std::vector<uint8_t> tmp(sizeof(t));
     std::memcpy(tmp.data(), &t, sizeof(t));

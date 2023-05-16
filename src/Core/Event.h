@@ -30,6 +30,7 @@ public:
         PLAYER_ACTION,            //13
         SYNC_PULSE,               //14
         UPDATE_RESOURCES,         //15
+        ATTACK,                   //16
     };
     Event() = delete;
     Event(Type t, int id);
