@@ -17,6 +17,7 @@ public:
     void updateAndRender() override;
 
     void onMouseClick(int x, int y, sf::Mouse::Button b) override;
+    bool disabled;
 
 private:
     std::string label;

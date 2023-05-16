@@ -6,8 +6,11 @@
 #define PAWNMANAGER_CRAFTBUILDINGWINDOW_H
 
 #include "ArrowControl.h"
+#include "ButtonControl.h"
 #include "GameWindow.h"
 #include "SlotControl.h"
+
+class Recipe;
 
 class CraftBuildingWindow : public GameWindow {
 public:
@@ -17,10 +20,15 @@ public:
     std::vector<SlotControl*> inputSlots;
     std::vector<SlotControl*> outputSlots;
     ArrowControl* arrow;
+    ButtonControl* assignButton;
 
     explicit CraftBuildingWindow(int id);
 
     void updateAndRender() override;
+private:
+    int getRecipeCount();
+    Recipe* getRecipe();
+    bool isRecipeCurrent();
 };
 
 

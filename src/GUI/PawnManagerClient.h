@@ -22,6 +22,7 @@ public:
     static ResourceRenderer* resourceRenderer;
     static PawnRenderer* pawnRenderer;
     static BuildingRenderer* buildingRenderer;
+    static sf::Vector2f playerPos;
 
 private:
     static double curTime;
@@ -40,6 +41,7 @@ public:
 private:
     static void init();
     static void updateAndRender();
+    static sf::Vector2f getRenderOrigin();
     static void buildingRenderDfs(ptr<Building> b, sf::Vector2f center);
     static void onMouseClick(int x, int y, sf::Mouse::Button b);
     static bool onBuildingMouseClick(ptr<Building> b, sf::Vector2f pos, sf::Mouse::Button button);
