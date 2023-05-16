@@ -6,6 +6,7 @@
 #define PAWNMANAGER_CRAFTBUILDINGWINDOW_H
 
 #include "ArrowControl.h"
+#include "ButtonControl.h"
 #include "GameWindow.h"
 #include "SlotControl.h"
 
@@ -19,6 +20,7 @@ public:
     std::vector<SlotControl*> inputSlots;
     std::vector<SlotControl*> outputSlots;
     ArrowControl* arrow;
+    ButtonControl* assignButton;
 
     explicit CraftBuildingWindow(int id);
 

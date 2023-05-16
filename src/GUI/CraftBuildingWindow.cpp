@@ -20,7 +20,8 @@ CraftBuildingWindow::CraftBuildingWindow(int id) : id(id), selectedRecipe(0), sh
             selectedRecipe = p->recipes.size();
         }
     }
-    controls.push_back(new ButtonControl(*this, sf::IntRect(1, 4, 2, 0), "Assign recipe", [w = this]() {
+    controls.push_back(assignButton = new ButtonControl(*this, sf::IntRect(1, 4, 2, 0),
+                                                        "Assign recipe", [w = this]() {
         ptr<CraftBuilding> p(w->id);
         Recipe* r = w->getRecipe();
 
@@ -62,6 +63,7 @@ void CraftBuildingWindow::updateAndRender() {
         PawnManagerClient::winManager.popWindow();
         return;
     }
+    assignButton->disabled = isRecipeCurrent();
     GameWindow::updateAndRender();
     sf::FloatRect fr = getWindowRectangle();
     sf::Text t(std::string("Craft Building ") + (isRecipeCurrent() ? "Current recipe" : std::to_string(selectedRecipe)),

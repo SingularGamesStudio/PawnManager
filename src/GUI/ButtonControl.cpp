@@ -12,6 +12,7 @@
 
 ButtonControl::ButtonControl(GameWindow& win, sf::IntRect rect, std::string label, std::function<void()> callback)
     : Control(win, rect),
+      disabled(false),
       label(std::move(label)),
       callback(std::move(callback)) {}
 
@@ -19,7 +20,9 @@ void ButtonControl::updateAndRender() {
     Control::updateAndRender();
     sf::FloatRect r = win.getGridRectangle(rect);
     sf::Color c;
-    if (mouseOver()) {
+    if(disabled) {
+        c = sf::Color(255 - 100, 255 - 100, 255 - 100);
+    } else if (mouseOver()) {
         c = sf::Color(255 - 20, 255 - 20, 255);
     } else {
         c = sf::Color(255, 255, 255);
@@ -34,6 +37,9 @@ void ButtonControl::updateAndRender() {
 }
 
 void ButtonControl::onMouseClick(int x, int y, sf::Mouse::Button b) {
+    if(disabled) {
+        return;
+    }
     Control::onMouseClick(x, y, b);
     if (b == sf::Mouse::Button::Left) { callback(); }
 }
