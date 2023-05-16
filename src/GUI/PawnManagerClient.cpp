@@ -34,6 +34,7 @@ double PawnManagerClient::curTime;
 int PawnManagerClient::selectedBuilding;
 GameWindowManager PawnManagerClient::winManager;
 FontManager PawnManagerClient::fontManager;
+float PawnManagerClient::renderScale = 1.5f;
 
 
 void PawnManagerClient::run() {
@@ -61,6 +62,11 @@ void PawnManagerClient::run() {
                     winManager.onCharInput(evt.text.unicode);
                 }
             }
+            if(evt.type == sf::Event::MouseWheelScrolled) {
+                if(winManager.windowCount() == 0) {
+                    renderScale *= std::pow(2, evt.mouseWheelScroll.delta * 0.1f);
+                }
+            }
         }
         updateAndRender();
         window->display();
@@ -86,10 +92,10 @@ void PawnManagerClient::updateAndRender() {
                 ptr<WorkerPawn> wp = p.dyn_cast<WorkerPawn>();
                 ptr<FighterPawn> fp = p.dyn_cast<FighterPawn>();
                 if (wp) {
-                    pawnRenderer->drawWorkerPawn(wp->expertises, sf::Vector2f(x, y) * renderScale + center);
+                    pawnRenderer->drawWorkerPawn(wp->expertises, sf::Vector2f(x, y) * renderScale + center, 12 / 1.5 * renderScale);
                     if (wp->holding != Resource::Nothing) {
                         float rotation = dist2(rng);
-                        resourceRenderer->drawResource(wp->holding, sf::Vector2f(x, y) * renderScale + center, rotation);
+                        resourceRenderer->drawResource(wp->holding, sf::Vector2f(x, y) * renderScale + center, rotation, 7 / 1.5 * renderScale);
                     }
                 } else if (fp) {
                     pawnRenderer->drawFighterPawn(fp->getType(), sf::Vector2f(x, y) * renderScale + center);
@@ -98,7 +104,7 @@ void PawnManagerClient::updateAndRender() {
         }
         for (ptr<ResourceEntity> res: godObject::local_server->danglingResources) {
             resourceRenderer->drawResource(res->resource, sf::Vector2f(res->position.first, res->position.second) * renderScale + center,
-                                           std::numbers::pi_v<float> / 4.0f);
+                                           std::numbers::pi_v<float> / 4.0f, 7 / 1.5 * renderScale);
         }
     }
     winManager.updateAndRender();
@@ -108,7 +114,7 @@ void PawnManagerClient::buildingRenderDfs(ptr<Building> b, sf::Vector2f center) 
     if (!b) { return; }
     auto [x, y] = b->position;
     for (ptr<Building> ob: b->children) {
-        buildingRenderer->drawEdge(b, ob, center);
+        buildingRenderer->drawEdge(b, ob, center, 5 / 1.5 * renderScale);
         buildingRenderDfs(ob, center);
     }
     sf::Vector2f p(x, y);
@@ -124,8 +130,8 @@ void PawnManagerClient::buildingRenderDfs(ptr<Building> b, sf::Vector2f center) 
             y = dist(rng);
         }
         float rotation = dist2(rng);
-        sf::Vector2f pos = (sf::Vector2f(x, y) * (float) (b->radius - 7 / renderScale) + p) * renderScale + center;
-        resourceRenderer->drawResource(res, pos, rotation);
+        sf::Vector2f pos = (sf::Vector2f(x, y) * (float) (b->radius - 7 / 1.5) + p) * renderScale + center;
+        resourceRenderer->drawResource(res, pos, rotation, 7 / 1.5 * renderScale);
     }
     for (Resource res: b->reservedResources) {
         float x = 2;
@@ -135,8 +141,8 @@ void PawnManagerClient::buildingRenderDfs(ptr<Building> b, sf::Vector2f center) 
             y = dist(rng);
         }
         float rotation = dist2(rng);
-        sf::Vector2f pos = (sf::Vector2f(x, y) * (float) (b->radius - 7 / renderScale) + p) * renderScale + center;
-        resourceRenderer->drawResource(res, pos, rotation);
+        sf::Vector2f pos = (sf::Vector2f(x, y) * (float) (b->radius - 7 / 1.5) + p) * renderScale + center;
+        resourceRenderer->drawResource(res, pos, rotation, 7 / 1.5 * renderScale);
     }
 }
 

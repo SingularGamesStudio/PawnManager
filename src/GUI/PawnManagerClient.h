@@ -28,7 +28,7 @@ private:
     static int selectedBuilding;
 
 public:
-    static constexpr float renderScale = 1.5f;
+    static float renderScale;
     static GameWindowManager winManager;
     static FontManager fontManager;
     static void run();

@@ -17,21 +17,21 @@ void BuildingRenderer::drawBuilding(ptr<Building> b, sf::Vector2f pos) {
     ptr<CraftBuilding> cb = b.dyn_cast<CraftBuilding>();
     if(cb) {
         if(cb->recipes.size() == 0) {
-            drawBuilding(cb->radius, sf::Color::Blue, pos);
+            drawBuilding(cb->radius * PawnManagerClient::renderScale, sf::Color::Blue, pos);
         } else {
-            drawBuilding(cb->radius, sf::Color::Green, pos);
+            drawBuilding(cb->radius * PawnManagerClient::renderScale, sf::Color::Green, pos);
         }
     } else {
-        drawBuilding(b->radius, sf::Color::White, pos);
+        drawBuilding(b->radius * PawnManagerClient::renderScale, sf::Color::White, pos);
     }
 }
 
-void BuildingRenderer::drawEdge(ptr<Building> a, ptr<Building> b, sf::Vector2f center) {
+void BuildingRenderer::drawEdge(ptr<Building> a, ptr<Building> b, sf::Vector2f center, float size) {
     sf::Vector2f aPos = sf::Vector2f(a->position.first, a->position.second) * PawnManagerClient::renderScale + center;
     sf::Vector2f bPos = sf::Vector2f(b->position.first, b->position.second) * PawnManagerClient::renderScale + center;
     sf::Vector2f delta = bPos - aPos;
     sf::Vector2f orth(delta.y, -delta.x);
-    orth *= (5.0f / sqrtf(orth.x * orth.x + orth.y * orth.y));
+    orth *= (size / sqrtf(orth.x * orth.x + orth.y * orth.y));
     sf::VertexArray arr;
     arr.setPrimitiveType(sf::Triangles);
     sf::Color c(127, 127, 127);
@@ -44,7 +44,6 @@ void BuildingRenderer::drawEdge(ptr<Building> a, ptr<Building> b, sf::Vector2f c
     window.draw(arr);
 }
 void BuildingRenderer::drawBuilding(float radius, sf::Color col, sf::Vector2f pos) {
-    radius *= PawnManagerClient::renderScale;
     std::vector<sf::Vector2f> vertices;
     std::vector<sf::Vector2f> outerVertices;
     int cnt = 30;
@@ -76,8 +75,8 @@ void BuildingRenderer::drawBuilding(float radius, sf::Color col, sf::Vector2f po
 
 void BuildingRenderer::drawBuilding(BuildingIdea& idea, sf::Vector2f pos) {
     if(idea.available.empty()) {
-        drawBuilding(idea.radius, sf::Color::Green, pos);
+        drawBuilding(idea.radius * 1.5, sf::Color::Green, pos);
     } else {
-        drawBuilding(idea.radius, sf::Color::White, pos);
+        drawBuilding(idea.radius * 1.5, sf::Color::White, pos);
     }
 }
