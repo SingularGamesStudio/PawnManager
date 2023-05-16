@@ -174,12 +174,8 @@ std::vector<uint8_t> WorkerPawn::serializeSelf() const {
     result.resize(result.size() + size);
     uint8_t* curr = result.data() + result.size() - size;
     curr += copyVariable(curr, currentInWay);
-
-    curr += copyVariable(curr, expertises.size());
-    for (const auto& i: expertises) { curr += copyVariable(curr, i); }
-
-    curr += copyVariable(curr, onTheWay.size());
-    for (const auto& i: onTheWay) { curr += copyVariable(curr, i); }
+    curr += copySet(curr, expertises);
+    curr += copyVector(curr, onTheWay);
     return result;
 }
 
@@ -188,17 +184,8 @@ size_t WorkerPawn::deserializeSelf(const uint8_t* data) {
     size_t shift = Pawn::deserializeSelf(data);
     const uint8_t* curr = data + shift;
     curr += initializeVariable(curr, currentInWay);
-
-    size_t size;
-    curr += initializeVariable(curr, size);
-    for (size_t i = 0; i < size; ++i) {
-        expertisesID tmp;
-        curr += initializeVariable(curr, tmp);
-    }
-
-    curr += initializeVariable(curr, size);
-    onTheWay.resize(size);
-    for (size_t i = 0; i < size; ++i) { curr += initializeVariable(curr, onTheWay[i]); }
+    curr += initializeSet(curr, expertises);
+    curr += initializeVector(curr, onTheWay);
     return curr - data;
 }
 
