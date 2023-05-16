@@ -16,7 +16,7 @@ RequiresID* IDmanager::get(int id) { return all[id]; }
 
 void IDmanager::set(int id, RequiresID* data) {
     all[id] = data;
-    if (id == 0 && data == nullptr) { throw std::logic_error("aboba"); }
+    std::cerr << "id set is " << id << " and type is " << typeid(data).name() << std::endl;
 }
 
 std::vector<uint8_t> RequiresID::serialize() const { return serializeSelf(); }

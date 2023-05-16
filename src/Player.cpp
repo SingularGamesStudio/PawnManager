@@ -293,9 +293,7 @@ std::vector<uint8_t> Player::serializeSelf() const {
     uint8_t* curr = result.data() + result.size() - size;
     curr += copyVariable(curr, id);
     curr += copyVariable(curr, hub);
-    size = pawns.size();
-    curr += copyVariable(curr, size);
-    for (auto i: pawns) { curr += copyVariable(curr, i); }
+    curr += copySet(curr ,pawns);
     return result;
 }
 
@@ -312,4 +310,17 @@ size_t Player::deserializeSelf(const uint8_t* data) {
         pawns.insert(tmp);
     }
     return curr - data;
+}
+
+void buildingDFS(ptr<Building> v, std::vector<ptr<Building>>& result) {
+    result.push_back(v);
+    for(auto u : v->children) {
+        buildingDFS(u, result);
+    }
+}
+
+std::vector<ptr<Building>> Player::get_buildings() const {
+    std::vector<ptr<Building>> result;
+    buildingDFS(hub, result);
+    return result;
 }

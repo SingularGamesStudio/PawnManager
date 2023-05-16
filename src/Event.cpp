@@ -8,6 +8,7 @@
 #include "IDmanager.h"
 #include "Player.h"
 #include "Recipes/Recipe.h"
+#include "godobject.h"
 
 Event::Event(Event::Type t, int id) {
     std::set<Event::Type> acceptable_events;
@@ -20,6 +21,9 @@ Event::Event(Event::Type t, int id) {
     acceptable_events.insert(Event::Type::PLAYER_DISAPPEAR);
     acceptable_events.insert(Event::Type::RESOURCE_ENTITY_APPEAR);
     acceptable_events.insert(Event::Type::RESOURCE_ENTITY_DISAPPEAR);
+#ifdef SERVER_SIDE
+    acceptable_events.insert(Event::Type::SYNC_PULSE);
+#endif
     acceptable_events.insert(Event::Type::UPDATE_RESOURCES);
     if (!acceptable_events.contains(t)) throw std::invalid_argument("Trying to make event with wrong type");
     std::vector<uint8_t> tmp(sizeof(t));
@@ -33,14 +37,66 @@ Event::Event(Event::Type t, int id) {
         curr_data = pw->serialize();
     } else if (t == Event::Type::PLAYER_APPEAR) {
         ptr<Player> pl(id);
-        curr_data = pl->serialize();// todo
+        curr_data = pl->serialize();
     } else if (t == Event::Type::RESOURCE_ENTITY_APPEAR) {
         ptr<ResourceEntity> pl(id);
         curr_data = pl->serialize();// todo
     } else if (t == Event::Type::UPDATE_RESOURCES) {
         ptr<Building> bu(id);
         curr_data = bu->serializeResources();
-    } else {
+    }
+#ifdef SERVER_SIDE
+    else if(t == Event::Type::SYNC_PULSE) {
+        std::vector<ptr<Building>> all_buildings;
+        for(auto i : godObject::global_server->players) {
+            if(!i.second)
+                continue;
+            std::vector<ptr<Building>> curr_buildings = i.second->get_buildings();
+            std::copy(curr_buildings.begin(), curr_buildings.end(),
+                      std::back_inserter(all_buildings));
+        }
+        curr_data.resize(sizeof(size_t));
+        copyVariable(curr_data.data(), all_buildings.size());
+        std::copy(curr_data.begin(), curr_data.end(), std::back_inserter(tmp));
+        for(auto i : all_buildings) {
+            curr_data = i->serialize();
+            std::copy(curr_data.begin(), curr_data.end(), std::back_inserter(tmp));
+        }
+
+        std::vector<ptr<Pawn>> all_pawns;
+        for(auto i : godObject::global_server->players) {
+            if(!i.second)
+                continue;
+            std::copy(i.second->pawns.begin(), i.second->pawns.end(), std::back_inserter(all_pawns));
+        }
+        curr_data.resize(sizeof(size_t));
+        copyVariable(curr_data.data(), all_pawns.size());
+        std::copy(curr_data.begin(), curr_data.end(), std::back_inserter(tmp));
+        for(auto i : all_pawns) {
+            curr_data = i->serialize();
+            std::copy(curr_data.begin(), curr_data.end(), std::back_inserter(tmp));
+        }
+
+
+        std::vector<ptr<Player>> all_players;
+        for(auto i : godObject::global_server->players) {
+            if(!i.second)
+                continue;
+            all_players.push_back(i.second);
+        }
+        curr_data.resize(sizeof(size_t));
+        copyVariable(curr_data.data(), all_players.size());
+        std::copy(curr_data.begin(), curr_data.end(), std::back_inserter(tmp));
+        for(auto i : all_players) {
+            curr_data = i->serialize();
+            std::copy(curr_data.begin(), curr_data.end(), std::back_inserter(tmp));
+        }
+
+        curr_data.resize(sizeof(int));
+        copyVariable(curr_data.data(), id);
+    }
+#endif
+    else {
         tmp.resize(sizeof(t) + sizeof(id));
         std::memcpy(tmp.data() + sizeof(t), &id, sizeof(id));
     }

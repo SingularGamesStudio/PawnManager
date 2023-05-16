@@ -11,6 +11,43 @@
 #include "Entities/Pawns/FighterPawn.h"
 #include "Entities/Pawns/WorkerPawn.h"
 
+std::pair<Building*, size_t> getBuilding(uint8_t* data) {
+    BuildingType buildingType = static_cast<BuildingType>(data[0]);
+    ++data;
+    Building* building = nullptr;
+    switch (buildingType) {
+        case BuildingType::BASE_BUILDING:
+            building = new Building();
+            break;
+        case BuildingType::CRAFT_BUILDING:
+            building = new CraftBuilding();
+            break;
+        default:
+            break;
+    }
+    return {building, building->deserialize(data) + 1};
+}
+
+std::pair<Pawn*, size_t> getPawn(uint8_t* data) {
+    int pawnType = data[0];
+    ++data;
+    Pawn* pawn = nullptr;
+    switch (pawnType) {
+        case DummyWorker:
+            pawn = new WorkerPawn();
+            break;
+        case static_cast<uint8_t>(FighterPawnType::Monk):
+            pawn = new Monk();
+            break;
+        case static_cast<uint8_t>(FighterPawnType::Swordsman):
+            pawn = new Swordsman();
+            break;
+        default:
+            break;
+    }
+    return {pawn, pawn->deserialize(data) + 1};
+}
+
 void LocalController::onPacketReceive(const dlib::Packet& p) {
     Event::Type type = static_cast<Event::Type>(p.data[0]);
     std::cerr << "Packet received " << int(type) << std::endl;
@@ -30,43 +67,17 @@ void LocalController::onPacketReceive(const dlib::Packet& p) {
         }
         ptr<Player>(id).del();
     } else if (type == Event::Type::PAWN_APPEAR) {
-        int pawnType = data[0];
-        data.erase(data.begin());
-        Pawn* pawn = nullptr;
-        switch (pawnType) {
-            case DummyWorker:
-                pawn = new WorkerPawn();
-                break;
-            case static_cast<uint8_t>(FighterPawnType::Monk):
-                pawn = new Monk();
-                break;
-            case static_cast<uint8_t>(FighterPawnType::Swordsman):
-                pawn = new Swordsman();
-                break;
-            default:
-                break;
-        }
-        pawn->deserialize(data.data());
+        Pawn* pawn = getPawn(data.data()).first;
+        pawn->owner->pawns.insert(ptr<Pawn>(pawn->id));
         IDmanager::set(pawn->id, dynamic_cast<RequiresID*>(pawn));
     } else if (type == Event::Type::RESOURCE_ENTITY_APPEAR) {
         ResourceEntity* rEntity = new ResourceEntity();
         rEntity->deserialize(data.data());
         IDmanager::set(rEntity->id, dynamic_cast<RequiresID*>(rEntity));
     } else if (type == Event::Type::BUILDING_APPEAR) {
-        BuildingType buildingType = static_cast<BuildingType>(data[0]);
-        data.erase(data.begin());
-        Building* building = nullptr;
-        switch (buildingType) {
-            case BuildingType::BASE_BUILDING:
-                building = new Building();
-                break;
-            case BuildingType::CRAFT_BUILDING:
-                building = new CraftBuilding();
-                break;
-            default:
-                break;
-        }
-        building->deserialize(data.data());
+        Building* building = getBuilding(data.data()).first;
+        if (building->parent)
+            building->parent->children.insert(ptr<Building>(building->id));
         IDmanager::set(building->id, dynamic_cast<RequiresID*>(building));
     } else if (type == Event::Type::BUILDING_ADD_RES) {
         int id = 0;
@@ -103,6 +114,38 @@ void LocalController::onPacketReceive(const dlib::Packet& p) {
         std::memcpy(&id, data.data(), sizeof(int));
         ptr<Building> bu(id);
         bu->updateResources(data.data() + sizeof(int));
+    } else if(type == Event::Type::SYNC_PULSE) {
+        uint8_t* dota = data.data();
+
+        size_t buildingCnt;
+        dota += initializeVariable(dota, buildingCnt);
+        for(size_t i = 0; i < buildingCnt; ++i){
+            auto res = getBuilding(dota);
+            dota += res.second;
+            Building* building = res.first;
+            IDmanager::set(building->id, dynamic_cast<RequiresID*>(building));
+        }
+
+        size_t pawnCnt;
+        dota += initializeVariable(dota, pawnCnt);
+        for(size_t i = 0; i < pawnCnt; ++i){
+            auto res = getPawn(dota);
+            dota += res.second;
+            Pawn* pawn = res.first;
+            IDmanager::set(pawn->id, dynamic_cast<RequiresID*>(pawn));
+        }
+
+        size_t playerCnt;
+        dota += initializeVariable(dota, playerCnt);
+        for(size_t i = 0; i < playerCnt; ++i){
+            Player* p = new Player(-1);
+            dota += p->deserialize(dota);
+            IDmanager::set(p->id, dynamic_cast<RequiresID*>(p));
+            players.insert(ptr<Player>(p->id));
+        }
+
+        initializeVariable(dota, mainPlayer);
+
     } else {
         int id = 0;
         std::memcpy(&id, data.data(), sizeof(int));
@@ -113,11 +156,7 @@ void LocalController::onPacketReceive(const dlib::Packet& p) {
 void LocalController::init(std::string host, uint16_t port) {
     connect(host, port);
     awaitPacket([this](const dlib::Packet& pack) {
-        Player* p = new Player();
-        p->deserialize(pack.data.data() + 1);
-        IDmanager::set(p->id, dynamic_cast<RequiresID*>(p));
-        mainPlayer = ptr<Player>(p->id);
-        players.insert(ptr<Player>(p->id));
+        onPacketReceive(pack);
     });
 }
 

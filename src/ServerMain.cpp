@@ -49,16 +49,14 @@ bool GameServer::onConnection(std::shared_ptr<dlib::Connection> client) {
     }
     Event plA(Event::Type::PLAYER_APPEAR, player->id);
     Event hubA(Event::Type::BUILDING_APPEAR, hub->id);
-    sendPacketClient(client, plA.getPacket());
-    sendPacketClient(client, hubA.getPacket());
     sendPacketAll(plA.getPacket());
     sendPacketAll(hubA.getPacket());
     for(auto i : player->pawns) {
         Event workerA(Event::Type::PAWN_APPEAR, i.id);
-        sendPacketClient(client, workerA.getPacket());
         sendPacketAll(workerA.getPacket());
     }
     players[client->getID()] = player;
+    sendPacketClient(client, Event(Event::Type::SYNC_PULSE, players[client->getID()].id).getPacket());
     return true;
 }
 
@@ -91,10 +89,12 @@ void tickBuildings(ptr<Building> place, double deltaTime) {
 }
 
 void GameServer::tick(double deltaTime) {
-    for (auto p: players) {
-        p.second->tick();
-        for (ptr<Pawn> p: p.second->pawns) { p->tick(deltaTime); }
-        tickBuildings(p.second->hub, deltaTime);
+    for (auto pl: players) {
+        pl.second->tick();
+        for (ptr<Pawn> pw: pl.second->pawns) {
+            pw->tick(deltaTime);
+        }
+        tickBuildings(pl.second->hub, deltaTime);
     }
 }
 
