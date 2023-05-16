@@ -6,11 +6,11 @@
 #define PAWNMANAGER_GODOBJECT_H
 
 #include "LocalController.h"
-#include "net/server.h"
+#include "ServerMain.h"
 
 struct godObject {
 #ifdef SERVER_SIDE
-    static dlib::ServerInterface* global_server;
+    static GameServer* global_server;
 #endif
 #ifdef CLIENT_SIDE
     static LocalController* local_server;

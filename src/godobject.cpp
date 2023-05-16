@@ -9,7 +9,7 @@
 #include "Recipes/Recipe.h"
 
 #ifdef SERVER_SIDE
-dlib::ServerInterface* godObject::global_server = nullptr;
+GameServer* godObject::global_server = nullptr;
 #endif
 
 #ifdef CLIENT_SIDE

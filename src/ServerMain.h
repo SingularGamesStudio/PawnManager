@@ -1,3 +1,6 @@
+#ifndef SERVER_MAIN_H
+#define SERVER_MAIN_H
+
 #include <random>
 #include <unordered_map>
 
@@ -20,3 +23,5 @@ public:
 };
 
 int main(int argc, char** argv);// takes port and whether there should be environment monsters
+
+#endif
