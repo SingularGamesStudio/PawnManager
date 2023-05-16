@@ -2,15 +2,15 @@
 
 #include <cstring>
 
-#include "../../Event.h"
-#include "../../Player.h"
-#include "../../Resource.h"
-#include "../../godobject.h"
+#include "../../Core/Event.h"
+#include "../../Core/Player.h"
+#include "../../Core/Resource.h"
+#include "../../Core/godobject.h"
 #include "../Buildings/Building.h"
 #include "../ResourceEntity.h"
 #ifdef SERVER_SIDE
 
-void Pawn::drop(ptr<Building> in, std::pair<double, double> pos) {
+void Pawn::drop(ptr<Building> in, Position pos) {
     if (in && holding != Resource::Nothing) {
         in->addResource(holding);
         //godObject::global_server->sendPacketAll(Event(Event::Type::BUILDING_ADD_RES, in->id, holding).getPacket());

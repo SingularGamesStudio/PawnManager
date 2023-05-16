@@ -4,19 +4,20 @@
 #include <deque>
 #include <vector>
 
+#include "../Recipes/Recipe.h"
 #include "IDmanager.h"
-#include "Recipes/Recipe.h"
 #include "Task.h"
 
 enum class expertisesID : uint8_t;
 class Building;
 class Pawn;
 class Player;
+class Position;
 
 class Player : public RequiresID {
 public:
 #ifdef CLIENT_SIDE
-    Player(){}
+    Player() {}
 #endif
 
     Player(int id) { this->id = id; }
@@ -84,7 +85,7 @@ public:
     bool checkRecipe(Recipe* recipe);
 
 
-    ptr<CraftBuilding> placeBlueprint(std::pair<double, double> pos, ptr<Building> parent, double r);
+    ptr<CraftBuilding> placeBlueprint(Position pos, ptr<Building> parent, double r);
 
     void tick();
     void attack(ptr<Building> what);

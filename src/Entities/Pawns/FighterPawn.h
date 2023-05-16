@@ -14,16 +14,16 @@ public:
     double speed = 100;
     double hp = 30;
     bool toAttack = false;
-    std::pair<double, double> destinationPosition;
+    Position destinationPosition;
     ptr<Building> destination;
 
     virtual FighterPawnType getType() const;
-    #ifdef SERVER_SIDE
+#ifdef SERVER_SIDE
     virtual void attack(ptr<Entity> attacked, double deltaTime);
     static ptr<FighterPawn> createFighterPawn(FighterPawnType type, ptr<Building> placeOfCreation);
     void moveToResource(ResourceEntity* toGet);
     void takePresentResource(ResourceEntity* toTake);
-    void moveToPosition(std::pair<double, double> pos);
+    void moveToPosition(Position pos);
     void moveToBuilding(ptr<Building> dest) override;
     void getResource(ResourceEntity* toGet);
     void assignTask(const Task& task) override;
@@ -33,6 +33,7 @@ public:
     std::vector<uint8_t> serialize() const override;
 
     size_t deserialize(const uint8_t* data) override;
+
 protected:
     std::vector<uint8_t> serializeSelf() const;
     size_t deserializeSelf(const uint8_t* data);

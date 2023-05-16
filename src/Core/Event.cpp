@@ -2,12 +2,12 @@
 
 #include <stdexcept>
 
-#include "Entities/Buildings/Building.h"
-#include "Entities/Pawns/Pawn.h"
-#include "Entities/ResourceEntity.h"
+#include "../Entities/Buildings/Building.h"
+#include "../Entities/Pawns/Pawn.h"
+#include "../Entities/ResourceEntity.h"
 #include "IDmanager.h"
 #include "Player.h"
-#include "Recipes/Recipe.h"
+#include "../Recipes/Recipe.h"
 #include "godobject.h"
 
 Event::Event(Event::Type t, int id) {
@@ -98,7 +98,7 @@ Event::Event(Event::Type t, int id) {
 #endif
     else {
         tmp.resize(sizeof(t) + sizeof(id));
-        std::memcpy(tmp.data() + sizeof(t), &id, sizeof(id));
+        copyVariable(tmp.data() + sizeof(t), id);
     }
     std::copy(curr_data.begin(), curr_data.end(), std::back_inserter(tmp));
     p << tmp;
@@ -111,27 +111,30 @@ Event::Event(Event::Type t, int id, Resource res) {
     acceptable_events.insert(Event::Type::PAWN_TAKE_RES);
     if (!acceptable_events.contains(t)) throw std::invalid_argument("Trying to make event with wrong type");
     std::vector<uint8_t> tmp(sizeof(t) + sizeof(id) + sizeof(res));
-    std::memcpy(tmp.data(), &t, sizeof(t));
-    std::memcpy(tmp.data() + sizeof(t), &id, sizeof(id));
-    std::memcpy(tmp.data() + sizeof(t) + sizeof(id), &res, sizeof(res));
+    uint8_t* data = tmp.data();
+    data += copyVariable(data, t);
+    data += copyVariable(data, id);
+    data += copyVariable(data, res);
     p << tmp;
 }
 
-Event::Event(Event::Type t, int id, std::pair<double, double> pos, double time) {
+Event::Event(Event::Type t, int id, Position pos, double time) {
     if (t != Event::Type::PAWN_MOVE) throw std::invalid_argument("Trying to make event with wrong type");
     std::vector<uint8_t> tmp(sizeof(t) + sizeof(id) + sizeof(pos) + sizeof(time));
-    std::memcpy(tmp.data(), &t, sizeof(t));
-    std::memcpy(tmp.data() + sizeof(t), &id, sizeof(id));
-    std::memcpy(tmp.data() + sizeof(t) + sizeof(id), &pos, sizeof(pos));
-    std::memcpy(tmp.data() + sizeof(t) + sizeof(id) + sizeof(pos), &time, sizeof(time));
+    uint8_t* data = tmp.data();
+    data += copyVariable(data, t);
+    data += copyVariable(data, id);
+    data += copyVariable(data, pos);
+    data += copyVariable(data, time);
     p << tmp;
 }
 
 Event::Event(Type t, Recipe *recipe, int id) {
     if (t != Event::Type::PLAYER_ACTION) throw std::invalid_argument("Trying to make event with wrong type");
     std::vector<uint8_t> tmp(sizeof(t) + sizeof(id));
-    std::memcpy(tmp.data(), &t, sizeof(t));
-    std::memcpy(tmp.data() + sizeof(t), &id, sizeof(id));
+    uint8_t* data = tmp.data();
+    data += copyVariable(data, t);
+    data += copyVariable(data, id);
     std::vector<uint8_t> curr_data = recipe->serialize();
     std::copy(curr_data.begin(), curr_data.end(), std::back_inserter(tmp));
     p << tmp;

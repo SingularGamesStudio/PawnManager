@@ -4,13 +4,13 @@
 #include <set>
 #include <utility>
 
-#include "../Resource.h"
+#include "../Core/Resource.h"
 #include "Entity.h"
 
 class ResourceEntity : public Entity {
 public:
     Resource resource;
-    ResourceEntity(int id, Resource res, std::pair<double, double> pos);
+    ResourceEntity(int id, Resource res, Position pos);
     virtual ~ResourceEntity();
     virtual std::vector<uint8_t> serialize() const;
     virtual size_t deserialize(const uint8_t* data);

@@ -4,7 +4,7 @@
 
 #ifndef PAWNMANAGER_RESOURCERENDERER_H
 #define PAWNMANAGER_RESOURCERENDERER_H
-#include "../Resource.h"
+#include "../Core/Resource.h"
 #include "SFML/Graphics/RenderWindow.hpp"
 
 

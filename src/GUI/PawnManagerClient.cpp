@@ -9,15 +9,15 @@
 #include <numbers>
 #include <random>
 
+#include "../Core/IDmanager.h"
+#include "../Core/LocalController.h"
+#include "../Core/godobject.h"
 #include "../Entities/Buildings/Building.h"
 #include "../Entities/Buildings/CraftBuilding.h"
 #include "../Entities/Pawns/FighterPawn.h"
 #include "../Entities/Pawns/WorkerPawn.h"
 #include "../Entities/ResourceEntity.h"
-#include "../IDmanager.h"
-#include "../LocalController.h"
 #include "../Recipes/BuildRecipe.h"
-#include "../godobject.h"
 #include "BuildBuildingWindow.h"
 #include "CraftBuildingWindow.h"
 #include "MainMenuWindow.h"
@@ -43,7 +43,7 @@ void PawnManagerClient::run() {
     init();
     while (window->isOpen()) {
         float delta = clock.restart().asSeconds();
-        if(godObject::local_server) { godObject::local_server->respond(); }
+        if (godObject::local_server) { godObject::local_server->respond(); }
         sf::Event evt{};
         while (window->pollEvent(evt)) {
             if (evt.type == sf::Event::Closed) { window->close(); }
@@ -56,34 +56,22 @@ void PawnManagerClient::run() {
             if (evt.type == sf::Event::KeyPressed) {
                 if (evt.key.code == sf::Keyboard::Escape) {
                     if ((winManager.windowCount() > 0 && godObject::local_server) || winManager.windowCount() > 1) { winManager.popWindow(); }
-                } else if(winManager.windowCount() > 0) {
+                } else if (winManager.windowCount() > 0) {
                     winManager.onKeyInput(evt.key.code);
                 }
             }
-            if(evt.type == sf::Event::TextEntered) {
-                if(winManager.windowCount() > 0) {
-                    winManager.onCharInput(evt.text.unicode);
-                }
+            if (evt.type == sf::Event::TextEntered) {
+                if (winManager.windowCount() > 0) { winManager.onCharInput(evt.text.unicode); }
             }
-            if(evt.type == sf::Event::MouseWheelScrolled) {
-                if(winManager.windowCount() == 0) {
-                    renderScale *= std::pow(2, evt.mouseWheelScroll.delta * 0.1f);
-                }
+            if (evt.type == sf::Event::MouseWheelScrolled) {
+                if (winManager.windowCount() == 0) { renderScale *= std::pow(2, evt.mouseWheelScroll.delta * 0.1f); }
             }
         }
-        if(winManager.windowCount() == 0) {
-            if(sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
-                playerPos -= sf::Vector2f(0, 80 * delta / renderScale);
-            }
-            if(sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
-                playerPos -= sf::Vector2f(80 * delta / renderScale, 0);
-            }
-            if(sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
-                playerPos += sf::Vector2f(0, 80 * delta / renderScale);
-            }
-            if(sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
-                playerPos += sf::Vector2f(80 * delta / renderScale, 0);
-            }
+        if (winManager.windowCount() == 0) {
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) { playerPos -= sf::Vector2f(0, 80 * delta / renderScale); }
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) { playerPos -= sf::Vector2f(80 * delta / renderScale, 0); }
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) { playerPos += sf::Vector2f(0, 80 * delta / renderScale); }
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) { playerPos += sf::Vector2f(80 * delta / renderScale, 0); }
         }
         updateAndRender();
         window->display();
@@ -97,7 +85,7 @@ void PawnManagerClient::updateAndRender() {
     //    tick((newTime - curTime) / CLOCKS_PER_SEC);
     curTime = newTime;
     window->clear(sf::Color::White);
-    if(godObject::local_server) {
+    if (godObject::local_server) {
         sf::Vector2f center = getRenderOrigin();
         for (ptr<Player> player: godObject::local_server->players) {
             buildingRenderDfs(player->hub, center);
@@ -120,7 +108,7 @@ void PawnManagerClient::updateAndRender() {
             }
         }
         for (ptr<ResourceEntity> res: godObject::local_server->danglingResources) {
-            resourceRenderer->drawResource(res->resource, sf::Vector2f(res->position.first, res->position.second) * renderScale + center,
+            resourceRenderer->drawResource(res->resource, sf::Vector2f(res->position.x, res->position.y) * renderScale + center,
                                            std::numbers::pi_v<float> / 4.0f, 7 / 1.5 * renderScale);
         }
     }
@@ -168,9 +156,7 @@ void PawnManagerClient::onMouseClick(int x, int y, sf::Mouse::Button b) {
         winManager.onMouseClick(x, y, b);
         return;
     }
-    if(!godObject::local_server) {
-        return;
-    }
+    if (!godObject::local_server) { return; }
     sf::Vector2f center = getRenderOrigin();
     sf::Vector2f pos = (sf::Vector2f(x, y) - center) / renderScale;
     if (!onBuildingMouseClick(godObject::local_server->mainPlayer->hub, pos, b)) {
@@ -226,7 +212,7 @@ void PawnManagerClient::shutdown() {
     delete buildingRenderer;
     delete pawnRenderer;
     delete window;
-    if(godObject::local_server) { delete godObject::local_server; }
+    if (godObject::local_server) { delete godObject::local_server; }
 }
 void PawnManagerClient::connect(std::string address, int port) {
     godObject::local_server = new LocalController();

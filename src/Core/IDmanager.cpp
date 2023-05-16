@@ -1,6 +1,6 @@
 #include <stdexcept>
 
-#include "Entities/Entity.h"
+#include "../Entities/Entity.h"
 
 std::unordered_map<int, RequiresID*> IDmanager::all;
 int IDmanager::nextID = 0;

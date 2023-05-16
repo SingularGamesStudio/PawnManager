@@ -2,10 +2,10 @@
 #define PAWNMANAGER_LOCALCONTROLLER_H
 #include <set>
 
-#include "Entities/ResourceEntity.h"
+#include "../Entities/ResourceEntity.h"
+#include "../net/client.h"
 #include "Event.h"
 #include "Player.h"
-#include "net/client.h"
 
 class LocalController : public dlib::ClientInterface {
 public:

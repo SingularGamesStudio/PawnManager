@@ -3,7 +3,7 @@
 #include <chrono>
 #include <cstring>
 
-#include "../Player.h"
+#include "../Core/Player.h"
 
 
 #ifdef SERVER_SIDE
@@ -25,7 +25,7 @@ size_t Entity::deserialize(const uint8_t* data) { return deserializeSelf(data); 
 
 std::vector<uint8_t> Entity::serializeSelf() const {
     std::vector<uint8_t> result = RequiresID::serializeSelf();
-    size_t size = sizeof(double) * 2 + sizeof(ptr<Player>) + sizeof(std::pair<double, double>);
+    size_t size = sizeof(double) * 2 + sizeof(ptr<Player>) + sizeof(Position);
     result.resize(result.size() + size);
     uint8_t* curr = result.data() + result.size() - size;
     curr += copyVariable(curr, hp);
@@ -52,15 +52,15 @@ double getTime() {
     auto x = std::chrono::steady_clock::now() - p;
     return std::chrono::duration<double>(x).count();
 }
-void Entity::startMoveToPos(std::pair<double, double> pos, double time) {
+void Entity::startMoveToPos(Position pos, double time) {
     prevPos = getInterpolatedPos();
     this->position = pos;
     posReachTime = time;
     beginTime = getTime();
 }
-std::pair<double, double> Entity::getInterpolatedPos() {
+Position Entity::getInterpolatedPos() {
     double progress = std::min((getTime() - beginTime) / posReachTime, 1.0);
-    return {position.first * progress + prevPos.first * (1 - progress), position.second * progress + prevPos.second * (1 - progress)};
+    return {position.x * progress + prevPos.x * (1 - progress), position.y * progress + prevPos.y * (1 - progress)};
 }
 
 #endif

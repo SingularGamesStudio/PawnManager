@@ -4,9 +4,9 @@
 
 #include "godobject.h"
 
-#include "Recipes/BuildRecipe.h"
-#include "Recipes/CraftRecipe.h"
-#include "Recipes/Recipe.h"
+#include "../Recipes/BuildRecipe.h"
+#include "../Recipes/CraftRecipe.h"
+#include "../Recipes/Recipe.h"
 
 #ifdef SERVER_SIDE
 GameServer* godObject::global_server = nullptr;

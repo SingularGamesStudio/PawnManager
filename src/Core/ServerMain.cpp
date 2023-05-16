@@ -5,18 +5,17 @@
 #include <chrono>
 #include <unordered_map>
 
-#include "Entities/Buildings/Building.h"
-#include "Entities/Buildings/BuildingRegisty.h"
-#include "Entities/Buildings/CraftBuilding.h"
-#include "Entities/Pawns/FighterPawn.h"
-#include "Entities/Pawns/WorkerPawn.h"
+#include "../Entities/Buildings/Building.h"
+#include "../Entities/Buildings/BuildingRegisty.h"
+#include "../Entities/Buildings/CraftBuilding.h"
+#include "../Entities/Pawns/FighterPawn.h"
+#include "../Entities/Pawns/WorkerPawn.h"
+#include "../Recipes/CraftRecipe.h"
 #include "Event.h"
 #include "IDmanager.h"
 #include "Player.h"
-#include "Recipes/CraftRecipe.h"
 #include "Resource.h"
 #include "godobject.h"
-#include "Entities/Buildings/BuildingRegisty.h"
 #ifdef SERVER_SIDE
 using std::string;
 
@@ -29,8 +28,8 @@ int fromString(const string& str) {
 bool GameServer::onConnection(std::shared_ptr<dlib::Connection> client) {
     ptr<Player> player = makeptr<Player>();
     player->manager.owner = player;
-    ptr<CraftBuilding> hub = makeptr<CraftBuilding>(std::pair<double, double>{IDs * 90, IDs * 90}, player, 100.0);
-    for(size_t i = 0 ; i < 30; ++i)
+    ptr<CraftBuilding> hub = makeptr<CraftBuilding>(Position(IDs * 90, IDs * 90), player, 100.0);
+    for(size_t i = 0 ; i < 10; ++i)
         hub->resources.insert(Resource::Ore);
     player->hub = static_cast<ptr<Building>>(hub);
     auto recipe = new CraftRecipe();

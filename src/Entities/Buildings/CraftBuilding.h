@@ -12,8 +12,7 @@ class CraftBuilding : public Building {
     void stopRecipe();
 #endif
 public:
-    CraftBuilding(int id, std::pair<double, double> pos, ptr<Player> owner, double hp, double radius = baseBuildingRadius,
-                  ptr<Building> parent = ptr<Building>())
+    CraftBuilding(int id, Position pos, ptr<Player> owner, double hp, double radius = baseBuildingRadius, ptr<Building> parent = ptr<Building>())
         : Building(id, pos, owner, hp, radius, parent),
           Entity(pos, owner, hp, radius),
           current(nullptr) {}
