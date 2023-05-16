@@ -62,7 +62,7 @@ ptr<FighterPawn> FighterPawn::createFighterPawn(FighterPawnType type, ptr<Buildi
     }
     placeOfCreation->owner->pawns.insert(newborn->id);
     newborn->IMHere(placeOfCreation);
-    //godObject::global_server->sendPacketAll(Event(Event::Type::PAWN_APPEAR, newborn->id).getPacket());
+    return ptr<FighterPawn>(newborn.id);
 }
 void FighterPawn::getResource(ResourceEntity* toGet) {
     if (positionBuilding) IMNotHere();

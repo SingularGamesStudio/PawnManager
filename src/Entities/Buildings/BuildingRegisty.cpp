@@ -90,13 +90,13 @@ void BuildingRegisty::init() {
     }
 
     {
-        BuildingIdea temple = BuildingIdea(Building::baseBuildingRadius * 3, database.size());
+        BuildingIdea temple = BuildingIdea(Building::baseBuildingRadius * 2.7, database.size());
 
         CraftRecipe* prayForPower = new CraftRecipe();
         prayForPower->reqWorkers.push_back(expertisesID::Nitwit);
         prayForPower->inWorkers.push_back(expertisesID::Nitwit);
         prayForPower->outFighters.push_back(FighterPawnType::Monk);
-        prayForPower->duration = 15;
+        prayForPower->duration = 1.5;
         temple.available.push_back(prayForPower);
 
         CraftRecipe* prayForResources = new CraftRecipe();
@@ -106,14 +106,15 @@ void BuildingRegisty::init() {
         prayForResources->outResources.push_back(Resource::Ore);
         prayForResources->outResources.push_back(Resource::Ingot);
         prayForResources->outResources.push_back(Resource::Weapon);
-        prayForResources->duration = 15;
+        prayForResources->duration = 1.5;
+        temple.available.push_back(prayForResources);
 
         BuildRecipe* createTemple = new BuildRecipe({0, 0}, temple);
         createTemple->inResources.push_back(Resource::Ingot);
         createTemple->inResources.push_back(Resource::Ingot);
         createTemple->inResources.push_back(Resource::Ingot);
-        createTemple->duration = 30;
-        createTemple->reqWorkers.push_back(expertisesID::Metalworking);
+        createTemple->duration = 3;
+        //createTemple->reqWorkers.push_back(expertisesID::Metalworking);
         createTemple->reqWorkers.push_back(expertisesID::Smeltery);
         createTemple->reqWorkers.push_back(expertisesID::Nitwit);
         database.push_back(createTemple);

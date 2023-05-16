@@ -28,7 +28,7 @@ void CraftRecipe::finish() {
     for (ptr<Pawn> p: procPawns) { p.del(); }
 
     for (FighterPawnType t: outFighters) { auto send = FighterPawn::createFighterPawn(t, place.dyn_cast<Building>()).dyn_cast<Pawn>();
-        godObject::global_server->sendPacketAll(Event(Event::Type::RESOURCE_ENTITY_APPEAR, send.id).getPacket());}
+        godObject::global_server->sendPacketAll(Event(Event::Type::PAWN_APPEAR, send.id).getPacket());}
     for (Resource t: outResources) { place->addResource(t); }
     cleanup();
 }

@@ -40,7 +40,7 @@ bool GameServer::onConnection(std::shared_ptr<dlib::Connection> client) {
     recipe->duration = 5;
     hub->recipes.push_back(recipe);
 
-    for(size_t i = 0; i < 2; ++i) {
+    for(size_t i = 0; i < 5; ++i) {
         ptr<WorkerPawn> pawn = makeptr<WorkerPawn>();
         pawn->create(player->hub);
         pawn->expertises.insert(expertisesID::Nitwit);
