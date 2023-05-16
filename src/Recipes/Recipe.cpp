@@ -9,6 +9,7 @@
 #include "../Entities/Pawns/Pawn.h"
 #include "../Entities/Pawns/WorkerPawn.h"
 #include "../Resource.h"
+#include "../godobject.h"
 
 #ifdef SERVER_SIDE
 
@@ -91,6 +92,8 @@ bool Recipe::checkRequirements(ptr<CraftBuilding> place, bool start) {
         procResources = usedResources;
         procPawns = usedPawns;
         workers = workingPawns;
+        
+        godObject::global_server->sendPacketAll(Event(Event::Type::UPDATE_RESOURCES, place->id).getPacket());
 
         // for(ptr<Pawn> p:usedPawns){p->beIngridient();}
         // for(ptr<WorkerPawn>

@@ -98,6 +98,11 @@ void LocalController::onPacketReceive(const dlib::Packet& p) {
         double time;
         std::memcpy(&time, data.data() + sizeof(int) + sizeof(pos), sizeof(time));
         ptr<Entity>(id)->startMoveToPos(pos, time);
+    } else if (type == Event::Type::UPDATE_RESOURCES) {
+        int id = 0;
+        std::memcpy(&id, data.data(), sizeof(int));
+        ptr<Building> bu(id);
+        bu->updateResources(data.data() + sizeof(int));
     } else {
         int id = 0;
         std::memcpy(&id, data.data(), sizeof(int));

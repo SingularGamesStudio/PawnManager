@@ -27,7 +27,8 @@ public:
         RESOURCE_ENTITY_APPEAR,   //11
         RESOURCE_ENTITY_DISAPPEAR,//12
         PLAYER_ACTION,            //13
-        SYNC_PULSE                //14
+        SYNC_PULSE,               //14
+        UPDATE_RESOURCES,         //15
     };
     Event() = delete;
     Event(Type t, int id);

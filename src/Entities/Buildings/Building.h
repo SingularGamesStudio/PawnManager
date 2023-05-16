@@ -45,6 +45,11 @@ public:
     std::vector<uint8_t> serialize() const override;
     size_t deserialize(const uint8_t* data) override;
 
+
+    std::vector<uint8_t> serializeResources() const;
+    size_t updateResources(const uint8_t* data);
+
+
 protected:
     std::vector<uint8_t> serializeSelf() const;
     size_t deserializeSelf(const uint8_t* data);

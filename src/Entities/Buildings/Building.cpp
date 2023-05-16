@@ -92,6 +92,25 @@ std::vector<uint8_t> Building::serializeSelf() const {
     return result;
 }
 
+std::vector<uint8_t> Building::serializeResources() const {
+    size_t size = sizeof(int) + sizeof(size_t) * 2 + sizeof(Resource) * (resources.size() + reservedResources.size());
+    std::vector<uint8_t> result = std::vector<uint8_t>(size);
+    uint8_t* curr = result.data();
+    curr += copyVariable(curr, id);
+    curr += copySet(curr, resources);
+    curr += copySet(curr, reservedResources);
+    return result;
+}
+
+size_t Building::updateResources(const uint8_t* data) {
+    const uint8_t* curr = data;
+    resources.clear();
+    reservedResources.clear();
+    curr += initializeSet(curr, resources);
+    curr += initializeSet(curr, reservedResources);
+    return curr - data;
+}
+
 size_t Building::deserializeSelf(const uint8_t* data) {
     size_t shift = Entity::deserializeSelf(data);
     const uint8_t* curr = data + shift;

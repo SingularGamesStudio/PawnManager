@@ -20,6 +20,7 @@ Event::Event(Event::Type t, int id) {
     acceptable_events.insert(Event::Type::PLAYER_DISAPPEAR);
     acceptable_events.insert(Event::Type::RESOURCE_ENTITY_APPEAR);
     acceptable_events.insert(Event::Type::RESOURCE_ENTITY_DISAPPEAR);
+    acceptable_events.insert(Event::Type::UPDATE_RESOURCES);
     if (!acceptable_events.contains(t)) throw std::invalid_argument("Trying to make event with wrong type");
     std::vector<uint8_t> tmp(sizeof(t));
     std::memcpy(tmp.data(), &t, sizeof(t));
@@ -36,6 +37,9 @@ Event::Event(Event::Type t, int id) {
     } else if (t == Event::Type::RESOURCE_ENTITY_APPEAR) {
         ptr<ResourceEntity> pl(id);
         curr_data = pl->serialize();// todo
+    } else if (t == Event::Type::UPDATE_RESOURCES) {
+        ptr<Building> bu(id);
+        curr_data = bu->serializeResources();
     } else {
         tmp.resize(sizeof(t) + sizeof(id));
         std::memcpy(tmp.data() + sizeof(t), &id, sizeof(id));
