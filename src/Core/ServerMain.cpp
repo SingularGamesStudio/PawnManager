@@ -78,14 +78,12 @@ void GameServer::onPacketReceive(std::shared_ptr<dlib::Connection> client, dlib:
         return;
     } else if (type == Event::Type::ATTACK) {
         int id = 0;
-        std::memcpy(&id, data.data(), sizeof(int));
+        uint8_t* dota = data.data();
+        dota += initializeVariable(dota, id);
         ptr<Building> toAttack(id);
-        for (ptr<Pawn> p: players[client->getID()]->pawns) {
-            if (p.dyn_cast<FighterPawn>()) {
-                ptr<FighterPawn> f = p.dyn_cast<FighterPawn>();
-                f->assignTask(Task(TaskID::Attack, toAttack.dyn_cast<Entity>()));
-            }
-        }
+        std::vector<std::pair<FighterPawnType, int>> fighters;
+        dota += initializeVector(dota, fighters);
+        players[client->getID()]->manager.attack(toAttack, fighters);
     }
 }
 
@@ -132,6 +130,7 @@ int main(int argc, char** argv) {
             }
             todel.del();
         }
+        godObject::global_server->suicideSquad.clear();
     }
     server.stop();
 }

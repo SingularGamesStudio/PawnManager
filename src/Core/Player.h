@@ -77,6 +77,8 @@ public:
 
         bool startRecipe(Recipe* recipe, ptr<Building> where);
 
+        void attack(ptr<Building> what, std::vector<std::pair<FighterPawnType, int>> fighters);
+
         void tick();
     };
 
@@ -93,7 +95,7 @@ public:
     ~Player();
 #endif
 #ifdef CLIENT_SIDE
-    void localAttack(ptr<Building> what);
+    void localAttack(ptr<Building> what, std::vector<std::pair<FighterPawnType, int>> who);
     void localStart(Recipe* recipe, ptr<Building> where);
 #endif
     std::vector<ptr<Building>> get_buildings() const;

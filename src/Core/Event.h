@@ -6,6 +6,7 @@
 class Building;
 class Pawn;
 class Recipe;
+enum class FighterPawnType : uint8_t;
 enum class Resource : uint8_t;
 
 class Event {
@@ -38,6 +39,7 @@ public:
     Event(Type t, int id, Resource res);
     Event(Type t, int id, int id_dest, double time);
     Event(Type t, Recipe* recipe, int id);
+    Event(Type t, int id, std::vector<std::pair<FighterPawnType, int>> what);
     dlib::Packet getPacket();
 };
 #endif

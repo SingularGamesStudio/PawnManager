@@ -212,6 +212,29 @@ Player::TaskManager::PendingRecipe::~PendingRecipe() {
     delete recipe;
 }
 
+void Player::TaskManager::attack(ptr<Building> what, std::vector<std::pair<FighterPawnType, int>> fighters) {
+    for (auto p: fighters) {
+        FighterPawnType type = p.first;
+        int cnt = p.second;
+        for (ptr<Pawn> pawn: owner->pawns) {
+            if (pawn.dyn_cast<FighterPawn>()) {
+                ptr<FighterPawn> fighter = pawn.dyn_cast<FighterPawn>();
+                if (fighter->getType() == type && fighter->currentTask.id == TaskID::Idle) {
+                    cnt--;
+                    if (what->owner == owner) {
+                        fighter->assignTask(Task(TaskID::Protect, ptr<Entity>(), what));
+                    } else {
+                        fighter->assignTask(Task(TaskID::Attack, what.dyn_cast<Entity>()));
+                    }
+                    if (cnt == 0) break;
+                }
+            }
+        }
+        if(cnt>0)
+            std::cerr << cnt << " fighters not found" << std::endl;
+    }
+}
+
 void Player::TaskManager::cancelTask(Task task, ptr<Pawn> pawn) {
     PendingRecipe* pr = nullptr;
     for (PendingRecipe* t: work) {
@@ -295,8 +318,8 @@ Player::~Player() {
 #endif
 
 #ifdef CLIENT_SIDE
-void Player::localAttack(ptr<Building> what) {
-    Event attack(Event::Type::ATTACK, what.id);
+void Player::localAttack(ptr<Building> what, std::vector<std::pair<FighterPawnType, int>> who) {
+    Event attack(Event::Type::ATTACK, what.id, who);
     godObject::local_server->send(attack.getPacket());
 }
 void Player::localStart(Recipe* recipe, ptr<Building> where) {
@@ -315,7 +338,7 @@ std::vector<uint8_t> Player::serializeSelf() const {
     uint8_t* curr = result.data() + result.size() - size;
     curr += copyVariable(curr, id);
     curr += copyVariable(curr, hub);
-    curr += copySet(curr ,pawns);
+    curr += copySet(curr, pawns);
     return result;
 }
 
@@ -336,9 +359,7 @@ size_t Player::deserializeSelf(const uint8_t* data) {
 
 void buildingDFS(ptr<Building> v, std::vector<ptr<Building>>& result) {
     result.push_back(v);
-    for(auto u : v->children) {
-        buildingDFS(u, result);
-    }
+    for (auto u: v->children) { buildingDFS(u, result); }
 }
 
 std::vector<ptr<Building>> Player::get_buildings() const {

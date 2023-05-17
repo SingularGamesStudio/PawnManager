@@ -11,16 +11,14 @@
 #include "SFML/Graphics/Text.hpp"
 void FighterPawnControlWindow::updateAndRender() {
     std::vector<std::pair<FighterPawnType, int>> pawnCnts = getPawnCnts();
-    if(pawnCnts.empty()) {
+    if (pawnCnts.empty()) {
         PawnManagerClient::winManager.popWindow();
         return;
     }
-    if(currentSelected >= pawnCnts.size()) {
-        currentSelected = 0;
-    }
+    if (currentSelected >= pawnCnts.size()) { currentSelected = 0; }
     GameWindow::updateAndRender();
     sf::FloatRect fr = getWindowRectangle();
-    sf::Text t(std::string(isProtection()?"Protect building " : "Attack building ") + std::to_string(currentSelected),
+    sf::Text t(std::string(isProtection() ? "Protect building " : "Attack building ") + std::to_string(currentSelected),
                PawnManagerClient::fontManager.f);
     t.setCharacterSize(20);
     t.setFillColor(sf::Color(0, 0, 0));
@@ -32,23 +30,19 @@ void FighterPawnControlWindow::updateAndRender() {
 }
 FighterPawnControlWindow::FighterPawnControlWindow(ptr<Building> b) : currentSelected(0), b(b) {
     slotCounts = sf::Vector2i(5, 5);
-    controls.push_back(new ButtonControl(*this, sf::IntRect(1, 4, 2, 0), "Send", [this](){
-        //TODO send attack or protect to server
-        godObject::local_server->mainPlayer->localAttack(this->b);
+    controls.push_back(new ButtonControl(*this, sf::IntRect(1, 4, 2, 0), "Send", [this]() {
+        auto cnts = getPawnCnts();
+        godObject::local_server->mainPlayer->localAttack(this->b, cnts);
     }));
-    controls.push_back(new ButtonControl(*this, sf::IntRect(0, 4, 0, 0), "<", [this](){
+    controls.push_back(new ButtonControl(*this, sf::IntRect(0, 4, 0, 0), "<", [this]() {
         int pawnTypes = getPawnCnts().size();
         --currentSelected;
-        if(currentSelected < 0) {
-            currentSelected += pawnTypes;
-        }
+        if (currentSelected < 0) { currentSelected += pawnTypes; }
     }));
-    controls.push_back(new ButtonControl(*this, sf::IntRect(4, 4, 0, 0), ">", [this](){
+    controls.push_back(new ButtonControl(*this, sf::IntRect(4, 4, 0, 0), ">", [this]() {
         int pawnTypes = getPawnCnts().size();
         ++currentSelected;
-        if(currentSelected >= pawnTypes) {
-            currentSelected -= pawnTypes;
-        }
+        if (currentSelected >= pawnTypes) { currentSelected -= pawnTypes; }
     }));
     controls.push_back(slot = new SlotControl(*this, sf::IntRect(0, 1, 0, 0)));
     controls.push_back(pawnCnt = new LabelControl(*this, sf::IntRect(1, 1, 3, 0), "Count: 0"));
@@ -59,11 +53,9 @@ bool FighterPawnControlWindow::isProtection() { return b->owner == godObject::lo
 
 std::vector<std::pair<FighterPawnType, int>> FighterPawnControlWindow::getPawnCnts() {
     std::map<FighterPawnType, int> res;
-    for(ptr<Pawn> p : godObject::local_server->mainPlayer->pawns) {
+    for (ptr<Pawn> p: godObject::local_server->mainPlayer->pawns) {
         ptr<FighterPawn> fp = p.dyn_cast<FighterPawn>();
-        if(fp && fp->currentTask.id == TaskID::Idle) {
-            ++res[fp->getType()];
-        }
+        if (fp && fp->currentTask.id == TaskID::Idle) { ++res[fp->getType()]; }
     }
     return std::vector<std::pair<FighterPawnType, int>>(res.begin(), res.end());
 }

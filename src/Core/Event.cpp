@@ -22,7 +22,6 @@ Event::Event(Event::Type t, int id) {
     acceptable_events.insert(Event::Type::PLAYER_DISAPPEAR);
     acceptable_events.insert(Event::Type::RESOURCE_ENTITY_APPEAR);
     acceptable_events.insert(Event::Type::RESOURCE_ENTITY_DISAPPEAR);
-    acceptable_events.insert(Event::Type::ATTACK);
     acceptable_events.insert(Event::Type::UPDATE_EXPERTISES);
 #ifdef SERVER_SIDE
     acceptable_events.insert(Event::Type::SYNC_PULSE);
@@ -139,6 +138,18 @@ Event::Event(Type t, Recipe* recipe, int id) {
     data += copyVariable(data, id);
     std::vector<uint8_t> curr_data = recipe->serialize();
     std::copy(curr_data.begin(), curr_data.end(), std::back_inserter(tmp));
+    p << tmp;
+}
+
+Event::Event(Type t, int id, std::vector<std::pair<FighterPawnType, int>> what) {
+    std::set<Event::Type> acceptable_events;
+    acceptable_events.insert(Event::Type::ATTACK);
+    if (!acceptable_events.contains(t)) throw std::invalid_argument("Trying to make event with wrong type");
+    std::vector<uint8_t> tmp(sizeof(t) + sizeof(int) + sizeof(size_t) + sizeof(std::pair<FighterPawnType, int>) * what.size());
+    uint8_t* data = tmp.data();
+    data += copyVariable(data, t);
+    data += copyVariable(data, id);
+    data += copyVector(data, what);
     p << tmp;
 }
 

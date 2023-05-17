@@ -98,6 +98,7 @@ void FighterPawn::assignTask(const Task& toAssign) {
             moveToEntity(toAssign.destination.dyn_cast<Entity>());
             break;
         case TaskID::Protect:
+            travelling = true;
             break;
         default:
             throw("Unexpected FighterPawn TaskID: ", toAssign.id);
@@ -125,12 +126,12 @@ void FighterPawn::moveToEntity(ptr<Entity> dest) {
     godObject::global_server->sendPacketAll(Event(Event::Type::PAWN_MOVE, id, destination.id, speed).getPacket());
 }
 void FighterPawn::tick(double deltaTime) {
+    if (!currentTask.destination) toAttack = false;
     if ((!currentTask.destination) && (!currentTask.destination2)) {
         toAttack = false;
         currentTask = Task(TaskID::Move, owner->hub.dyn_cast<Entity>());
         return;
     }
-    toAttack = false;
     if (currentTask.id == TaskID::Protect) {
         ptr<Entity> enemy;
         for (auto theOpponent: godObject::global_server->players) {
