@@ -4,6 +4,7 @@
 #include <random>
 #include <unordered_map>
 
+#include "../net/blocking_map.h"
 #include "../net/server.h"
 #include "IDmanager.h"
 
@@ -11,8 +12,8 @@ class Player;
 
 class GameServer : public dlib::ServerInterface {
 public:
-    std::unordered_map<int, ptr<Player>> players;
     std::vector<ptr<RequiresID>> suicideSquad;
+    dlib::BlockingMap<int, ptr<Player>> players;
     std::mt19937 rnd;
     GameServer(uint16_t port) : dlib::ServerInterface(port) {}
     virtual bool onConnection(std::shared_ptr<dlib::Connection> client) override;

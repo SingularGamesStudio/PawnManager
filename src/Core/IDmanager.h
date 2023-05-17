@@ -4,6 +4,7 @@
 #include <iostream>
 #include <unordered_map>
 #include <vector>
+#include "../net//blocking_map.h"
 
 class Entity;
 class Pawn;
@@ -12,7 +13,7 @@ class Building;
 struct RequiresID;
 
 struct IDmanager {
-    static std::unordered_map<int, RequiresID*> all;
+    static dlib::BlockingMap<int, RequiresID*> all;
 
     static int nextID;
     static int newID();

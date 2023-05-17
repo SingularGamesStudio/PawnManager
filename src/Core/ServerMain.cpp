@@ -37,7 +37,9 @@ bool GameServer::onConnection(std::shared_ptr<dlib::Connection> client) {
     recipe->outResources.push_back(Resource::Ingot);
     recipe->duration = 5;
     hub->recipes.push_back(recipe);
-
+    recipe = new CraftRecipe();
+    recipe->outFighters.push_back(FighterPawnType::Monk);
+    hub->recipes.push_back(recipe);
     for (size_t i = 0; i < 5; ++i) {
         ptr<WorkerPawn> pawn = makeptr<WorkerPawn>();
         pawn->create(player->hub);
@@ -114,8 +116,6 @@ int main(int argc, char** argv) {
     }
 
     GameServer server(params["port"]);
-    IDmanager::all.reserve(1'000);
-    server.players.reserve(1'000);
     server.start();
     godObject::global_server = &server;
     server.rnd = std::mt19937(42);
@@ -127,7 +127,7 @@ int main(int argc, char** argv) {
         server.tick(dTime / CLOCKS_PER_SEC);
         server.respond();
         for (ptr<RequiresID> todel: godObject::global_server->suicideSquad) {
-            if(todel.dyn_cast<Player>()) {
+            if (todel.dyn_cast<Player>()) {
                 //TODO
             }
             todel.del();

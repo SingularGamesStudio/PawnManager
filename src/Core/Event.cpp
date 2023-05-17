@@ -42,8 +42,8 @@ Event::Event(Event::Type t, int id) {
         ptr<Player> pl(id);
         curr_data = pl->serialize();
     } else if (t == Event::Type::RESOURCE_ENTITY_APPEAR) {
-        ptr<ResourceEntity> pl(id);
-        curr_data = pl->serialize();// todo
+        ptr<ResourceEntity> re(id);
+        curr_data = re->serialize();
     } else if (t == Event::Type::UPDATE_RESOURCES) {
         ptr<Building> bu(id);
         curr_data = bu->serializeResources();

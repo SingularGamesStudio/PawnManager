@@ -20,6 +20,7 @@
 #include "../Recipes/BuildRecipe.h"
 #include "BuildBuildingWindow.h"
 #include "CraftBuildingWindow.h"
+#include "FighterPawnControlWindow.h"
 #include "MainMenuWindow.h"
 #include "SFML/Graphics/Text.hpp"
 #include "SFML/Window.hpp"
@@ -159,11 +160,15 @@ void PawnManagerClient::onMouseClick(int x, int y, sf::Mouse::Button b) {
     if (!godObject::local_server) { return; }
     sf::Vector2f center = getRenderOrigin();
     sf::Vector2f pos = (sf::Vector2f(x, y) - center) / renderScale;
-    if (!onBuildingMouseClick(godObject::local_server->mainPlayer->hub, pos, b)) {
+    if(onBuildingMouseClick(godObject::local_server->mainPlayer->hub, pos, b)) {
+        return;
+    }
+    {
         ptr<Building> building = ptr<Building>(selectedBuilding);
         if (building) {
             winManager.pushWindow(new BuildBuildingWindow(selectedBuilding, pos));
             selectedBuilding = -1;
+            return;
         }
     }
     for(ptr<Player> plr:godObject::local_server->players) {
@@ -185,9 +190,10 @@ bool PawnManagerClient::onBuildingMouseClick(ptr<Building> b, sf::Vector2f pos, 
             ptr<CraftBuilding> cb = c.dyn_cast<CraftBuilding>();
             if (cb && !cb->recipes.empty()) { winManager.pushWindow(new CraftBuildingWindow(c->id)); }
         } else if (button == sf::Mouse::Middle) {
+            winManager.pushWindow(new FighterPawnControlWindow(b));
             //b.del();
 
-            godObject::local_server->mainPlayer->localAttack(b);
+//            godObject::local_server->mainPlayer->localAttack(b);
         }
         return true;
     }

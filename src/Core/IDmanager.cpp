@@ -2,7 +2,7 @@
 
 #include "../Entities/Entity.h"
 
-std::unordered_map<int, RequiresID*> IDmanager::all;
+dlib::BlockingMap<int, RequiresID*> IDmanager::all;
 int IDmanager::nextID = 0;
 
 int IDmanager::newID() { return nextID++; }
