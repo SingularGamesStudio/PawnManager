@@ -19,7 +19,6 @@ void Pawn::drop(ptr<Building> in, Position pos) {
         return;
     }
     if (holding != Resource::Nothing) {
-        // TODO godObject::global_server->sendPacketAll(Event(Event::Type::RESOURCE_ENTITY_ADD, holding).getPacket());
         auto send = makeptr<ResourceEntity>(holding, pos);
         godObject::global_server->sendPacketAll(Event(Event::Type::RESOURCE_ENTITY_APPEAR, send.id).getPacket());
     }

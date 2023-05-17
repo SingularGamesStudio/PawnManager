@@ -109,7 +109,6 @@ void LocalController::onPacketReceive(const dlib::Packet& p) {
         double velocity;
         dota += initializeVariable(dota, velocity);
         ptr<Entity>(id)->startMoveToEntity(ptr<Entity>(id_where), velocity);
-        /// TODO: change to move to entity cmd
     } else if (type == Event::Type::UPDATE_RESOURCES) {
         int id = 0;
         std::memcpy(&id, data.data(), sizeof(int));

@@ -29,7 +29,7 @@ bool Recipe::checkRequirements(ptr<CraftBuilding> place, bool start) {
         } else
             assert(0);
     }
-    // TODO:копипаста
+
     for (FighterPawnType t: inFighters) {
         bool ok = false;
         for (auto it = fightersInside.begin(); it != fightersInside.end(); it++) {

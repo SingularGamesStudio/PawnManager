@@ -118,8 +118,6 @@ int main(int argc, char** argv) {
     }
 
     GameServer server(params["port"]);
-    IDmanager::all.reserve(1'000);
-    server.players.reserve(1'000);
     server.start();
     godObject::global_server = &server;
     server.rnd = std::mt19937(42);
