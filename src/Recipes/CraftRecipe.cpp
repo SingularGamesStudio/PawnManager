@@ -14,7 +14,7 @@ void CraftRecipe::finish() {
         auto send = FighterPawn::createFighterPawn(t, place.dyn_cast<Building>()).dyn_cast<Pawn>();
         godObject::global_server->sendPacketAll(Event(Event::Type::PAWN_APPEAR, send.id).getPacket());
         send->currentTask = Task(TaskID::Protect, ptr<Entity>(), send->owner->hub);
-        send.dyn_cast<FighterPawn>()->moveToEntity(send->owner->hub.dyn_cast<Entity>());//TODO:костыль
+        send->travelling = true;//TODO:костыль
     }
 
     for (Resource t: outResources) { place->addResource(t); }

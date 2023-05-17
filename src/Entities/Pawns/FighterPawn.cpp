@@ -120,6 +120,7 @@ void FighterPawn::moveToPosition(Position pos) {
 void FighterPawn::moveToEntity(ptr<Entity> dest) {
     //moveToPosition(dest->position);
     destination = dest.dyn_cast<Entity>();
+    travelling = true;
     destinationPosition = Position(-1, -1);
     godObject::global_server->sendPacketAll(Event(Event::Type::PAWN_MOVE, id, destination.id, speed).getPacket());
 }
