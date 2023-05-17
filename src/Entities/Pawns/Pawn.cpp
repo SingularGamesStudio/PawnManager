@@ -39,7 +39,7 @@ void Pawn::IMHere(ptr<Building> to) {
         position = positionBuilding->position;
     }
 }
-void Pawn::stopBeingIngridient() { assignTask(Task(TaskID::Idle, positionBuilding)); }
+void Pawn::stopBeingIngridient() { assignTask(Task(TaskID::Idle, positionBuilding.dyn_cast<Entity>())); }
 void Pawn::moveToBuilding(ptr<Building> toMove) { throw("How did we get here?"); }
 //void Pawn::assignTask(const Task& toAssign) = 0;
 

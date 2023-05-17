@@ -21,7 +21,7 @@ size_t copyVariable(uint8_t* dst, T src) {
     std::memcpy(dst, &src, sizeof(src));
     return sizeof(src);
 }
-
+double dist(Position a, Position b);
 template<typename T>
 size_t initializeVariable(const uint8_t* src, T& dst) {
     std::memcpy(&dst, src, sizeof(dst));

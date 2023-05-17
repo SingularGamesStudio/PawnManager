@@ -14,7 +14,7 @@
 #ifdef SERVER_SIDE
 
 void WorkerPawn::create(ptr<Building> placeOfCreation) {
-    currentTask = Task(TaskID::Idle, placeOfCreation);
+    currentTask = Task(TaskID::Idle, placeOfCreation.dyn_cast<Entity>());
     travelling = false;
     holding = Resource::Nothing;
     needed = Resource::Nothing;
@@ -30,20 +30,20 @@ void WorkerPawn::assignTask(const Task& toAssign) {
     currentInWay = 0;
     switch (toAssign.id) {
         case TaskID::Get:
-            moveToBuilding(toAssign.destination);
+            moveToBuilding(toAssign.destination.dyn_cast<Building>());
             needed = toAssign.object;
             toTake = true;
             break;
         case TaskID::Transport:
-            moveToBuilding(toAssign.destination);
+            moveToBuilding(toAssign.destination.dyn_cast<Building>());
             toTake = true;
             needed = toAssign.object;
             break;
         case TaskID::Move:
-            moveToBuilding(toAssign.destination);
+            moveToBuilding(toAssign.destination.dyn_cast<Building>());
             break;
         case TaskID::BeProcessed:
-            moveToBuilding(toAssign.destination);
+            moveToBuilding(toAssign.destination.dyn_cast<Building>());
             break;
         case TaskID::Idle:
             break;

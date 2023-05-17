@@ -48,12 +48,12 @@ ptr<FighterPawn> FighterPawn::createFighterPawn(FighterPawnType type, ptr<Buildi
     ptr<FighterPawn> newborn;
     switch (type) {
         case FighterPawnType::Monk:
-            newborn = (makeptr<Monk>(Task(TaskID::Idle, placeOfCreation), false, Resource::Nothing, placeOfCreation->owner, placeOfCreation,
+            newborn = (makeptr<Monk>(Task(TaskID::Idle, placeOfCreation.dyn_cast<Entity>()), false, Resource::Nothing, placeOfCreation->owner, placeOfCreation,
                                      placeOfCreation))
                               .dyn_cast<FighterPawn>();
             break;
         case FighterPawnType::Swordsman:
-            newborn = (makeptr<Swordsman>(Task(TaskID::Idle, placeOfCreation), false, Resource::Nothing, placeOfCreation->owner, placeOfCreation,
+            newborn = (makeptr<Swordsman>(Task(TaskID::Idle, placeOfCreation.dyn_cast<Entity>()), false, Resource::Nothing, placeOfCreation->owner, placeOfCreation,
                                           placeOfCreation))
                               .dyn_cast<FighterPawn>();
             break;
@@ -62,7 +62,9 @@ ptr<FighterPawn> FighterPawn::createFighterPawn(FighterPawnType type, ptr<Buildi
     }
     placeOfCreation->owner->pawns.insert(newborn->id);
     newborn->IMHere(placeOfCreation);
-    return ptr<FighterPawn>(newborn.id);
+    newborn->currentTask = Task(TaskID::Protect, ptr<Entity>(),placeOfCreation->owner->hub);
+    newborn->moveToBuilding(placeOfCreation->owner->hub);
+    return ptr<FighterPawn>(newborn->id);
 }
 void FighterPawn::getResource(ResourceEntity* toGet) {
     if (positionBuilding) IMNotHere();
@@ -77,26 +79,26 @@ void FighterPawn::assignTask(const Task& toAssign) {
     currentTask = toAssign;
     switch (toAssign.id) {
         case TaskID::Get:
-            moveToBuilding(toAssign.destination);
+            moveToBuilding(toAssign.destination.dyn_cast<Building>());
             needed = toAssign.object;
             toTake = true;
             break;
         case TaskID::Transport:
-            moveToBuilding(toAssign.destination);
+            moveToBuilding(toAssign.destination.dyn_cast<Building>());
             toTake = true;
             needed = toAssign.object;
             break;
         case TaskID::Move:
-            moveToBuilding(toAssign.destination);
+            moveToBuilding(toAssign.destination.dyn_cast<Building>());
             break;
         case TaskID::BeProcessed:
-            moveToBuilding(toAssign.destination);
+            moveToBuilding(toAssign.destination.dyn_cast<Building>());
             break;
         case TaskID::Idle:
             break;
         case TaskID::Attack:
             toAttack = true;
-            moveToBuilding(toAssign.destination);
+            moveToBuilding(toAssign.destination.dyn_cast<Building>());
             break;
         case TaskID::Protect:
             break;
@@ -122,16 +124,29 @@ void FighterPawn::moveToBuilding(ptr<Building> dest) { moveToPosition(dest->posi
 void FighterPawn::tick(double deltaTime) {
     if (!currentTask.destination) {
         toAttack = false;
-        currentTask = Task(TaskID::Move, owner->hub);
+        currentTask = Task(TaskID::Move, owner->hub.dyn_cast<Entity>());
         return;
     }
     if (currentTask.id == TaskID::Protect) {
         ptr<Entity> enemy;
-        ///TODO enemy spotted
+        for (auto theOpponent : godObject::global_server->players){
+            if (theOpponent.second == owner)
+                continue;
+            for (auto thePawnOfOpponent : theOpponent.second->pawns){
+                if(thePawnOfOpponent.dyn_cast<FighterPawn>()){
+                    if(dist(currentTask.destination->position, thePawnOfOpponent->position) <= awarenessRadius){
+                        enemy = thePawnOfOpponent.dyn_cast<Entity>();
+                        break;
+                    }
+                }
+            }
+            if(enemy)
+                break;
+        }
         if (enemy) {
-            attack(enemy, deltaTime);
+            toAttack = true;
         } else
-            moveToBuilding(currentTask.destination);
+            moveToBuilding(currentTask.destination2);
     }
     Position dest = destinationPosition;
     double deltaX = fabs(position.x - dest.x);
@@ -140,6 +155,9 @@ void FighterPawn::tick(double deltaTime) {
     if (toAttack && wholeDelta <= currentTask.destination->radius) {
         attack(currentTask.destination.dyn_cast<Entity>(), deltaTime);
         return;
+    }
+    else if (toAttack){
+        moveToPosition(currentTask.destination->position);
     }
     if (travelling) {
         double signX = position.x - dest.x;

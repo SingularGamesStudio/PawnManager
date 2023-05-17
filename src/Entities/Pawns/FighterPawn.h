@@ -14,6 +14,7 @@ public:
     double speed = 100;
     double hp = 30;
     bool toAttack = false;
+    double awarenessRadius = 10;
     Position destinationPosition;
     ptr<Building> destination;
 

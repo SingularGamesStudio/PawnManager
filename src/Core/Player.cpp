@@ -119,7 +119,7 @@ void Player::TaskManager::tick() {//TODO:rewrite to mincost
                 if (haulers.size() == 0) {
                     newNeed.insert(resource);
                 } else {
-                    haulers.back()->assignTask(Task(TaskID::Transport, where, rec->place, resource, rec->ID));
+                    haulers.back()->assignTask(Task(TaskID::Transport, where.dyn_cast<Entity>(), rec->place, resource, rec->ID));
                     haulers.pop_back();
                     rec->movedResources.insert(resource);
                 }
@@ -142,7 +142,7 @@ void Player::TaskManager::tick() {//TODO:rewrite to mincost
                     for (auto z: found) {
                         ptr<Pawn> pawn = z.first;
                         PawnReq* p = z.second;
-                        pawn->assignTask(Task(TaskID::BeProcessed, rec->place, ptr<Building>(), Resource::Nothing, rec->ID));
+                        pawn->assignTask(Task(TaskID::BeProcessed, rec->place.dyn_cast<Entity>(), ptr<Building>(), Resource::Nothing, rec->ID));
                         rec->movedPawns.insert(pawn);
                         rec->backupNeeds[pawn] = p;
                     }
@@ -283,7 +283,7 @@ void Player::attack(ptr<Building> what) {
     for (ptr<Pawn> p: pawns) {
         if (p.dyn_cast<FighterPawn>()) {
             ptr<FighterPawn> f = p.dyn_cast<FighterPawn>();
-            f->assignTask(Task(TaskID::Attack, what));
+            f->assignTask(Task(TaskID::Attack, what.dyn_cast<Entity>()));
         }
     }
 }

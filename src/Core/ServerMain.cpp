@@ -83,7 +83,7 @@ void GameServer::onPacketReceive(std::shared_ptr<dlib::Connection> client, dlib:
         for (ptr<Pawn> p: players[client->getID()]->pawns) {
             if (p.dyn_cast<FighterPawn>()) {
                 ptr<FighterPawn> f = p.dyn_cast<FighterPawn>();
-                f->assignTask(Task(TaskID::Attack, toAttack));
+                f->assignTask(Task(TaskID::Attack, toAttack.dyn_cast<Entity>()));
             }
         }
     }

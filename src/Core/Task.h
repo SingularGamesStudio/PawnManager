@@ -13,14 +13,14 @@ class Building;
 class Task {
 public:
     TaskID id;
-    ptr<Building> destination;
+    ptr<Entity> destination;
     Resource object;
     ptr<Building> destination2;
     int returnID;
 
     bool avaliable(ptr<Player> owner);
 
-    Task(TaskID taskid = TaskID::Idle, ptr<Building> building = ptr<Building>(), ptr<Building> building2 = ptr<Building>(),
+    Task(TaskID taskid = TaskID::Idle, ptr<Entity> dest = ptr<Entity>(), ptr<Building> building2 = ptr<Building>(),
          Resource resource = Resource::Nothing, int returnID = -1);
     ///TASK_REFORM(player -> pawn commands)
 };

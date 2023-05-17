@@ -2,7 +2,7 @@
 
 #include <chrono>
 #include <cstring>
-
+#include <cmath>
 #include "../Core/Player.h"
 
 
@@ -17,7 +17,9 @@ void Entity::changeHealth(double delta) {
     }
 }
 #endif
-
+double dist(Position a, Position b){
+    return std::sqrt((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y));
+}
 std::chrono::steady_clock::time_point p = std::chrono::steady_clock::now();
 
 std::vector<uint8_t> Entity::serialize() const { return serializeSelf(); }
