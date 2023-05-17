@@ -38,7 +38,9 @@ bool GameServer::onConnection(std::shared_ptr<dlib::Connection> client) {
     recipe->outResources.push_back(Resource::Ingot);
     recipe->duration = 5;
     hub->recipes.push_back(recipe);
-
+    recipe = new CraftRecipe();
+    recipe->outFighters.push_back(FighterPawnType::Monk);
+    hub->recipes.push_back(recipe);
     for(size_t i = 0; i < 5; ++i) {
         ptr<WorkerPawn> pawn = makeptr<WorkerPawn>();
         pawn->create(player->hub);
