@@ -1,25 +1,27 @@
 #include "Entity.h"
 
 #include <chrono>
-#include <cstring>
 #include <cmath>
+#include <cstring>
+
 #include "../Core/Player.h"
+#include "../Core/godobject.h"
 
 
 #ifdef SERVER_SIDE
-void Entity::changeHealth(double delta) {
+bool Entity::changeHealth(double delta) {
     hp += delta;
     if (hp <= 0) {
         if (owner->hub.id == id) {
-            owner.del();
+            godObject::global_server->suicideSquad.push_back(owner.dyn_cast<RequiresID>());
         } else
-            delete this;
+            godObject::global_server->suicideSquad.push_back(ptr<RequiresID>(id));
+        return true;
     }
+    return false;
 }
 #endif
-double dist(Position a, Position b){
-    return std::sqrt((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y));
-}
+double dist(Position a, Position b) { return std::sqrt((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y)); }
 std::chrono::steady_clock::time_point p = std::chrono::steady_clock::now();
 
 std::vector<uint8_t> Entity::serialize() const { return serializeSelf(); }
@@ -57,14 +59,14 @@ void Entity::startMoveToEntity(ptr<Entity> pos, double speed) {
     lastTime = getTime();
 }
 Position Entity::getInterpolatedPos() {
-    if(motionTarget) {
+    if (motionTarget) {
         double curTime = getTime();
         double deltaTime = curTime - lastTime;
         lastTime = curTime;
         double motion = motionSpeed * deltaTime;
         Position posDelta(motionTarget->position.x - position.x, motionTarget->position.y - position.y);
         double len = std::sqrt(posDelta.x * posDelta.x + posDelta.y * posDelta.y);
-        if(motion < len) {
+        if (motion < len) {
             posDelta.x *= motion / len;
             posDelta.y *= motion / len;
         }

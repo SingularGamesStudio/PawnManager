@@ -29,8 +29,7 @@ bool GameServer::onConnection(std::shared_ptr<dlib::Connection> client) {
     ptr<Player> player = makeptr<Player>();
     player->manager.owner = player;
     ptr<CraftBuilding> hub = makeptr<CraftBuilding>(Position(IDs * 90, IDs * 90), player, 100.0);
-    for(size_t i = 0 ; i < 10; ++i)
-        hub->resources.insert(Resource::Ore);
+    for (size_t i = 0; i < 10; ++i) hub->resources.insert(Resource::Ore);
     player->hub = static_cast<ptr<Building>>(hub);
     auto recipe = new CraftRecipe();
     recipe->inResources.push_back(Resource::Ore);
@@ -39,7 +38,7 @@ bool GameServer::onConnection(std::shared_ptr<dlib::Connection> client) {
     recipe->duration = 5;
     hub->recipes.push_back(recipe);
 
-    for(size_t i = 0; i < 5; ++i) {
+    for (size_t i = 0; i < 5; ++i) {
         ptr<WorkerPawn> pawn = makeptr<WorkerPawn>();
         pawn->create(player->hub);
         pawn->expertises.insert(expertisesID::Nitwit);
@@ -50,7 +49,7 @@ bool GameServer::onConnection(std::shared_ptr<dlib::Connection> client) {
     Event hubA(Event::Type::BUILDING_APPEAR, hub->id);
     sendPacketAll(plA.getPacket());
     sendPacketAll(hubA.getPacket());
-    for(auto i : player->pawns) {
+    for (auto i: player->pawns) {
         Event workerA(Event::Type::PAWN_APPEAR, i.id);
         sendPacketAll(workerA.getPacket());
     }
@@ -59,8 +58,7 @@ bool GameServer::onConnection(std::shared_ptr<dlib::Connection> client) {
     return true;
 }
 
-void GameServer::afterConnection(std::shared_ptr<dlib::Connection> client) {
-}
+void GameServer::afterConnection(std::shared_ptr<dlib::Connection> client) {}
 
 void GameServer::onDisconnection(std::shared_ptr<dlib::Connection> client) {}
 
@@ -97,9 +95,7 @@ void tickBuildings(ptr<Building> place, double deltaTime) {
 void GameServer::tick(double deltaTime) {
     for (auto pl: players) {
         pl.second->tick();
-        for (ptr<Pawn> pw: pl.second->pawns) {
-            pw->tick(deltaTime);
-        }
+        for (ptr<Pawn> pw: pl.second->pawns) { pw->tick(deltaTime); }
         tickBuildings(pl.second->hub, deltaTime);
     }
 }
@@ -128,8 +124,14 @@ int main(int argc, char** argv) {
     while (1) {
         double dTime = clock() - currTime;
         currTime += dTime;
-        server.tick( dTime / CLOCKS_PER_SEC);
+        server.tick(dTime / CLOCKS_PER_SEC);
         server.respond();
+        for (ptr<RequiresID> todel: godObject::global_server->suicideSquad) {
+            if(todel.dyn_cast<Player>()) {
+                //TODO
+            }
+            todel.del();
+        }
     }
     server.stop();
 }

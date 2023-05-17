@@ -103,7 +103,7 @@ public:
 #endif
     double radius;
 #ifdef SERVER_SIDE
-    void changeHealth(double delta);
+    bool changeHealth(double delta);
 #endif
     virtual ~Entity() = default;
     std::vector<uint8_t> serialize() const override;
