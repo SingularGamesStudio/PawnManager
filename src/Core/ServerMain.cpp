@@ -11,6 +11,7 @@
 #include "../Entities/Pawns/FighterPawn.h"
 #include "../Entities/Pawns/WorkerPawn.h"
 #include "../Recipes/CraftRecipe.h"
+#include "../Recipes/WorkerRecipe.h"
 #include "Event.h"
 #include "IDmanager.h"
 #include "Player.h"
@@ -37,9 +38,21 @@ bool GameServer::onConnection(std::shared_ptr<dlib::Connection> client) {
     recipe->outResources.push_back(Resource::Ingot);
     recipe->duration = 5;
     hub->recipes.push_back(recipe);
+
     recipe = new CraftRecipe();
     recipe->outFighters.push_back(FighterPawnType::Monk);
     hub->recipes.push_back(recipe);
+
+    auto wrecipe = new WorkerRecipe();
+    wrecipe->outWorkers.push_back(
+            std::vector<expertisesID>({expertisesID ::Nitwit, expertisesID ::Metalworking, expertisesID ::Smeltery, expertisesID ::Trainership}));
+    hub->recipes.push_back(wrecipe);
+
+    wrecipe = new WorkerRecipe();
+    wrecipe->reqWorkers.push_back(expertisesID::Nitwit);
+    wrecipe->trainExpertises.push_back(expertisesID ::Metalworking);
+    hub->recipes.push_back(wrecipe);
+
     for (size_t i = 0; i < 5; ++i) {
         ptr<WorkerPawn> pawn = makeptr<WorkerPawn>();
         pawn->create(player->hub);
@@ -128,12 +141,9 @@ int main(int argc, char** argv) {
             if (todel.dyn_cast<Player>()) {
                 auto pl = todel.dyn_cast<Player>();
                 auto it = server.players.begin();
-                while(it != server.players.end() && it->second != pl)
-                    ++it;
+                while (it != server.players.end() && it->second != pl) ++it;
                 server.players.erase(it);
-                for(auto pwn : pl->pawns) {
-                    pwn.del();
-                }
+                for (auto pwn: pl->pawns) { pwn.del(); }
             }
             todel.del();
         }
