@@ -199,13 +199,11 @@ void FighterPawn::tick(double deltaTime) {
             holding = needed;
             needed = Resource::Nothing;
             ///TODO removeFromExistence needed
-            if (!toDrop) currentTask = TaskID::Idle;
         }
-        switch (currentTask.id) {
-            default:
-                owner->manager.finishTask(currentTask, ptr<Pawn>(id));
-                currentTask.id = TaskID::Idle;
-        }
+    }
+    if ((!travelling) && currentTask.id != TaskID::Protect){
+        currentTask = TaskID::Idle;
+        owner->manager.finishTask(currentTask, ptr<Pawn>(id));
     }
 }
 #endif
