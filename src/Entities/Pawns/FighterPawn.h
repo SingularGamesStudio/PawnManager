@@ -12,9 +12,8 @@ class FighterPawn : public Pawn {
 public:
     double atk = 10;
     double speed = 100;
-    double hp = 30;
     bool toAttack = false;
-    double awarenessRadius = 10;
+    double awarenessRadius = 50;
     Position destinationPosition;
     ptr<Entity> destination;
 

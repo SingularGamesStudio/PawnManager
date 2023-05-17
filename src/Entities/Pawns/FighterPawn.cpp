@@ -161,7 +161,7 @@ void FighterPawn::tick(double deltaTime) {
         dest = destinationPosition;
     double deltaX = fabs(position.x - dest.x);
     double deltaY = fabs(position.y - dest.y);
-    double wholeDelta = deltaX * deltaX + deltaY * deltaY;
+    double wholeDelta = std::sqrt(deltaX * deltaX + deltaY * deltaY);
     if (toAttack && wholeDelta <= currentTask.destination->radius) {
         attack(currentTask.destination.dyn_cast<Entity>(), deltaTime);
         return;

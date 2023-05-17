@@ -89,8 +89,8 @@ class Player;
 
 class Entity : public RequiresID {
 public:
-    Entity() {}
-    Entity(Position pos, ptr<Player> owner, double hp, double radius) : position(pos), owner(owner), hp(hp), radius(radius) {}
+    Entity() : position(Position(0, 0)), owner(ptr<Player>()), hp(30), radius(8) {}
+    Entity(Position pos, ptr<Player> owner, double hp = 30, double radius = 8) : position(pos), owner(owner), hp(hp), radius(radius) {}
     double hp;
     ptr<Player> owner;
     Position position;
