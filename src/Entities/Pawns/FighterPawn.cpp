@@ -127,9 +127,9 @@ void FighterPawn::moveToEntity(ptr<Entity> dest) {
 }
 void FighterPawn::tick(double deltaTime) {
     if (!currentTask.destination) toAttack = false;
-    if ((!currentTask.destination) && (!currentTask.destination2)) {
+    if ((!currentTask.destination) && (!currentTask.destination2) && (currentTask.id == TaskID::Protect || currentTask.id == TaskID::Attack)) {
         toAttack = false;
-        currentTask = Task(TaskID::Move, owner->hub.dyn_cast<Entity>());
+        assignTask(Task(TaskID::Move, owner->hub.dyn_cast<Entity>()));
         return;
     }
     if (currentTask.id == TaskID::Protect) {

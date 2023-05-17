@@ -12,10 +12,9 @@
 bool Entity::changeHealth(double delta) {
     hp += delta;
     if (hp <= 0) {
-        if (owner->hub.id == id) {
+        if (owner->hub.id == id)
             godObject::global_server->suicideSquad.push_back(owner.dyn_cast<RequiresID>());
-        } else
-            godObject::global_server->suicideSquad.push_back(ptr<RequiresID>(id));
+        godObject::global_server->suicideSquad.push_back(ptr<RequiresID>(id));
         return true;
     }
     return false;
