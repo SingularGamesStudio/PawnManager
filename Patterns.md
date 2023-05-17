@@ -26,6 +26,11 @@ Connection - Adapter сетевой библиотеки (для сервера/клиента)
 
 clientInterface/serverInterface - Interface для Connection
 
+события Events - оповещения от сервера клиенту о любых изменениях
+
+serialization/deserialization - байтовое кодирование всех интересующих нас 
+ классов(Pawn, Building, Player, Recipe) 
+
 #### Тамьяров Илья(vertignesss):
 
 Pawn + наследники
