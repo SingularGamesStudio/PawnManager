@@ -130,6 +130,7 @@ void FighterPawn::tick(double deltaTime) {
         currentTask = Task(TaskID::Move, owner->hub.dyn_cast<Entity>());
         return;
     }
+    toAttack = false;
     if (currentTask.id == TaskID::Protect) {
         ptr<Entity> enemy;
         for (auto theOpponent: godObject::global_server->players) {
