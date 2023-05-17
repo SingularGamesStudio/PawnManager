@@ -45,6 +45,9 @@ void PawnManagerClient::run() {
     while (window->isOpen()) {
         float delta = clock.restart().asSeconds();
         if (godObject::local_server) { godObject::local_server->respond(); }
+        if(!godObject::local_server->mainPlayer->hub) {
+            exit(0);
+        }
         sf::Event evt{};
         while (window->pollEvent(evt)) {
             if (evt.type == sf::Event::Closed) { window->close(); }

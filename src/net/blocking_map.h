@@ -10,6 +10,7 @@ namespace dlib {
         std::unordered_map<T, U> mp;
     public:
         class iterator {
+            friend BlockingMap;
         private:
             std::mutex* m_ptr;
             typename std::unordered_map<T, U>::iterator it;
@@ -72,6 +73,11 @@ namespace dlib {
         const U& operator[](const T& arg) const {
             std::scoped_lock lock_guard(mx);
             return mp[arg];
+        }
+        void erase(iterator it) {
+            std::scoped_lock lock_guard(mx);
+            if(it.it != mp.end())
+                mp.erase(it.it);
         }
         void clear() {
             std::scoped_lock lock_guard(mx);
