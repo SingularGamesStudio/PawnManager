@@ -150,7 +150,7 @@ void FighterPawn::tick(double deltaTime) {
             currentTask.destination = enemy;
             destination = enemy;
             toAttack = true;
-        } else if (dist(position, currentTask.destination2->position) > 1 && dist(destinationPosition, currentTask.destination2->position) > 1e-3) {
+        } else if (dist(position, currentTask.destination2->position) > 1 && dist(destination->position, currentTask.destination2->position) > 1e-3) {
             moveToEntity(currentTask.destination2.dyn_cast<Entity>());
         }
     }
