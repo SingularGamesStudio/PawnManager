@@ -23,7 +23,6 @@ public:
     void drop(ptr<Building> in, Position pos = {0, 0});
     void IMNotHere();
     void IMHere(ptr<Building> to);
-    virtual void moveToBuilding(ptr<Building> toMove) = 0;
     virtual void moveToPosition(Position toMove) = 0;
     virtual void assignTask(const Task& toAssign) = 0;
     void stopBeingIngridient();

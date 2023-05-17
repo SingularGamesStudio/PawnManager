@@ -87,11 +87,7 @@ void WorkerPawn::tick(double deltaTime) {
             IMHere(dest);
             ++currentInWay;
             if (currentInWay < onTheWay.size()) {
-                auto tmp = onTheWay[currentInWay]->position;
-                double tim = std::hypot(tmp.x - position.x, tmp.y - position.y);
-                tim /= speed;
-
-                godObject::global_server->sendPacketAll(Event(Event::Type::PAWN_MOVE, id, onTheWay[currentInWay]->position, tim).getPacket());
+                godObject::global_server->sendPacketAll(Event(Event::Type::PAWN_MOVE, id, onTheWay[currentInWay].id, speed).getPacket());
             }
         }
     } else {
