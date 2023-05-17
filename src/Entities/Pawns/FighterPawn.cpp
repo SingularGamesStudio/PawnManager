@@ -130,6 +130,8 @@ void FighterPawn::tick(double deltaTime) {
             if (theOpponent.second == owner) continue;
             for (auto thePawnOfOpponent: theOpponent.second->pawns) {
                 if (thePawnOfOpponent.dyn_cast<FighterPawn>()) {
+                    std::cout<<"I am the fighter enemy pawn of id:"<<thePawnOfOpponent.id<<" and I am "<<dist(currentTask.destination2->position, thePawnOfOpponent->position)
+                            <<" units away from protected building!\n";
                     if (dist(currentTask.destination2->position, thePawnOfOpponent->position) <= awarenessRadius) {
                         enemy = thePawnOfOpponent.dyn_cast<Entity>();
                         break;
