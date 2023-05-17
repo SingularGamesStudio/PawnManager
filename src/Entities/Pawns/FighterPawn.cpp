@@ -36,7 +36,6 @@ Swordsman::Swordsman(int id, Task task, bool BOOL, Resource resource, ptr<Player
 }
 #ifdef SERVER_SIDE
 void FighterPawn::attack(ptr<Entity> attacked, double deltaTime) {
-    std::cout << "Genuinly attacking " << -atk << " " << attacked->hp << "\n";
     attacked->changeHealth(-atk * deltaTime);
     if (attacked.dyn_cast<FighterPawn>()) {
         ptr<FighterPawn> fighterPawnAttacked = attacked.dyn_cast<FighterPawn>();
@@ -48,13 +47,13 @@ ptr<FighterPawn> FighterPawn::createFighterPawn(FighterPawnType type, ptr<Buildi
     ptr<FighterPawn> newborn;
     switch (type) {
         case FighterPawnType::Monk:
-            newborn = (makeptr<Monk>(Task(TaskID::Idle, placeOfCreation.dyn_cast<Entity>()), false, Resource::Nothing, placeOfCreation->owner, placeOfCreation,
-                                     placeOfCreation))
+            newborn = (makeptr<Monk>(Task(TaskID::Idle, placeOfCreation.dyn_cast<Entity>()), false, Resource::Nothing, placeOfCreation->owner,
+                                     placeOfCreation, placeOfCreation))
                               .dyn_cast<FighterPawn>();
             break;
         case FighterPawnType::Swordsman:
-            newborn = (makeptr<Swordsman>(Task(TaskID::Idle, placeOfCreation.dyn_cast<Entity>()), false, Resource::Nothing, placeOfCreation->owner, placeOfCreation,
-                                          placeOfCreation))
+            newborn = (makeptr<Swordsman>(Task(TaskID::Idle, placeOfCreation.dyn_cast<Entity>()), false, Resource::Nothing, placeOfCreation->owner,
+                                          placeOfCreation, placeOfCreation))
                               .dyn_cast<FighterPawn>();
             break;
         default:
@@ -62,8 +61,6 @@ ptr<FighterPawn> FighterPawn::createFighterPawn(FighterPawnType type, ptr<Buildi
     }
     placeOfCreation->owner->pawns.insert(newborn->id);
     newborn->IMHere(placeOfCreation);
-    newborn->currentTask = Task(TaskID::Protect, ptr<Entity>(),placeOfCreation->owner->hub);
-    newborn->moveToBuilding(placeOfCreation->owner->hub);
     return ptr<FighterPawn>(newborn->id);
 }
 void FighterPawn::getResource(ResourceEntity* toGet) {
@@ -129,21 +126,21 @@ void FighterPawn::tick(double deltaTime) {
     }
     if (currentTask.id == TaskID::Protect) {
         ptr<Entity> enemy;
-        for (auto theOpponent : godObject::global_server->players){
-            if (theOpponent.second == owner)
-                continue;
-            for (auto thePawnOfOpponent : theOpponent.second->pawns){
-                if(thePawnOfOpponent.dyn_cast<FighterPawn>()){
-                    if(dist(currentTask.destination->position, thePawnOfOpponent->position) <= awarenessRadius){
+        for (auto theOpponent: godObject::global_server->players) {
+            if (theOpponent.second == owner) continue;
+            for (auto thePawnOfOpponent: theOpponent.second->pawns) {
+                if (thePawnOfOpponent.dyn_cast<FighterPawn>()) {
+                    if (dist(currentTask.destination->position, thePawnOfOpponent->position) <= awarenessRadius) {
                         enemy = thePawnOfOpponent.dyn_cast<Entity>();
                         break;
                     }
                 }
             }
-            if(enemy)
-                break;
+            if (enemy) break;
         }
         if (enemy) {
+            std::cout << "Enemy spotted" << std::endl;
+            currentTask.destination = enemy;
             toAttack = true;
         } else
             moveToBuilding(currentTask.destination2);
@@ -155,8 +152,7 @@ void FighterPawn::tick(double deltaTime) {
     if (toAttack && wholeDelta <= currentTask.destination->radius) {
         attack(currentTask.destination.dyn_cast<Entity>(), deltaTime);
         return;
-    }
-    else if (toAttack){
+    } else if (toAttack) {
         moveToPosition(currentTask.destination->position);
     }
     if (travelling) {
