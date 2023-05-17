@@ -130,8 +130,8 @@ void FighterPawn::tick(double deltaTime) {
             if (theOpponent.second == owner) continue;
             for (auto thePawnOfOpponent: theOpponent.second->pawns) {
                 if (thePawnOfOpponent.dyn_cast<FighterPawn>()) {
-                    std::cout<<"I am the fighter enemy pawn of id:"<<thePawnOfOpponent.id<<" and I am "<<dist(currentTask.destination2->position, thePawnOfOpponent->position)
-                            <<" units away from protected building!\n";
+                    std::cout << "I am the fighter enemy pawn of id:" << thePawnOfOpponent.id << " and I am "
+                              << dist(currentTask.destination2->position, thePawnOfOpponent->position) << " units away from protected building!\n";
                     if (dist(currentTask.destination2->position, thePawnOfOpponent->position) <= awarenessRadius) {
                         enemy = thePawnOfOpponent.dyn_cast<Entity>();
                         break;
@@ -145,13 +145,12 @@ void FighterPawn::tick(double deltaTime) {
             currentTask.destination = enemy;
             destination = enemy;
             toAttack = true;
-        } else if (dist(position, currentTask.destination2->position) > 1 && dist(destinationPosition, currentTask.destination->position) > 1e-3){
+        } else if (dist(position, currentTask.destination2->position) > 1 && dist(destinationPosition, currentTask.destination2->position) > 1e-3) {
             moveToBuilding(currentTask.destination2);
         }
     }
     Position dest;
-    if(destination)
-        dest = destination->position;
+    if (destination) dest = destination->position;
     else
         dest = destinationPosition;
     double deltaX = fabs(position.x - dest.x);
@@ -201,7 +200,7 @@ void FighterPawn::tick(double deltaTime) {
             ///TODO removeFromExistence needed
         }
     }
-    if ((!travelling) && currentTask.id != TaskID::Protect){
+    if ((!travelling) && currentTask.id != TaskID::Protect) {
         currentTask = TaskID::Idle;
         owner->manager.finishTask(currentTask, ptr<Pawn>(id));
     }

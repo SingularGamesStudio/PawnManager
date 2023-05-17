@@ -38,7 +38,7 @@ add_executable(PawnManagerServer src/Entities/Entity.cpp src/Core/Player.cpp src
         src/Entities/Buildings/Building.cpp src/Entities/Pawns/FighterPawn.cpp src/Entities/Pawns/Pawn.cpp
         src/Recipes/Recipe.cpp src/Entities/ResourceEntity.cpp src/Entities/Pawns/WorkerPawn.cpp
         src/Entities/Buildings/CraftBuilding.cpp src/Core/IDmanager.cpp src/Entities/Buildings/BuildingRegisty.cpp
-        src/Recipes/CraftRecipe.cpp src/Recipes/BuildRecipe.cpp src/Core/ServerMain.cpp src/Core/Event.cpp src/Core/godobject.cpp src/Core/LocalController.cpp)
+        src/Recipes/CraftRecipe.cpp src/Recipes/BuildRecipe.cpp src/Core/ServerMain.cpp src/Core/Event.cpp src/Core/godobject.cpp src/Core/LocalController.cpp src/Recipes/WorkerRecipe.cpp)
 
 target_include_directories(PawnManagerServer PRIVATE ${Boost_SOURCE_DIR}/libs/asio/include)
 

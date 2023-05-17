@@ -179,6 +179,21 @@ std::vector<uint8_t> WorkerPawn::serializeSelf() const {
     return result;
 }
 
+std::vector<uint8_t> WorkerPawn::serializeExpertises() const {
+    size_t size = sizeof(int) + sizeof(size_t) + sizeof(expertisesID) * expertises.size();
+    std::vector<uint8_t> result = std::vector<uint8_t>(size);
+    uint8_t* curr = result.data();
+    curr += copyVariable(curr, id);
+    curr += copySet(curr, expertises);
+    return result;
+}
+
+size_t WorkerPawn::updateExpertises(const uint8_t* data) {
+    const uint8_t* curr = data;
+    expertises.clear();
+    curr += initializeSet(curr, expertises);
+    return curr - data;
+}
 
 size_t WorkerPawn::deserializeSelf(const uint8_t* data) {
     size_t shift = Pawn::deserializeSelf(data);

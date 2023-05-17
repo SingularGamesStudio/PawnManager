@@ -31,6 +31,8 @@ public:
     virtual ~WorkerPawn();
 
     std::vector<uint8_t> serialize() const override;
+    std::vector<uint8_t> serializeExpertises() const;
+    size_t updateExpertises(const uint8_t* data);
     size_t deserialize(const uint8_t* data) override;
 
 protected:

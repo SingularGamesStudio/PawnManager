@@ -31,6 +31,7 @@ public:
         SYNC_PULSE,               //14
         UPDATE_RESOURCES,         //15
         ATTACK,                   //16
+        UPDATE_EXPERTISES,        //17
     };
     Event() = delete;
     Event(Type t, int id);
