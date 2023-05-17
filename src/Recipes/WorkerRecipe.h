@@ -6,8 +6,8 @@ protected:
     Recipe* cloneSelf() override;
 
 public:
-    std::vector<std::vector<expertisesID>> outPawns;
-    std::vector<Resource> outResources;
+    std::vector<std::vector<expertisesID>> outWorkers;
+    std::vector<expertisesID> trainExpertises;
 
     WorkerRecipe() {}
 #ifdef SERVER_SIDE

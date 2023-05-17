@@ -4,10 +4,11 @@
 
 #include "../Entities/Buildings/Building.h"
 #include "../Entities/Pawns/Pawn.h"
+#include "../Entities/Pawns/WorkerPawn.h"
 #include "../Entities/ResourceEntity.h"
+#include "../Recipes/Recipe.h"
 #include "IDmanager.h"
 #include "Player.h"
-#include "../Recipes/Recipe.h"
 #include "godobject.h"
 
 Event::Event(Event::Type t, int id) {
@@ -22,6 +23,7 @@ Event::Event(Event::Type t, int id) {
     acceptable_events.insert(Event::Type::RESOURCE_ENTITY_APPEAR);
     acceptable_events.insert(Event::Type::RESOURCE_ENTITY_DISAPPEAR);
     acceptable_events.insert(Event::Type::ATTACK);
+    acceptable_events.insert(Event::Type::UPDATE_EXPERTISES);
 #ifdef SERVER_SIDE
     acceptable_events.insert(Event::Type::SYNC_PULSE);
 #endif
@@ -47,48 +49,44 @@ Event::Event(Event::Type t, int id) {
         curr_data = bu->serializeResources();
     }
 #ifdef SERVER_SIDE
-    else if(t == Event::Type::SYNC_PULSE) {
+    else if (t == Event::Type::SYNC_PULSE) {
         std::vector<ptr<Building>> all_buildings;
-        for(auto i : godObject::global_server->players) {
-            if(!i.second)
-                continue;
+        for (auto i: godObject::global_server->players) {
+            if (!i.second) continue;
             std::vector<ptr<Building>> curr_buildings = i.second->get_buildings();
-            std::copy(curr_buildings.begin(), curr_buildings.end(),
-                      std::back_inserter(all_buildings));
+            std::copy(curr_buildings.begin(), curr_buildings.end(), std::back_inserter(all_buildings));
         }
         curr_data.resize(sizeof(size_t));
         copyVariable(curr_data.data(), all_buildings.size());
         std::copy(curr_data.begin(), curr_data.end(), std::back_inserter(tmp));
-        for(auto i : all_buildings) {
+        for (auto i: all_buildings) {
             curr_data = i->serialize();
             std::copy(curr_data.begin(), curr_data.end(), std::back_inserter(tmp));
         }
 
         std::vector<ptr<Pawn>> all_pawns;
-        for(auto i : godObject::global_server->players) {
-            if(!i.second)
-                continue;
+        for (auto i: godObject::global_server->players) {
+            if (!i.second) continue;
             std::copy(i.second->pawns.begin(), i.second->pawns.end(), std::back_inserter(all_pawns));
         }
         curr_data.resize(sizeof(size_t));
         copyVariable(curr_data.data(), all_pawns.size());
         std::copy(curr_data.begin(), curr_data.end(), std::back_inserter(tmp));
-        for(auto i : all_pawns) {
+        for (auto i: all_pawns) {
             curr_data = i->serialize();
             std::copy(curr_data.begin(), curr_data.end(), std::back_inserter(tmp));
         }
 
 
         std::vector<ptr<Player>> all_players;
-        for(auto i : godObject::global_server->players) {
-            if(!i.second)
-                continue;
+        for (auto i: godObject::global_server->players) {
+            if (!i.second) continue;
             all_players.push_back(i.second);
         }
         curr_data.resize(sizeof(size_t));
         copyVariable(curr_data.data(), all_players.size());
         std::copy(curr_data.begin(), curr_data.end(), std::back_inserter(tmp));
-        for(auto i : all_players) {
+        for (auto i: all_players) {
             curr_data = i->serialize();
             std::copy(curr_data.begin(), curr_data.end(), std::back_inserter(tmp));
         }
@@ -97,7 +95,10 @@ Event::Event(Event::Type t, int id) {
         copyVariable(curr_data.data(), id);
     }
 #endif
-    else {
+    else if (t == Event::Type::UPDATE_EXPERTISES) {
+        ptr<WorkerPawn> bu(id);
+        curr_data = bu->serializeExpertises();
+    } else {
         tmp.resize(sizeof(t) + sizeof(id));
         copyVariable(tmp.data() + sizeof(t), id);
     }
@@ -130,7 +131,7 @@ Event::Event(Event::Type t, int id, int id_dest, double velocity) {
     p << tmp;
 }
 
-Event::Event(Type t, Recipe *recipe, int id) {
+Event::Event(Type t, Recipe* recipe, int id) {
     if (t != Event::Type::PLAYER_ACTION) throw std::invalid_argument("Trying to make event with wrong type");
     std::vector<uint8_t> tmp(sizeof(t) + sizeof(id));
     uint8_t* data = tmp.data();

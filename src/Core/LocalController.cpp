@@ -76,8 +76,7 @@ void LocalController::onPacketReceive(const dlib::Packet& p) {
         IDmanager::set(rEntity->id, dynamic_cast<RequiresID*>(rEntity));
     } else if (type == Event::Type::BUILDING_APPEAR) {
         Building* building = getBuilding(data.data()).first;
-        if (building->parent)
-            building->parent->children.insert(ptr<Building>(building->id));
+        if (building->parent) building->parent->children.insert(ptr<Building>(building->id));
         IDmanager::set(building->id, dynamic_cast<RequiresID*>(building));
     } else if (type == Event::Type::BUILDING_ADD_RES) {
         int id = 0;
@@ -116,12 +115,17 @@ void LocalController::onPacketReceive(const dlib::Packet& p) {
         std::memcpy(&id, data.data(), sizeof(int));
         ptr<Building> bu(id);
         bu->updateResources(data.data() + sizeof(int));
-    } else if(type == Event::Type::SYNC_PULSE) {
+    } else if (type == Event::Type::UPDATE_EXPERTISES) {
+        int id = 0;
+        std::memcpy(&id, data.data(), sizeof(int));
+        ptr<WorkerPawn> bu(id);
+        bu->updateExpertises(data.data() + sizeof(int));
+    } else if (type == Event::Type::SYNC_PULSE) {
         uint8_t* dota = data.data();
 
         size_t buildingCnt;
         dota += initializeVariable(dota, buildingCnt);
-        for(size_t i = 0; i < buildingCnt; ++i){
+        for (size_t i = 0; i < buildingCnt; ++i) {
             auto res = getBuilding(dota);
             dota += res.second;
             Building* building = res.first;
@@ -130,7 +134,7 @@ void LocalController::onPacketReceive(const dlib::Packet& p) {
 
         size_t pawnCnt;
         dota += initializeVariable(dota, pawnCnt);
-        for(size_t i = 0; i < pawnCnt; ++i){
+        for (size_t i = 0; i < pawnCnt; ++i) {
             auto res = getPawn(dota);
             dota += res.second;
             Pawn* pawn = res.first;
@@ -139,7 +143,7 @@ void LocalController::onPacketReceive(const dlib::Packet& p) {
 
         size_t playerCnt;
         dota += initializeVariable(dota, playerCnt);
-        for(size_t i = 0; i < playerCnt; ++i){
+        for (size_t i = 0; i < playerCnt; ++i) {
             Player* p = new Player(-1);
             dota += p->deserialize(dota);
             IDmanager::set(p->id, dynamic_cast<RequiresID*>(p));
@@ -157,9 +161,7 @@ void LocalController::onPacketReceive(const dlib::Packet& p) {
 
 void LocalController::init(std::string host, uint16_t port) {
     connect(host, port);
-    awaitPacket([this](const dlib::Packet& pack) {
-        onPacketReceive(pack);
-    });
+    awaitPacket([this](const dlib::Packet& pack) { onPacketReceive(pack); });
 }
 
 #endif

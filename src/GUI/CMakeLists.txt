@@ -26,7 +26,7 @@ add_compile_definitions(BOOST_ASIO_STANDALONE)
 add_executable(PawnManagerGUI ClientMain.cpp BuildingRenderer.cpp CraftBuildingWindow.cpp FontManager.cpp GameWindow.cpp
         GameWindowManager.cpp MainMenuWindow.cpp PawnManagerClient.cpp PawnRenderer.cpp ResourceRenderer.cpp
         Control.cpp ButtonControl.cpp SlotControl.cpp ArrowControl.cpp BuildBuildingWindow.cpp
-        BuildingResultControl.cpp TextInputControl.cpp)
+        BuildingResultControl.cpp TextInputControl.cpp ../Recipes/WorkerRecipe.cpp)
 
 target_compile_definitions(PawnManagerGUI PUBLIC CLIENT_SIDE BOOST_ASIO_STANDALONE)
 target_include_directories(PawnManagerGUI PRIVATE ${Boost_SOURCE_DIR}/libs/asio/include)
