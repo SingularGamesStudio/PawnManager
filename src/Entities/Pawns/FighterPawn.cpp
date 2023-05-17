@@ -119,7 +119,7 @@ void FighterPawn::moveToPosition(Position pos) {
 }
 void FighterPawn::moveToBuilding(ptr<Building> dest) { moveToPosition(dest->position); }
 void FighterPawn::tick(double deltaTime) {
-    if (!currentTask.destination) {
+    if ((!currentTask.destination) && (!currentTask.destination2)) {
         toAttack = false;
         currentTask = Task(TaskID::Move, owner->hub.dyn_cast<Entity>());
         return;
