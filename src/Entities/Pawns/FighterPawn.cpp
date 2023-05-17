@@ -12,7 +12,7 @@ FighterPawnType Monk::getType() const { return FighterPawnType::Monk; }
 FighterPawnType Swordsman::getType() const { return FighterPawnType::Swordsman; }
 FighterPawnType FighterPawn::getType() const { return FighterPawnType::DummNotFound; };
 
-Monk::Monk(int id, Task task, bool BOOL, Resource resource, ptr<Player> Owner, ptr<Building> dest, ptr<Building> in) {
+Monk::Monk(int id, Task task, bool BOOL, Resource resource, ptr<Player> Owner, ptr<Entity> dest, ptr<Building> in) {
     this->id = id;
     currentTask = task;
     travelling = BOOL;
@@ -23,7 +23,7 @@ Monk::Monk(int id, Task task, bool BOOL, Resource resource, ptr<Player> Owner, p
     IMHere(in);
 #endif
 }
-Swordsman::Swordsman(int id, Task task, bool BOOL, Resource resource, ptr<Player> Owner, ptr<Building> dest, ptr<Building> in) {
+Swordsman::Swordsman(int id, Task task, bool BOOL, Resource resource, ptr<Player> Owner, ptr<Entity> dest, ptr<Building> in) {
     this->id = id;
     currentTask = task;
     travelling = BOOL;
@@ -48,12 +48,12 @@ ptr<FighterPawn> FighterPawn::createFighterPawn(FighterPawnType type, ptr<Buildi
     switch (type) {
         case FighterPawnType::Monk:
             newborn = (makeptr<Monk>(Task(TaskID::Idle, placeOfCreation.dyn_cast<Entity>()), false, Resource::Nothing, placeOfCreation->owner,
-                                     placeOfCreation, placeOfCreation))
+                                     placeOfCreation.dyn_cast<Entity>(), placeOfCreation))
                               .dyn_cast<FighterPawn>();
             break;
         case FighterPawnType::Swordsman:
             newborn = (makeptr<Swordsman>(Task(TaskID::Idle, placeOfCreation.dyn_cast<Entity>()), false, Resource::Nothing, placeOfCreation->owner,
-                                          placeOfCreation, placeOfCreation))
+                                          placeOfCreation.dyn_cast<Entity>(), placeOfCreation))
                               .dyn_cast<FighterPawn>();
             break;
         default:
@@ -141,11 +141,17 @@ void FighterPawn::tick(double deltaTime) {
         if (enemy) {
             std::cout << "Enemy spotted" << std::endl;
             currentTask.destination = enemy;
+            destination = enemy;
             toAttack = true;
-        } else
+        } else if (dist(position, currentTask.destination2->position) > 1 && dist(destinationPosition, currentTask.destination->position) > 1e-3){
             moveToBuilding(currentTask.destination2);
+        }
     }
-    Position dest = destinationPosition;
+    Position dest;
+    if(destination)
+        dest = destination->position;
+    else
+        dest = destinationPosition;
     double deltaX = fabs(position.x - dest.x);
     double deltaY = fabs(position.y - dest.y);
     double wholeDelta = deltaX * deltaX + deltaY * deltaY;

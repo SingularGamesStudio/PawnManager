@@ -16,7 +16,7 @@ public:
     bool toAttack = false;
     double awarenessRadius = 10;
     Position destinationPosition;
-    ptr<Building> destination;
+    ptr<Entity> destination;
 
     virtual FighterPawnType getType() const;
 #ifdef SERVER_SIDE
@@ -45,7 +45,7 @@ public:
     //void attack(ptr<Entity> attacked) override;
 
     FighterPawnType getType() const override;
-    Monk(int id, Task task, bool BOOL, Resource resource, ptr<Player> Owner, ptr<Building> dest, ptr<Building> in);
+    Monk(int id, Task task, bool BOOL, Resource resource, ptr<Player> Owner, ptr<Entity> dest, ptr<Building> in);
 
 #ifdef CLIENT_SIDE
     Monk() {}
@@ -56,7 +56,7 @@ public:
     //void attack(ptr<Entity> attacked) override;
 
     FighterPawnType getType() const override;
-    Swordsman(int id, Task task, bool BOOL, Resource resource, ptr<Player> Owner, ptr<Building> dest, ptr<Building> in);
+    Swordsman(int id, Task task, bool BOOL, Resource resource, ptr<Player> Owner, ptr<Entity> dest, ptr<Building> in);
 
 #ifdef CLIENT_SIDE
     Swordsman() {}
