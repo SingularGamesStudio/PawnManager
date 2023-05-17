@@ -19,7 +19,7 @@ add_library(PawnManagerClient src/Entities/Entity.cpp src/Core/Player.cpp src/Co
         src/Entities/Buildings/Building.cpp src/Entities/Pawns/FighterPawn.cpp src/Entities/Pawns/Pawn.cpp
         src/Recipes/Recipe.cpp src/Entities/ResourceEntity.cpp src/Entities/Pawns/WorkerPawn.cpp
         src/Entities/Buildings/CraftBuilding.cpp src/Core/IDmanager.cpp src/Entities/Buildings/BuildingRegisty.cpp
-        src/Recipes/CraftRecipe.cpp src/Recipes/BuildRecipe.cpp src/Core/Event.cpp src/Core/godobject.cpp src/Core/LocalController.cpp)
+        src/Recipes/CraftRecipe.cpp src/Recipes/BuildRecipe.cpp src/Core/Event.cpp src/Core/godobject.cpp src/Core/LocalController.cpp src/Recipes/WorkerRecipe.cpp)
 target_include_directories(PawnManagerClient PRIVATE ${Boost_SOURCE_DIR}/libs/asio/include)
 
 target_compile_definitions(PawnManagerClient PUBLIC CLIENT_SIDE BOOST_ASIO_STANDALONE)

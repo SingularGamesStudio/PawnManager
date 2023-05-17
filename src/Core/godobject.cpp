@@ -7,6 +7,7 @@
 #include "../Recipes/BuildRecipe.h"
 #include "../Recipes/CraftRecipe.h"
 #include "../Recipes/Recipe.h"
+#include "../Recipes/WorkerRecipe.h"
 
 #ifdef SERVER_SIDE
 GameServer* godObject::global_server = nullptr;
@@ -24,6 +25,9 @@ size_t godObject::getRecipe(const uint8_t* data, Recipe*& out) {
             break;
         case RecipeType::CRAFT_RECIPE:
             out = new CraftRecipe();
+            break;
+        case RecipeType::WORKER_RECIPE:
+            out = new WorkerRecipe();
             break;
         default:
             throw std::logic_error("Recipe is pure virtual, no BASE_RECIPE allowed");

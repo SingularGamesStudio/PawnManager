@@ -1,5 +1,9 @@
-#include "../Entities/Pawns/WorkerPawn.h"
+#ifndef WORKER_RECIPE_H
+#define WORKER_RECIPE_H
+
+
 #include "Recipe.h"
+
 
 class WorkerRecipe : public Recipe {
 protected:
@@ -21,3 +25,5 @@ protected:
     std::vector<uint8_t> serializeSelf() const;
     size_t deserializeSelf(const uint8_t* data);
 };
+
+#endif
