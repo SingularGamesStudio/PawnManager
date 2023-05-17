@@ -130,7 +130,7 @@ void FighterPawn::tick(double deltaTime) {
             if (theOpponent.second == owner) continue;
             for (auto thePawnOfOpponent: theOpponent.second->pawns) {
                 if (thePawnOfOpponent.dyn_cast<FighterPawn>()) {
-                    if (dist(currentTask.destination->position, thePawnOfOpponent->position) <= awarenessRadius) {
+                    if (dist(currentTask.destination2->position, thePawnOfOpponent->position) <= awarenessRadius) {
                         enemy = thePawnOfOpponent.dyn_cast<Entity>();
                         break;
                     }
