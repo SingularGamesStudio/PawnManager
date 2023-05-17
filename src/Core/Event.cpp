@@ -120,14 +120,14 @@ Event::Event(Event::Type t, int id, Resource res) {
     p << tmp;
 }
 
-Event::Event(Event::Type t, int id, Position pos, double time) {
+Event::Event(Event::Type t, int id, int id_dest, double velocity) {
     if (t != Event::Type::PAWN_MOVE) throw std::invalid_argument("Trying to make event with wrong type");
-    std::vector<uint8_t> tmp(sizeof(t) + sizeof(id) + sizeof(pos) + sizeof(time));
+    std::vector<uint8_t> tmp(sizeof(t) + sizeof(int) + sizeof(int) + sizeof(velocity));
     uint8_t* data = tmp.data();
     data += copyVariable(data, t);
     data += copyVariable(data, id);
-    data += copyVariable(data, pos);
-    data += copyVariable(data, time);
+    data += copyVariable(data, id_dest);
+    data += copyVariable(data, velocity);
     p << tmp;
 }
 

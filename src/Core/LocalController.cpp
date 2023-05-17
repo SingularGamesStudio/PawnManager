@@ -102,12 +102,14 @@ void LocalController::onPacketReceive(const dlib::Packet& p) {
         ptr<Pawn>(id)->holding = static_cast<Resource>(resource);
     } else if (type == Event::Type::PAWN_MOVE) {
         int id = 0;
-        std::memcpy(&id, data.data(), sizeof(int));
-        Position pos;
-        std::memcpy(&pos, data.data() + sizeof(int), sizeof(pos));
-        double time;
-        std::memcpy(&time, data.data() + sizeof(int) + sizeof(pos), sizeof(time));
-        ptr<Entity>(id)->startMoveToPos(pos, time);
+        uint8_t* dota = data.data();
+        dota += initializeVariable(dota, id);
+        int id_where;
+        dota += initializeVariable(dota, id_where);
+        double velocity;
+        dota += initializeVariable(dota, velocity);
+        ptr<Entity>(id)->startMoveToPos(ptr<Entity>(id_where)->position, velocity);
+        /// TODO: change to move to entity cmd
     } else if (type == Event::Type::UPDATE_RESOURCES) {
         int id = 0;
         std::memcpy(&id, data.data(), sizeof(int));

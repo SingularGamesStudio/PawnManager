@@ -36,7 +36,7 @@ public:
     Event() = delete;
     Event(Type t, int id);
     Event(Type t, int id, Resource res);
-    Event(Type t, int id, Position pos, double time);
+    Event(Type t, int id, int id_dest, double time);
     Event(Type t, Recipe* recipe, int id);
     dlib::Packet getPacket();
 };

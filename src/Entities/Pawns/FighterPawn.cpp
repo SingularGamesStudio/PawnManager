@@ -67,7 +67,7 @@ void FighterPawn::getResource(ResourceEntity* toGet) {
     if (positionBuilding) IMNotHere();
     moveToResource(toGet);
     takePresentResource(toGet);
-    moveToBuilding(owner->hub);
+    moveToEntity(owner->hub.dyn_cast<Entity>());
     positionBuilding = owner->hub;
     owner->hub->addPawn(ptr<Pawn>(id));
     drop(positionBuilding, position);
@@ -76,26 +76,26 @@ void FighterPawn::assignTask(const Task& toAssign) {
     currentTask = toAssign;
     switch (toAssign.id) {
         case TaskID::Get:
-            moveToBuilding(toAssign.destination.dyn_cast<Building>());
+            moveToEntity(toAssign.destination.dyn_cast<Entity>());
             needed = toAssign.object;
             toTake = true;
             break;
         case TaskID::Transport:
-            moveToBuilding(toAssign.destination.dyn_cast<Building>());
+            moveToEntity(toAssign.destination.dyn_cast<Entity>());
             toTake = true;
             needed = toAssign.object;
             break;
         case TaskID::Move:
-            moveToBuilding(toAssign.destination.dyn_cast<Building>());
+            moveToEntity(toAssign.destination.dyn_cast<Entity>());
             break;
         case TaskID::BeProcessed:
-            moveToBuilding(toAssign.destination.dyn_cast<Building>());
+            moveToEntity(toAssign.destination.dyn_cast<Entity>());
             break;
         case TaskID::Idle:
             break;
         case TaskID::Attack:
             toAttack = true;
-            moveToBuilding(toAssign.destination.dyn_cast<Building>());
+            moveToEntity(toAssign.destination.dyn_cast<Entity>());
             break;
         case TaskID::Protect:
             break;
@@ -113,11 +113,16 @@ void FighterPawn::moveToPosition(Position pos) {
     IMNotHere();
     double tim = std::hypot(pos.x - position.x, pos.y - position.y);
     tim /= speed;
-    godObject::global_server->sendPacketAll(Event(Event::Type::PAWN_MOVE, id, pos, tim).getPacket());
     travelling = true;
     destinationPosition = pos;
+    destination = ptr<Entity>();
 }
-void FighterPawn::moveToBuilding(ptr<Building> dest) { moveToPosition(dest->position); }
+void FighterPawn::moveToEntity(ptr<Entity> dest) {
+    //moveToPosition(dest->position);
+    destination = dest.dyn_cast<Entity>();
+    destinationPosition = Position(-1, -1);
+    godObject::global_server->sendPacketAll(Event(Event::Type::PAWN_MOVE, id, destination.id, speed).getPacket());
+}
 void FighterPawn::tick(double deltaTime) {
     if ((!currentTask.destination) && (!currentTask.destination2)) {
         toAttack = false;
@@ -145,8 +150,8 @@ void FighterPawn::tick(double deltaTime) {
             currentTask.destination = enemy;
             destination = enemy;
             toAttack = true;
-        } else if (dist(position, currentTask.destination2->position) > 1 && dist(destinationPosition, currentTask.destination2->position) > 1e-3) {
-            moveToBuilding(currentTask.destination2);
+        } else if (dist(position, currentTask.destination2->position) > 1 && dist(destinationPosition, currentTask.destination->position) > 1e-3) {
+            moveToEntity(currentTask.destination2.dyn_cast<Entity>());
         }
     }
     Position dest;

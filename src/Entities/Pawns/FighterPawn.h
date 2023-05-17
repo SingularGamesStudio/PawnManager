@@ -24,8 +24,8 @@ public:
     static ptr<FighterPawn> createFighterPawn(FighterPawnType type, ptr<Building> placeOfCreation);
     void moveToResource(ResourceEntity* toGet);
     void takePresentResource(ResourceEntity* toTake);
-    void moveToPosition(Position pos);
-    void moveToBuilding(ptr<Building> dest) override;
+    virtual void moveToPosition(Position pos);
+    void moveToEntity(ptr<Entity> dest);
     void getResource(ResourceEntity* toGet);
     void assignTask(const Task& task) override;
     void tick(double deltaTime) override;
