@@ -25,8 +25,8 @@ void ArrowControl::updateAndRender() {
     win.drawRect(sf::FloatRect(r.left, horizontalCenter - 10, arrowTriangleMin - r.left, 20), col);
     sf::Vector2f center = r.getPosition() + r.getSize() * (1 / 2.0f);
     for (int i = 0; i < pawnExpertises.size(); ++i) {
-        float part = (pawnExpertises.size() == 1) ? 0.5f : (i / (pawnExpertises.size() - 1));
-        float delta = ((part * 2) - 1) * 25;
+        float part = (pawnExpertises.size() == 1) ? 0.5f : ((float)i / (pawnExpertises.size() - 1));
+        float delta = ((part * 2) - 1) * 40;
         PawnManagerClient::pawnRenderer->drawWorkerPawn({pawnExpertises[i]}, center + sf::Vector2f(delta, 0), 20);
     }
 }
