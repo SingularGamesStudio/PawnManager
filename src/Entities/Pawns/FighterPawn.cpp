@@ -205,7 +205,6 @@ void FighterPawn::tick(double deltaTime) {
             toTake = false;
             holding = needed;
             needed = Resource::Nothing;
-            ///TODO removeFromExistence needed
         }
     }
     if ((!travelling) && currentTask.id != TaskID::Protect) {

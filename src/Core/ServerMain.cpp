@@ -128,7 +128,14 @@ int main(int argc, char** argv) {
         server.respond();
         for (ptr<RequiresID> todel: godObject::global_server->suicideSquad) {
             if (todel.dyn_cast<Player>()) {
-                //TODO
+                auto pl = todel.dyn_cast<Player>();
+                auto it = server.players.begin();
+                while(it != server.players.end() && it->second != pl)
+                    ++it;
+                server.players.erase(it);
+                for(auto pwn : pl->pawns) {
+                    pwn.del();
+                }
             }
             todel.del();
         }
