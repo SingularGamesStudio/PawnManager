@@ -13,12 +13,12 @@
 #include "SFML/Graphics/Text.hpp"
 
 CraftBuildingWindow::CraftBuildingWindow(int id) : id(id), selectedRecipe(0), shouldClose(false) {
-    slotCounts = sf::Vector2i(5, 5);
+    slotCounts = sf::Vector2i(7, 5);
     {
         ptr<CraftBuilding> p(id);
         if (p->current) { selectedRecipe = p->recipes.size(); }
     }
-    controls.push_back(assignButton = new ButtonControl(*this, sf::IntRect(1, 4, 2, 0), "Assign recipe", [w = this]() {
+    controls.push_back(assignButton = new ButtonControl(*this, sf::IntRect(1, 4, 4, 0), "Assign recipe", [w = this]() {
                            ptr<CraftBuilding> p(w->id);
                            Recipe* r = w->getRecipe();
 
@@ -33,22 +33,22 @@ CraftBuildingWindow::CraftBuildingWindow(int id) : id(id), selectedRecipe(0), sh
             --selectedRecipe;
         }
     }));
-    controls.push_back(new ButtonControl(*this, sf::IntRect(4, 4, 0, 0), ">", [this]() {
+    controls.push_back(new ButtonControl(*this, sf::IntRect(6, 4, 0, 0), ">", [this]() {
         if (selectedRecipe == getRecipeCount() - 1) {
             selectedRecipe = 0;
         } else {
             ++selectedRecipe;
         }
     }));
-    for (int j = 0; j < 3; ++j) {
-        SlotControl* sc = new SlotControl(*this, sf::IntRect(0, 1 + j, 0, 0));
+    for (int j = 0; j < 6; ++j) {
+        SlotControl* sc = new SlotControl(*this, sf::IntRect(j / 3, 1 + (j % 3), 0, 0));
         controls.push_back(sc);
         inputSlots.push_back(sc);
-        SlotControl* sc2 = new SlotControl(*this, sf::IntRect(4, 1 + j, 0, 0));
+        SlotControl* sc2 = new SlotControl(*this, sf::IntRect(5 + (j / 3) , 1 + (j % 3), 0, 0));
         controls.push_back(sc2);
         outputSlots.push_back(sc2);
     }
-    controls.push_back(arrow = new ArrowControl(*this, sf::IntRect(1, 2, 2, 0)));
+    controls.push_back(arrow = new ArrowControl(*this, sf::IntRect(2, 2, 2, 0)));
 }
 
 void CraftBuildingWindow::updateAndRender() {

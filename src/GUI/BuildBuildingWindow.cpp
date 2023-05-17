@@ -14,8 +14,8 @@
 
 BuildBuildingWindow::BuildBuildingWindow(int id, const sf::Vector2f& pos) : id(id), pos(pos), selectedRecipe(0), shouldClose(false), arrow(nullptr) {
 
-    slotCounts = sf::Vector2i(7, 5);
-    controls.push_back(new ButtonControl(*this, sf::IntRect(1, 4, 4, 0), "Build", [w = this]() {
+    slotCounts = sf::Vector2i(8, 5);
+    controls.push_back(new ButtonControl(*this, sf::IntRect(1, 4, 5, 0), "Build", [w = this]() {
         //TODO
         //        ptr<CraftBuilding> p(w->id);
         //        Recipe* r = p->recipes[w->selectedRecipe];
@@ -34,20 +34,20 @@ BuildBuildingWindow::BuildBuildingWindow(int id, const sf::Vector2f& pos) : id(i
             --selectedRecipe;
         }
     }));
-    controls.push_back(new ButtonControl(*this, sf::IntRect(6, 4, 0, 0), ">", [id = id, &selectedRecipe = selectedRecipe]() {
+    controls.push_back(new ButtonControl(*this, sf::IntRect(7, 4, 0, 0), ">", [id = id, &selectedRecipe = selectedRecipe]() {
         if (selectedRecipe == BuildingRegisty::database.size() - 1) {
             selectedRecipe = 0;
         } else {
             ++selectedRecipe;
         }
     }));
-    for (int j = 0; j < 3; ++j) {
-        SlotControl* sc = new SlotControl(*this, sf::IntRect(0, 1 + j, 0, 0));
+    for (int j = 0; j < 6; ++j) {
+        SlotControl* sc = new SlotControl(*this, sf::IntRect(j / 3, 1 + (j % 3), 0, 0));
         controls.push_back(sc);
         inputSlots.push_back(sc);
     }
-    controls.push_back(arrow = new ArrowControl(*this, sf::IntRect(1, 2, 2, 0)));
-    controls.push_back(result = new BuildingResultControl(*this, sf::IntRect(4, 2, 2, 0)));
+    controls.push_back(arrow = new ArrowControl(*this, sf::IntRect(2, 2, 2, 0)));
+    controls.push_back(result = new BuildingResultControl(*this, sf::IntRect(5, 2, 2, 0)));
 }
 
 void BuildBuildingWindow::updateAndRender() {
