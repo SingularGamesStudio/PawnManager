@@ -95,10 +95,10 @@ public:
     ptr<Player> owner;
     Position position;
 #ifdef CLIENT_SIDE
-    Position prevPos;
-    double posReachTime;
-    double beginTime;
-    void startMoveToPos(Position pos, double time);
+    ptr<Entity> motionTarget;
+    double motionSpeed;
+    double lastTime;
+    void startMoveToEntity(ptr<Entity> e, double speed);
     Position getInterpolatedPos();
 #endif
     double radius;

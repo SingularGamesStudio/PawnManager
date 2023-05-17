@@ -54,15 +54,27 @@ double getTime() {
     auto x = std::chrono::steady_clock::now() - p;
     return std::chrono::duration<double>(x).count();
 }
-void Entity::startMoveToPos(Position pos, double time) {
-    prevPos = getInterpolatedPos();
-    this->position = pos;
-    posReachTime = time;
-    beginTime = getTime();
+void Entity::startMoveToEntity(ptr<Entity> pos, double speed) {
+    motionTarget = pos;
+    motionSpeed = speed;
+    lastTime = getTime();
 }
 Position Entity::getInterpolatedPos() {
-    double progress = std::min((getTime() - beginTime) / posReachTime, 1.0);
-    return {position.x * progress + prevPos.x * (1 - progress), position.y * progress + prevPos.y * (1 - progress)};
+    if(motionTarget) {
+        double curTime = getTime();
+        double deltaTime = curTime - lastTime;
+        lastTime = curTime;
+        double motion = motionSpeed * deltaTime;
+        Position posDelta(motionTarget->position.x - position.x, motionTarget->position.y - position.y);
+        double len = std::sqrt(posDelta.x * posDelta.x + posDelta.y * posDelta.y);
+        if(motion < len) {
+            posDelta.x *= motion / len;
+            posDelta.y *= motion / len;
+        }
+        position.x += posDelta.x;
+        position.y += posDelta.y;
+    }
+    return position;
 }
 
 #endif
