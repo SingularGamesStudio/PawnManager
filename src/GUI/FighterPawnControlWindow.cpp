@@ -10,6 +10,10 @@
 #include "PawnManagerClient.h"
 #include "SFML/Graphics/Text.hpp"
 void FighterPawnControlWindow::updateAndRender() {
+    if(shouldClose) {
+        PawnManagerClient::winManager.popWindow();
+        return;
+    }
     std::vector<std::pair<FighterPawnType, int>> pawnCnts = getPawnCnts();
     if (pawnCnts.empty()) {
         PawnManagerClient::winManager.popWindow();
@@ -28,11 +32,12 @@ void FighterPawnControlWindow::updateAndRender() {
     slot->fighterPawnType = pawnCnts[currentSelected].first;
     pawnCnt->label = std::string("Count: ") + std::to_string(pawnCnts[currentSelected].second);
 }
-FighterPawnControlWindow::FighterPawnControlWindow(ptr<Building> b) : currentSelected(0), b(b) {
+FighterPawnControlWindow::FighterPawnControlWindow(ptr<Building> b) : currentSelected(0), b(b), shouldClose(false) {
     slotCounts = sf::Vector2i(5, 5);
     controls.push_back(new ButtonControl(*this, sf::IntRect(1, 4, 2, 0), "Send", [this]() {
         auto cnts = getPawnCnts();
         godObject::local_server->mainPlayer->localAttack(this->b, cnts);
+        shouldClose = true;
     }));
     controls.push_back(new ButtonControl(*this, sf::IntRect(0, 4, 0, 0), "<", [this]() {
         int pawnTypes = getPawnCnts().size();
