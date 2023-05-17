@@ -21,6 +21,7 @@ public:
     SlotControl* slot;
     LabelControl* pawnCnt;
     TextInputControl* countInput;
+    bool shouldClose;
     explicit FighterPawnControlWindow(ptr<Building> b);
     void updateAndRender() override;
     bool isProtection();
