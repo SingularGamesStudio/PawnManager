@@ -44,9 +44,6 @@ size_t Entity::deserializeSelf(const uint8_t* data) {
     curr += initializeVariable(curr, owner);
     curr += initializeVariable(curr, position);
     curr += initializeVariable(curr, radius);
-#ifdef CLIENT_SIDE
-    prevPos = position;
-#endif
     return curr - data;
 }
 #ifdef CLIENT_SIDE
