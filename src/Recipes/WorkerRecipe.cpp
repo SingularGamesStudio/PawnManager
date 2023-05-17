@@ -36,25 +36,36 @@ Recipe* WorkerRecipe::cloneSelf() {
     return res;
 }
 
-RecipeType WorkerRecipe::getType() const { return RecipeType::CRAFT_RECIPE; }
+RecipeType WorkerRecipe::getType() const { return RecipeType::WORKER_RECIPE; }
 
 std::vector<uint8_t> WorkerRecipe::serialize() const { return serializeSelf(); }
 size_t WorkerRecipe::deserialize(const uint8_t* data) { return deserializeSelf(data); }
 
 std::vector<uint8_t> WorkerRecipe::serializeSelf() const {
     std::vector<uint8_t> result = Recipe::serializeSelf();
-    size_t size = sizeof(size_t) * 2 + sizeof(uint8_t) * (outFighters.size() + outResources.size());
+    size_t size = sizeof(size_t) * 2 + sizeof(uint8_t) * (trainExpertises.size());
+    for(auto& i : outWorkers) {
+        size += i.size() * sizeof(uint8_t) + sizeof(size_t);
+    }
     result.resize(result.size() + size);
     uint8_t* curr = result.data() + result.size() - size;
-    curr += copyVector(curr, outFighters);
-    curr += copyVector(curr, outResources);
+    curr += copyVariable(curr, outWorkers.size());
+    for(auto& i : outWorkers) {
+        curr += copyVector(curr, i);
+    }
+    curr += copyVector(curr, trainExpertises);
     return result;
 }
 
 size_t WorkerRecipe::deserializeSelf(const uint8_t* data) {
     size_t shift = Recipe::deserializeSelf(data);
     const uint8_t* curr = data + shift;
-    curr += initializeVector(curr, outFighters);
-    curr += initializeVector(curr, outResources);
+    size_t tmpsz;
+    curr += initializeVariable(curr, tmpsz);
+    outWorkers.resize(tmpsz);
+    for(auto& i : outWorkers) {
+        curr += initializeVector(curr, i);
+    }
+    curr += initializeVector(curr, trainExpertises);
     return curr - data;
 }

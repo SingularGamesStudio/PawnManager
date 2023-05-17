@@ -15,7 +15,7 @@ class WorkerPawn;
 enum class Resource : uint8_t;
 enum class expertisesID : uint8_t;
 enum class FighterPawnType : uint8_t;
-enum class RecipeType : uint8_t { BASIC_RECIPE, CRAFT_RECIPE, BUILD_RECIPE, SHOOT_RECIPE };
+enum class RecipeType : uint8_t { BASIC_RECIPE, CRAFT_RECIPE, BUILD_RECIPE, WORKER_RECIPE };
 
 class Recipe {
 protected:
