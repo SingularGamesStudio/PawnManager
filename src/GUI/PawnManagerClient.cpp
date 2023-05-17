@@ -45,9 +45,7 @@ void PawnManagerClient::run() {
     while (window->isOpen()) {
         float delta = clock.restart().asSeconds();
         if (godObject::local_server) { godObject::local_server->respond(); }
-        if(!godObject::local_server->mainPlayer->hub) {
-            exit(0);
-        }
+        if (godObject::local_server && godObject::local_server->mainPlayer && !godObject::local_server->mainPlayer->hub) { exit(0); }
         sf::Event evt{};
         while (window->pollEvent(evt)) {
             if (evt.type == sf::Event::Closed) { window->close(); }
@@ -163,9 +161,7 @@ void PawnManagerClient::onMouseClick(int x, int y, sf::Mouse::Button b) {
     if (!godObject::local_server) { return; }
     sf::Vector2f center = getRenderOrigin();
     sf::Vector2f pos = (sf::Vector2f(x, y) - center) / renderScale;
-    if(onBuildingMouseClick(godObject::local_server->mainPlayer->hub, pos, b)) {
-        return;
-    }
+    if (onBuildingMouseClick(godObject::local_server->mainPlayer->hub, pos, b)) { return; }
     {
         ptr<Building> building = ptr<Building>(selectedBuilding);
         if (building) {
@@ -174,9 +170,8 @@ void PawnManagerClient::onMouseClick(int x, int y, sf::Mouse::Button b) {
             return;
         }
     }
-    for(ptr<Player> plr:godObject::local_server->players) {
-        if(b != sf::Mouse::Button::Middle)
-            break;
+    for (ptr<Player> plr: godObject::local_server->players) {
+        if (b != sf::Mouse::Button::Middle) break;
         onBuildingMouseClick(plr->hub, pos, b);
     }
 }
@@ -196,7 +191,7 @@ bool PawnManagerClient::onBuildingMouseClick(ptr<Building> b, sf::Vector2f pos, 
             winManager.pushWindow(new FighterPawnControlWindow(b));
             //b.del();
 
-//            godObject::local_server->mainPlayer->localAttack(b);
+            //            godObject::local_server->mainPlayer->localAttack(b);
         }
         return true;
     }
