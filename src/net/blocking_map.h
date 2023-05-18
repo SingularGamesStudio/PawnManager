@@ -57,7 +57,7 @@ namespace dlib {
                 return static_cast<reference>(*it);
             }
             pointer operator->() {
-                std::scoped_lock lock_guard(*m_ptr);
+                //std::scoped_lock lock_guard(*m_ptr);
                 return &this->operator*();
             }
         };

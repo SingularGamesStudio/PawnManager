@@ -143,7 +143,8 @@ int main(int argc, char** argv) {
                 auto it = server.players.begin();
                 while (it != server.players.end() && it->second != pl) ++it;
                 server.players.erase(it);
-                for (auto pwn: pl->pawns) { pwn.del(); }
+                while(!pl->pawns.empty())
+                    pl->pawns.begin()->del();
             }
             todel.del();
         }
