@@ -75,8 +75,8 @@ void BuildingRenderer::drawBuilding(float radius, sf::Color col, sf::Vector2f po
 
 void BuildingRenderer::drawBuilding(BuildingIdea& idea, sf::Vector2f pos) {
     if (idea.available.empty()) {
-        drawBuilding(idea.radius * 1.5, sf::Color::Green, pos);
-    } else {
         drawBuilding(idea.radius * 1.5, sf::Color::White, pos);
+    } else {
+        drawBuilding(idea.radius * 1.5, sf::Color::Green, pos);
     }
 }
