@@ -44,6 +44,15 @@ public:
             ptr<Pawn> find(ptr<Player> owner) override;
         };
 
+        struct TrainWorkerReq : public WorkerReq {
+            std::vector<expertisesID> notExpertise;
+            TrainWorkerReq(expertisesID expertise, std::vector<expertisesID> notExpertise) : WorkerReq(expertise) {
+                this->notExpertise = notExpertise;
+            }
+
+            ptr<Pawn> find(ptr<Player> owner) override;
+        };
+
         struct PendingRecipe {
             std::multiset<Resource> needResources;
             std::multiset<Resource> movedResources;

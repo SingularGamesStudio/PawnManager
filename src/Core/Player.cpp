@@ -11,6 +11,7 @@
 #include "../Entities/Pawns/FighterPawn.h"
 #include "../Entities/Pawns/WorkerPawn.h"
 #include "../Recipes/BuildRecipe.h"
+#include "../Recipes/WorkerRecipe.h"
 #include "Event.h"
 #include "godobject.h"
 
@@ -49,8 +50,15 @@ bool Player::checkRecipe(Recipe* recipe) {
     for (auto it = pawns.rbegin(); it != pawns.rend(); ++it) {
         ptr<Pawn> pawn = *it;
         if (ptr<WorkerPawn> worker = pawn.dyn_cast<WorkerPawn>(); worker) {
+            bool ok = true;
+            if (dynamic_cast<WorkerRecipe*>(recipe) != nullptr) {
+                WorkerRecipe* wrecipe = dynamic_cast<WorkerRecipe*>(recipe);
+                for (expertisesID e: wrecipe->trainExpertises) {
+                    if (worker->expertises.contains(e)) ok = false;
+                }
+            }
             for (expertisesID e: worker->expertises) {//TODO:change to mincost
-                if (workers.contains(e)) {
+                if (ok && workers.contains(e)) {
                     workers.erase(workers.find(e));
                     break;
                 }
@@ -86,7 +94,12 @@ Player::TaskManager::PendingRecipe::PendingRecipe(Recipe* recipe, ptr<Building> 
       priority(priority),
       ID(IDmanager::newID()) {
     for (Resource r: this->recipe->inResources) { needResources.insert(r); }
-    for (expertisesID e: this->recipe->reqWorkers) { needPawns.push_back(dynamic_cast<PawnReq*>(new WorkerReq(e))); }
+    for (expertisesID e: this->recipe->reqWorkers) {
+        if (dynamic_cast<WorkerRecipe*>(recipe) != nullptr) {
+            needPawns.push_back(dynamic_cast<PawnReq*>(new TrainWorkerReq(e, dynamic_cast<WorkerRecipe*>(recipe)->trainExpertises)));
+        } else
+            needPawns.push_back(dynamic_cast<PawnReq*>(new WorkerReq(e)));
+    }
     for (expertisesID e: this->recipe->inWorkers) { needPawns.push_back(dynamic_cast<PawnReq*>(new WorkerReq(e))); }
     for (FighterPawnType e: this->recipe->inFighters) { needPawns.push_back(dynamic_cast<PawnReq*>(new FighterReq(e))); }
 }
@@ -296,6 +309,21 @@ ptr<Pawn> Player::TaskManager::WorkerReq::find(ptr<Player> owner) {
         auto p = *it;
         ptr<WorkerPawn> w = p.dyn_cast<WorkerPawn>();
         if (w && w->expertises.contains(expertise) && w->currentTask.id == TaskID::Idle) { return p; }
+    }
+    return ptr<Pawn>();
+}
+
+ptr<Pawn> Player::TaskManager::TrainWorkerReq::find(ptr<Player> owner) {
+    for (auto it = owner->pawns.rbegin(); it != owner->pawns.rend(); ++it) {
+        auto p = *it;
+        ptr<WorkerPawn> w = p.dyn_cast<WorkerPawn>();
+        if (w && w->expertises.contains(expertise) && w->currentTask.id == TaskID::Idle) {
+            bool ok = true;
+            for (expertisesID e: notExpertise) {
+                if (w->expertises.contains(e)) ok = false;
+            }
+            if (ok) return p;
+        }
     }
     return ptr<Pawn>();
 }
