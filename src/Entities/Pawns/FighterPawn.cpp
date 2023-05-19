@@ -39,8 +39,8 @@ void FighterPawn::attack(ptr<Entity> attacked, double deltaTime) {
     attacked->changeHealth(-atk * deltaTime);
     if (attacked.dyn_cast<FighterPawn>()) {
         ptr<FighterPawn> fighterPawnAttacked = attacked.dyn_cast<FighterPawn>();
-        changeHealth(-(fighterPawnAttacked->atk) * deltaTime * (1-defendModifier));
-        attacked->changeHealth(-atk*deltaTime * defendModifier);
+        changeHealth(-(fighterPawnAttacked->atk) * deltaTime * (1 - defendModifier));
+        attacked->changeHealth(-atk * deltaTime * defendModifier);
     }
 };
 
@@ -153,9 +153,7 @@ void FighterPawn::tick(double deltaTime) {
             destination = enemy;
             toAttack = true;
         } else {
-            if (dist(position, currentTask.destination2->position) > 1){
-                moveToEntity(currentTask.destination2.dyn_cast<Entity>());
-            }
+            if (dist(position, currentTask.destination2->position) > 1) { moveToEntity(currentTask.destination2.dyn_cast<Entity>()); }
         }
     }
     if(currentTask.id == TaskID::Craft)
@@ -192,8 +190,6 @@ void FighterPawn::tick(double deltaTime) {
             position.x += -signX * (deltaX / sqrt(wholeDelta)) * speed * deltaTime;
             position.y += -signY * (deltaY / sqrt(wholeDelta)) * speed * deltaTime;
         }
-        //std::cerr<< position.x <<' '<< position.y <<'\n';
-        //std::cerr<< dest->position.x <<' '<< dest->position.y <<'\n';
         if (signX * (position.x - dest.x) <= 1 && signY * (position.y - dest.y) <= 1) {
             travelling = false;
             position = dest;

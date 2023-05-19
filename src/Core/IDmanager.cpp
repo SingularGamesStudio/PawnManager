@@ -14,10 +14,7 @@ int IDmanager::newObject(RequiresID* ptr) {
 
 RequiresID* IDmanager::get(int id) { return all[id]; }
 
-void IDmanager::set(int id, RequiresID* data) {
-    all[id] = data;
-    std::cerr << "id set is " << id << " and type is " << typeid(data).name() << std::endl;
-}
+void IDmanager::set(int id, RequiresID* data) { all[id] = data; }
 
 std::vector<uint8_t> RequiresID::serialize() const { return serializeSelf(); }
 size_t RequiresID::deserialize(const uint8_t* data) { return deserializeSelf(data); }

@@ -71,7 +71,6 @@ ptr<CraftBuilding> Player::placeBlueprint(Position pos, ptr<Building> parent, do
 }
 
 bool Player::TaskManager::startRecipe(Recipe* recipe, ptr<Building> where) {
-    std::cerr << owner.id << std::endl;
     if (!owner->checkRecipe(recipe)) return false;
     if (dynamic_cast<BuildRecipe*>(recipe) != nullptr) {
         BuildRecipe* brecipe = dynamic_cast<BuildRecipe*>(recipe);
@@ -165,7 +164,6 @@ void Player::TaskManager::tick() {//TODO:rewrite to mincost
             } else if (rec->movedPawns.empty()) {
                 ptr<CraftBuilding> crafter = rec->place.dyn_cast<CraftBuilding>();
                 if (crafter->current == nullptr && !busy.contains(crafter)) {
-                    std::cout << "starting recipe" << std::endl;
                     toClose.push_back({rec, true});
                     busy.insert(crafter);
                 }
@@ -231,8 +229,6 @@ void Player::TaskManager::attack(ptr<Building> what, std::vector<std::pair<Fight
                 }
             }
         }
-        if(cnt>0)
-            std::cerr << cnt << " fighters not found" << std::endl;
     }
 }
 
@@ -282,7 +278,6 @@ void Player::TaskManager::finishTask(Task task, ptr<Pawn> pawn) {
             pr->donePawns.push_back(pawn);
             break;
         default:
-            std::cout << "pawn is not ready :(\n";//YOU ARE NOT PREPARED
             break;
     }
 }
