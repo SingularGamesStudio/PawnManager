@@ -33,6 +33,7 @@ void BuildingRegisty::init() {
         WorkerRecipe* train = new WorkerRecipe();
         train->reqWorkers.push_back(expertisesID::Nitwit);
         train->trainExpertises.push_back(expertisesID::Lumbering);
+        train->duration = 7.0;
         park.available.push_back(train);
 
         BuildRecipe* createPark = new BuildRecipe({0, 0}, park);
@@ -56,6 +57,7 @@ void BuildingRegisty::init() {
         WorkerRecipe* train = new WorkerRecipe();
         train->reqWorkers.push_back(expertisesID::Nitwit);
         train->trainExpertises.push_back(expertisesID::Mining);
+        train->duration = 7.0;
         stone_mine.available.push_back(train);
 
         BuildRecipe* createMine = new BuildRecipe({0, 0}, stone_mine);
@@ -79,6 +81,7 @@ void BuildingRegisty::init() {
         WorkerRecipe* train = new WorkerRecipe();
         train->reqWorkers.push_back(expertisesID::Nitwit);
         train->trainExpertises.push_back(expertisesID::Mining);
+        train->duration = 7.0;
         iron_mine.available.push_back(train);
 
         BuildRecipe* createMine = new BuildRecipe({0, 0}, iron_mine);
@@ -116,6 +119,7 @@ void BuildingRegisty::init() {
         WorkerRecipe* train = new WorkerRecipe();
         train->reqWorkers.push_back(expertisesID::Nitwit);
         train->trainExpertises.push_back(expertisesID::Smithing);
+        train->duration = 7.0;
         blacksmith.available.push_back(train);
 
         BuildRecipe* createBlacksmith = new BuildRecipe({0, 0}, blacksmith);
@@ -134,6 +138,7 @@ void BuildingRegisty::init() {
 
         CraftRecipe* train_monk = new CraftRecipe();
         train_monk->inWorkers.push_back(expertisesID::Nitwit);
+        train_monk->inResources.push_back(Resource::Wood);
         train_monk->outFighters.push_back(FighterPawnType::Monk);
         train_monk->duration = 5.0;
         barracks.available.push_back(train_monk);

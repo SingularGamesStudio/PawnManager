@@ -46,7 +46,8 @@ bool Player::checkRecipe(Recipe* recipe) {
     for (expertisesID t: recipe->reqWorkers) { workers.insert(t); }
     dfs(hub, resources);
     if (!resources.empty()) return false;
-    for (ptr<Pawn> pawn: pawns) {
+    for (auto it = pawns.rbegin(); it != pawns.rend(); ++it) {
+        ptr<Pawn> pawn = *it;
         if (ptr<WorkerPawn> worker = pawn.dyn_cast<WorkerPawn>(); worker) {
             for (expertisesID e: worker->expertises) {//TODO:change to mincost
                 if (workers.contains(e)) {
@@ -287,7 +288,8 @@ void Player::TaskManager::finishTask(Task task, ptr<Pawn> pawn) {
 }
 
 ptr<Pawn> Player::TaskManager::FighterReq::find(ptr<Player> owner) {
-    for (auto p: owner->pawns) {
+    for (auto it = owner->pawns.rbegin(); it != owner->pawns.rend(); ++it) {
+        auto p = *it;
         ptr<FighterPawn> f = p.dyn_cast<FighterPawn>();
         if (f && f->getType() == type && f->currentTask.id == TaskID::Idle) { return p; }
     }
@@ -295,7 +297,8 @@ ptr<Pawn> Player::TaskManager::FighterReq::find(ptr<Player> owner) {
 }
 
 ptr<Pawn> Player::TaskManager::WorkerReq::find(ptr<Player> owner) {
-    for (auto p: owner->pawns) {
+    for (auto it = owner->pawns.rbegin(); it != owner->pawns.rend(); ++it) {
+        auto p = *it;
         ptr<WorkerPawn> w = p.dyn_cast<WorkerPawn>();
         if (w && w->expertises.contains(expertise) && w->currentTask.id == TaskID::Idle) { return p; }
     }
