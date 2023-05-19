@@ -7,6 +7,7 @@
 #include "../Core/godobject.h"
 #include "../Entities/Buildings/CraftBuilding.h"
 #include "../Recipes/CraftRecipe.h"
+#include "../Recipes/WorkerRecipe.h"
 #include "ArrowControl.h"
 #include "ButtonControl.h"
 #include "PawnManagerClient.h"
@@ -72,27 +73,39 @@ void CraftBuildingWindow::updateAndRender() {
     Recipe* r = getRecipe();
     int cInputPos = 0;
     int cOutputPos = 0;
-    CraftRecipe* cr = dynamic_cast<CraftRecipe*>(r);
-    if (cr) {
-        for (Resource res: cr->inResources) {
-            inputSlots[cInputPos]->drawType = 0;
-            inputSlots[cInputPos++]->res = res;
-        }
+    for (Resource res: r->inResources) {
+        inputSlots[cInputPos]->drawType = 0;
+        inputSlots[cInputPos++]->res = res;
+    }
+    for (expertisesID res: r->inWorkers) {
+        inputSlots[cInputPos]->drawType = 1;
+        inputSlots[cInputPos++]->pawnExpertiese = {res};
+    }
+    for (FighterPawnType f: r->inFighters) {
+        inputSlots[cInputPos]->drawType = 2;
+        inputSlots[cInputPos++]->fighterPawnType = f;
+    }
+    if(r->getType() == RecipeType::CRAFT_RECIPE) {
+        CraftRecipe *cr = dynamic_cast<CraftRecipe *>(r);
         for (Resource res: cr->outResources) {
             outputSlots[cOutputPos]->drawType = 0;
             outputSlots[cOutputPos++]->res = res;
         }
-        for (expertisesID res: cr->inWorkers) {
-            inputSlots[cInputPos]->drawType = 1;
-            inputSlots[cInputPos++]->pawnExpertiese = {res};
-        }
-        for (FighterPawnType f: cr->inFighters) {
-            inputSlots[cInputPos]->drawType = 2;
-            inputSlots[cInputPos++]->fighterPawnType = f;
-        }
         for (FighterPawnType f: cr->outFighters) {
             outputSlots[cOutputPos]->drawType = 2;
             outputSlots[cOutputPos++]->fighterPawnType = f;
+        }
+    }
+    if(r && r->getType() == RecipeType::WORKER_RECIPE) {
+        WorkerRecipe *wr = dynamic_cast<WorkerRecipe *>(r);
+        for (auto res: wr->outWorkers) {
+            outputSlots[cOutputPos]->drawType = 1;
+            std::set<expertisesID> st(res.begin(), res.end());
+            outputSlots[cOutputPos++]->pawnExpertiese = st;
+        }
+        for (expertisesID exp: wr->trainExpertises) {
+            outputSlots[cOutputPos]->drawType = 1;
+            outputSlots[cOutputPos++]->pawnExpertiese = {exp};
         }
     }
     for (; cInputPos < inputSlots.size(); ++cInputPos) {
