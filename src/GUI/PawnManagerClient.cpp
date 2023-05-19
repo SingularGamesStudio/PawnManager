@@ -105,7 +105,7 @@ void PawnManagerClient::updateAndRender() {
                         resourceRenderer->drawResource(wp->holding, sf::Vector2f(x, y) * renderScale + center, rotation, 7 / 1.5 * renderScale);
                     }
                 } else if (fp) {
-                    pawnRenderer->drawFighterPawn(fp->getType(), sf::Vector2f(x, y) * renderScale + center);
+                    pawnRenderer->drawFighterPawn(fp->getType(), sf::Vector2f(x, y) * renderScale + center, 15 / 1.5f * renderScale);
                 }
             }
         }

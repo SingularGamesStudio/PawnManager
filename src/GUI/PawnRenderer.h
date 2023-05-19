@@ -18,7 +18,7 @@ private:
 public:
     explicit PawnRenderer(sf::RenderWindow& window);
     void drawWorkerPawn(const std::set<expertisesID>& expertises, sf::Vector2f pos, float size = 12);
-    void drawFighterPawn(FighterPawnType type, sf::Vector2f pos);
+    void drawFighterPawn(FighterPawnType type, sf::Vector2f pos, float size = 15);
 };
 
 

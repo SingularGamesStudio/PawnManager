@@ -68,8 +68,7 @@ void PawnRenderer::drawWorkerPawn(const std::set<expertisesID>& expertises, sf::
 
 PawnRenderer::PawnRenderer(sf::RenderWindow& window) : window(window) {}
 
-void PawnRenderer::drawFighterPawn(FighterPawnType type, sf::Vector2f pos) {
-    float size = 15;
+void PawnRenderer::drawFighterPawn(FighterPawnType type, sf::Vector2f pos, float size) {
     std::vector<sf::Vector2f> vertices;
     std::vector<sf::Vector2f> outerVertices;
     int cnt = 3;
