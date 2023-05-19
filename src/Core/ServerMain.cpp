@@ -28,7 +28,7 @@ int fromString(const string& str) {
 
 Position get_pos(int id) {
     int diag = 0;
-    while(id > diag) {
+    while (id > diag) {
         ++diag;
         id -= diag;
     }
@@ -42,14 +42,15 @@ ptr<CraftBuilding> makeHub(ptr<Player> player, int key) {
     ptr<CraftBuilding> hub = makeptr<CraftBuilding>(hub_pos, player, 100.0);
     for (size_t i = 0; i < 10; ++i) hub->resources.insert(Resource::Wood);
     for (size_t i = 0; i < 10; ++i) hub->resources.insert(Resource::Stone);
+    hub->resources.insert(Resource::Sword);
     player->hub = static_cast<ptr<Building>>(hub);
     hub->recipes.push_back(makeGrindRecipe({expertisesID::Nitwit}, {Resource::Wood}, 10.0));
     hub->recipes.push_back(makeGrindRecipe({expertisesID::Nitwit}, {Resource::Stone}, 10.0));
 
     auto wrecipe = new WorkerRecipe();
     wrecipe->outWorkers.emplace_back(std::vector<expertisesID>());
-    for(int i = 0; i < 3; ++i) wrecipe->inResources.push_back(Resource::Wood);
-    for(int i = 0; i < 3; ++i) wrecipe->inResources.push_back(Resource::Stone);
+    for (int i = 0; i < 3; ++i) wrecipe->inResources.push_back(Resource::Wood);
+    for (int i = 0; i < 3; ++i) wrecipe->inResources.push_back(Resource::Stone);
     wrecipe->duration = 5.0;
     hub->recipes.push_back(wrecipe);
 
@@ -156,8 +157,7 @@ int main(int argc, char** argv) {
                 auto it = server.players.begin();
                 while (it != server.players.end() && it->second != pl) ++it;
                 server.players.erase(it);
-                while(!pl->pawns.empty())
-                    pl->pawns.begin()->del();
+                while (!pl->pawns.empty()) pl->pawns.begin()->del();
             }
             todel.del();
         }

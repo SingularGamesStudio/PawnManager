@@ -156,8 +156,7 @@ void FighterPawn::tick(double deltaTime) {
             if (dist(position, currentTask.destination2->position) > 1) { moveToEntity(currentTask.destination2.dyn_cast<Entity>()); }
         }
     }
-    if(currentTask.id == TaskID::Craft)
-        return;
+    if (currentTask.id == TaskID::Craft) return;
     Position dest;
     if (destination) dest = destination->position;
     else
@@ -204,14 +203,14 @@ void FighterPawn::tick(double deltaTime) {
             holding = needed;
             needed = Resource::Nothing;
         }
-        if(currentTask.id == TaskID::BeProcessed){
+        if (currentTask.id == TaskID::BeProcessed) {
             owner->manager.finishTask(currentTask, ptr<Pawn>(id));
             currentTask.id = TaskID::Craft;
         }
-    }
-    if ((!travelling) && currentTask.id != TaskID::Protect) {
-        currentTask = TaskID::Idle;
-        owner->manager.finishTask(currentTask, ptr<Pawn>(id));
+        if (currentTask.id != TaskID::Protect && currentTask.id != TaskID::Craft) {
+            currentTask = TaskID::Idle;
+            owner->manager.finishTask(currentTask, ptr<Pawn>(id));
+        }
     }
 }
 #endif

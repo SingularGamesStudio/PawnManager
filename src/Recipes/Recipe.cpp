@@ -22,12 +22,12 @@ bool Recipe::checkRequirements(ptr<CraftBuilding> place, bool start) {
     std::vector<Resource> usedResources;
     for (Resource r: place->reservedResources) { resourcesInside.insert(r); }
     for (ptr<Pawn> p: place->pawns) {
-        if (ptr<WorkerPawn> worker = p.dyn_cast<WorkerPawn>(); worker) {
-            workersInside.insert(worker);
-        } else if (ptr<FighterPawn> fighter = p.dyn_cast<FighterPawn>(); fighter) {
-            fightersInside.insert(fighter);
-        } else
-            assert(0);
+        if (ptr<WorkerPawn> worker = p.dyn_cast<WorkerPawn>(); worker) { workersInside.insert(worker); }
+    }
+    for (ptr<Pawn> p: place->owner->pawns) {
+        if (ptr<FighterPawn> fighter = p.dyn_cast<FighterPawn>(); fighter) {
+            if (fighter->currentTask.id == TaskID::Craft && fighter->currentTask.destination.id == place.id) fightersInside.insert(fighter);
+        }
     }
 
     for (FighterPawnType t: inFighters) {
@@ -87,7 +87,6 @@ bool Recipe::checkRequirements(ptr<CraftBuilding> place, bool start) {
         place->reservedResources.clear();
         for (Resource p: resourcesInside) { place->reservedResources.insert(p); }
         for (ptr<WorkerPawn> p: workersInside) { place->addPawn(p.dyn_cast<Pawn>()); }
-        for (ptr<FighterPawn> p: fightersInside) { place->addPawn(p.dyn_cast<Pawn>()); }
 
         procResources = usedResources;
         procPawns = usedPawns;
@@ -130,7 +129,7 @@ void Recipe::cleanup(ptr<Building> where) {
 
 void Recipe::cancel() {
     for (ptr<Pawn> p: procPawns) {
-        place->addPawn(p);
+        if (p.dyn_cast<WorkerPawn>()) place->addPawn(p);
         p->assignTask(Task(TaskID::Idle));
     }
     for (Resource p: procResources) { place->addResource(p); }
