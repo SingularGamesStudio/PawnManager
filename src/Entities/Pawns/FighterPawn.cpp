@@ -39,8 +39,8 @@ void FighterPawn::attack(ptr<Entity> attacked, double deltaTime) {
     attacked->changeHealth(-atk * deltaTime);
     if (attacked.dyn_cast<FighterPawn>()) {
         ptr<FighterPawn> fighterPawnAttacked = attacked.dyn_cast<FighterPawn>();
-        changeHealth(-(fighterPawnAttacked->atk) * deltaTime * (1-defendModifier));
-        attacked->changeHealth(-atk*deltaTime * defendModifier);
+        changeHealth(-(fighterPawnAttacked->atk) * deltaTime * (1 - defendModifier));
+        attacked->changeHealth(-atk * deltaTime * defendModifier);
     }
 };
 
@@ -140,8 +140,6 @@ void FighterPawn::tick(double deltaTime) {
             if (theOpponent.second == owner) continue;
             for (auto thePawnOfOpponent: theOpponent.second->pawns) {
                 if (thePawnOfOpponent.dyn_cast<FighterPawn>()) {
-                    std::cout << "I am the fighter enemy pawn of id:" << thePawnOfOpponent.id << " and I am "
-                              << dist(currentTask.destination2->position, thePawnOfOpponent->position) << " units away from protected building!\n";
                     if (dist(currentTask.destination2->position, thePawnOfOpponent->position) <= awarenessRadius) {
                         enemy = thePawnOfOpponent.dyn_cast<Entity>();
                         break;
@@ -151,14 +149,11 @@ void FighterPawn::tick(double deltaTime) {
             if (enemy) break;
         }
         if (enemy) {
-            std::cout << "Enemy spotted" << std::endl;
             currentTask.destination = enemy;
             destination = enemy;
             toAttack = true;
         } else {
-            if (dist(position, currentTask.destination2->position) > 1){
-                moveToEntity(currentTask.destination2.dyn_cast<Entity>());
-            }
+            if (dist(position, currentTask.destination2->position) > 1) { moveToEntity(currentTask.destination2.dyn_cast<Entity>()); }
         }
     }
     Position dest;
@@ -193,8 +188,6 @@ void FighterPawn::tick(double deltaTime) {
             position.x += -signX * (deltaX / sqrt(wholeDelta)) * speed * deltaTime;
             position.y += -signY * (deltaY / sqrt(wholeDelta)) * speed * deltaTime;
         }
-        //std::cerr<< position.x <<' '<< position.y <<'\n';
-        //std::cerr<< dest->position.x <<' '<< dest->position.y <<'\n';
         if (signX * (position.x - dest.x) <= 1 && signY * (position.y - dest.y) <= 1) {
             travelling = false;
             position = dest;
