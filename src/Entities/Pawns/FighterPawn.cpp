@@ -140,8 +140,6 @@ void FighterPawn::tick(double deltaTime) {
             if (theOpponent.second == owner) continue;
             for (auto thePawnOfOpponent: theOpponent.second->pawns) {
                 if (thePawnOfOpponent.dyn_cast<FighterPawn>()) {
-                    std::cout << "I am the fighter enemy pawn of id:" << thePawnOfOpponent.id << " and I am "
-                              << dist(currentTask.destination2->position, thePawnOfOpponent->position) << " units away from protected building!\n";
                     if (dist(currentTask.destination2->position, thePawnOfOpponent->position) <= awarenessRadius) {
                         enemy = thePawnOfOpponent.dyn_cast<Entity>();
                         break;
@@ -151,7 +149,6 @@ void FighterPawn::tick(double deltaTime) {
             if (enemy) break;
         }
         if (enemy) {
-            std::cout << "Enemy spotted" << std::endl;
             currentTask.destination = enemy;
             destination = enemy;
             toAttack = true;
@@ -161,6 +158,8 @@ void FighterPawn::tick(double deltaTime) {
             }
         }
     }
+    if(currentTask.id == TaskID::Craft)
+        return;
     Position dest;
     if (destination) dest = destination->position;
     else
@@ -200,7 +199,6 @@ void FighterPawn::tick(double deltaTime) {
             position = dest;
         }
     } else {
-        travelling = false;
         if (toDrop) {
             toDrop = false;
             drop(positionBuilding);
@@ -209,6 +207,10 @@ void FighterPawn::tick(double deltaTime) {
             toTake = false;
             holding = needed;
             needed = Resource::Nothing;
+        }
+        if(currentTask.id == TaskID::BeProcessed){
+            owner->manager.finishTask(currentTask, ptr<Pawn>(id));
+            currentTask.id = TaskID::Craft;
         }
     }
     if ((!travelling) && currentTask.id != TaskID::Protect) {
