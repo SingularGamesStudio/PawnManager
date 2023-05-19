@@ -48,15 +48,16 @@ Your base is composed of big Circles connected into a tree
 
 Each building contains resources.
 
-Also you have pawns - workers, that haul resources, and craft stuff (round ones), and fighters(triangles)
+Also you have pawns - workers, that haul resources, and craft stuff (round ones), and fighters(triangular ones)
 
 ## Controls
 
 RMB on a green building - craft menu
 
-LMB on any building, and then on unoccupied space - build menu
+LMB on any building, and then on unoccupied space - build menu (once you start building, a blue building - blueprint
+will appear and begin construction)
 
-MMB on a building - all your fighters will go and attack it
+MMB on a building - choose fighters to attack or defend it
 
 ## Structure
 

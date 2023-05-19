@@ -2,15 +2,19 @@
 
 #### Кирьянов Григорий(SingularGamesStudio):
 
-Building, Recipe, Entity, Player
+Building, Recipe, Entity, Player, IDmanager
 
 Entity - Composite
 
-Player::TaskManager - Bridge между Pawn и Player.
+Player::TaskManager - Proxy между Pawn и Player.
 
 Player - Facade между реальным игроком и Recipe
 
-Recipe - Command (из задач для Pawn/Building)
+Recipe - Builder, Prototype
+
+Player::TaskManager::PendingRecipe - Command
+
+IDmanager - Singleton
 
 #### Косов Михаил(128-bit-guy):
 
@@ -28,8 +32,8 @@ clientInterface/serverInterface - Interface для Connection
 
 события Events - оповещения от сервера клиенту о любых изменениях(Factory для Packet)
 
-serialization/deserialization - байтовое кодирование всех интересующих нас 
- классов(Pawn, Building, Player, Recipe) 
+serialization/deserialization - байтовое кодирование всех интересующих нас
+классов(Pawn, Building, Player, Recipe)
 
 #### Тамьяров Илья(vertignesss):
 
