@@ -10,6 +10,7 @@ class Entity;
 class ResourceEntity;
 class FighterPawn : public Pawn {
 public:
+    double defendModifier = 0.5;
     double atk = 10;
     double speed = 100;
     bool toAttack = false;

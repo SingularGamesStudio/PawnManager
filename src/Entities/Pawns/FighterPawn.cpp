@@ -39,7 +39,8 @@ void FighterPawn::attack(ptr<Entity> attacked, double deltaTime) {
     attacked->changeHealth(-atk * deltaTime);
     if (attacked.dyn_cast<FighterPawn>()) {
         ptr<FighterPawn> fighterPawnAttacked = attacked.dyn_cast<FighterPawn>();
-        changeHealth(-(fighterPawnAttacked->atk) * deltaTime);
+        changeHealth(-(fighterPawnAttacked->atk) * deltaTime * (1-defendModifier));
+        attacked->changeHealth(-atk*deltaTime * defendModifier);
     }
 };
 
@@ -153,9 +154,10 @@ void FighterPawn::tick(double deltaTime) {
             currentTask.destination = enemy;
             destination = enemy;
             toAttack = true;
-        } else if (dist(position, currentTask.destination2->position) > 1 &&
-                   ((!destination) || dist(destination->position, currentTask.destination2->position) > 1e-3)) {
-            moveToEntity(currentTask.destination2.dyn_cast<Entity>());
+        } else {
+            if (dist(position, currentTask.destination2->position) > 1){
+                moveToEntity(currentTask.destination2.dyn_cast<Entity>());
+            }
         }
     }
     Position dest;
