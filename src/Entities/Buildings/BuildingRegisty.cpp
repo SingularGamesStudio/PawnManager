@@ -157,5 +157,12 @@ void BuildingRegisty::init() {
         createBarracks->reqWorkers.push_back(expertisesID::Nitwit);
         database.push_back(createBarracks);
     }
-
+#ifdef CLIENT_SIDE
+    database[0]->toBuild.name = "Platform";
+    database[1]->toBuild.name = "Park";
+    database[2]->toBuild.name = "Stone mine";
+    database[3]->toBuild.name = "Iron mine";
+    database[4]->toBuild.name = "Blacksmith";
+    database[5]->toBuild.name = "Barracks";
+#endif
 }

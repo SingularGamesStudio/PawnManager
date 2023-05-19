@@ -14,8 +14,8 @@
 
 BuildBuildingWindow::BuildBuildingWindow(int id, const sf::Vector2f& pos) : id(id), pos(pos), selectedRecipe(0), shouldClose(false), arrow(nullptr) {
 
-    slotCounts = sf::Vector2i(8, 5);
-    controls.push_back(new ButtonControl(*this, sf::IntRect(1, 4, 5, 0), "Build", [w = this]() {
+    slotCounts = sf::Vector2i(8, 6);
+    controls.push_back(new ButtonControl(*this, sf::IntRect(1, 5, 5, 0), "Build", [w = this]() {
         //TODO
         //        ptr<CraftBuilding> p(w->id);
         //        Recipe* r = p->recipes[w->selectedRecipe];
@@ -27,14 +27,14 @@ BuildBuildingWindow::BuildBuildingWindow(int id, const sf::Vector2f& pos) : id(i
         w->shouldClose = true;
         //        PawnManagerClient::winManager.popWindow();
     }));
-    controls.push_back(new ButtonControl(*this, sf::IntRect(0, 4, 0, 0), "<", [id = id, &selectedRecipe = selectedRecipe]() {
+    controls.push_back(new ButtonControl(*this, sf::IntRect(0, 5, 0, 0), "<", [id = id, &selectedRecipe = selectedRecipe]() {
         if (selectedRecipe == 0) {
             selectedRecipe = BuildingRegisty::database.size() - 1;
         } else {
             --selectedRecipe;
         }
     }));
-    controls.push_back(new ButtonControl(*this, sf::IntRect(7, 4, 0, 0), ">", [id = id, &selectedRecipe = selectedRecipe]() {
+    controls.push_back(new ButtonControl(*this, sf::IntRect(7, 5, 0, 0), ">", [id = id, &selectedRecipe = selectedRecipe]() {
         if (selectedRecipe == BuildingRegisty::database.size() - 1) {
             selectedRecipe = 0;
         } else {
