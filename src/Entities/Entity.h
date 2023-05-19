@@ -14,7 +14,52 @@ struct Position {
     double y;
     Position(double x, double y) : x(x), y(y) {}
     Position() : Position(0, 0) {}
+    Position& operator+=(const Position& that) {
+        x += that.x;
+        y += that.y;
+        return *this;
+    }
+    Position& operator-=(const Position& that) {
+        x -= that.x;
+        y -= that.y;
+        return *this;
+    }
+    Position& operator*=(double k) {
+        x *= k;
+        y *= k;
+        return *this;
+    }
+    Position& operator/=(double k) {
+        x /= k;
+        y /= k;
+        return *this;
+    }
+    Position operator-() const {
+        return {-x, -y};
+    }
+
+    Position operator+(const Position& that) const {
+        Position result = *this;
+        result += that;
+        return result; // not returning result += because of RBO
+    }
+    Position operator-(const Position& that) const {
+        Position result = *this;
+        result -= that;
+        return result; // not returning result -= because of RBO
+    }
+    Position operator*(double k) const {
+        Position result = *this;
+        result *= k;
+        return result; // not returning result *= because of RBO
+    }
+    Position operator/(double k) const {
+        Position result = *this;
+        result /= k;
+        return result; // not returning result /= because of RBO
+    }
 };
+
 
 template<typename T>
 size_t copyVariable(uint8_t* dst, T src) {

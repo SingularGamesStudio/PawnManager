@@ -49,3 +49,11 @@ size_t CraftRecipe::deserializeSelf(const uint8_t* data) {
     curr += initializeVector(curr, outResources);
     return curr - data;
 }
+
+CraftRecipe* makeGrindRecipe(std::vector<expertisesID> skills, std::vector<Resource> production, double duration) {
+    auto recipe = new CraftRecipe();
+    recipe->reqWorkers = skills;
+    recipe->outResources = production;
+    recipe->duration = duration;
+    return recipe;
+}

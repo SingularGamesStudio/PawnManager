@@ -18,14 +18,17 @@ void ResourceRenderer::drawResource(Resource r, sf::Vector2f pos, float rotation
     std::vector<sf::Vector2f> outerVertices;
     int cnt = 3;
     switch (r) {
-        case Resource::Ingot:
+        case Resource::Steel:
+            cnt = 4;
+            break;
+        case Resource::Stone:
             cnt = 4;
             break;
         case Resource::Ore:
             cnt = 5;
             break;
-        case Resource::Weapon:
-            cnt = 4;
+        case Resource::Wood:
+            cnt = 6;
             break;
     }
     for (int i = 0; i < cnt; ++i) {
@@ -45,11 +48,14 @@ void ResourceRenderer::drawResource(Resource r, sf::Vector2f pos, float rotation
             case Resource::Ore:
                 col = sf::Color(192, 192, 192);
                 break;
-            case Resource::Ingot:
-                col = sf::Color(255, 255, 255);
+            case Resource::Steel:
+                col = sf::Color(212, 212, 212);
                 break;
-            case Resource::Weapon:
-                col = sf::Color::Red;
+            case Resource::Wood:
+                col = sf::Color(143, 94, 26);
+                break;
+            case Resource::Stone:
+                col = sf::Color(93, 93, 93);
                 break;
         }
         int j = i + 1;

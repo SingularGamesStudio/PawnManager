@@ -56,9 +56,10 @@ ptr<FighterPawn> FighterPawn::createFighterPawn(FighterPawnType type, ptr<Buildi
             newborn = (makeptr<Swordsman>(Task(TaskID::Idle, placeOfCreation.dyn_cast<Entity>()), false, Resource::Nothing, placeOfCreation->owner,
                                           placeOfCreation.dyn_cast<Entity>(), placeOfCreation))
                               .dyn_cast<FighterPawn>();
+            newborn->atk = 30;
             break;
         default:
-            throw("Type of FighterPawn not found");
+            throw std::logic_error("Type of FighterPawn not found");
     }
     placeOfCreation->owner->pawns.insert(newborn->id);
     newborn->IMHere(placeOfCreation);

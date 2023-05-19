@@ -80,7 +80,7 @@ namespace dlib {
                     std::cout << socket.remote_endpoint() << " connected to the SERVER\n";
                     std::shared_ptr<Connection> newConnection =
                             std::make_shared<Connection>(Connection::Owner::SERVER, serverContext, std::move(socket), inQueue);
-                    newConnection->setID(IDs++);
+                    newConnection->setID(++IDs);
                     if (onConnection(newConnection)) {
                         connections.push_back(std::move(newConnection));
                         connections.back()->connectToClient(IDs);

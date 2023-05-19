@@ -3,6 +3,7 @@
 
 #include "../../Recipes/BuildRecipe.h"
 #include "../../Recipes/CraftRecipe.h"
+#include "../../Recipes/WorkerRecipe.h"
 #include "../Pawns/FighterPawn.h"
 #include "../Pawns/WorkerPawn.h"
 #include "Building.h"
@@ -13,110 +14,143 @@ void BuildingRegisty::init() {
     {
         BuildingIdea empty = BuildingIdea(Building::baseBuildingRadius, database.size());
         BuildRecipe* recEmpty = new BuildRecipe({0, 0}, empty);
-        recEmpty->inResources.push_back(Resource::Ingot);
-        recEmpty->inResources.push_back(Resource::Ingot);
-        recEmpty->duration = 3;
+        for (int i = 0; i < 1; ++i) recEmpty->inResources.push_back(Resource::Wood);
+        for (int i = 0; i < 1; ++i) recEmpty->inResources.push_back(Resource::Stone);
+        recEmpty->duration = 3.0;
         database.push_back(recEmpty);
     }
 
     {
-        BuildingIdea blacksmith = BuildingIdea(Building::baseBuildingRadius * 2, database.size());
-        CraftRecipe* ingot = new CraftRecipe();
-        ingot->inResources.push_back(Resource::Ore);
-        ingot->outResources.push_back(Resource::Ingot);
-        ingot->duration = 1;
-        blacksmith.available.push_back(ingot);
+        BuildingIdea park = BuildingIdea(Building::baseBuildingRadius * 1.25, database.size());
 
-        CraftRecipe* weapon = new CraftRecipe();
-        weapon->inResources.push_back(Resource::Ingot);
-        weapon->outResources.push_back(Resource::Weapon);
-        weapon->reqWorkers.push_back(expertisesID::Smeltery);
-        weapon->duration = 2;
-        blacksmith.available.push_back(weapon);
+        CraftRecipe* wood = makeGrindRecipe({expertisesID::Lumbering}, {Resource::Wood}, 5.0);
+        park.available.push_back(wood);
 
-        BuildRecipe* createBlacksmith = new BuildRecipe({0, 0}, blacksmith);
-        createBlacksmith->inResources.push_back(Resource::Ore);
-        createBlacksmith->inResources.push_back(Resource::Ore);
-        createBlacksmith->inResources.push_back(Resource::Ore);
-        createBlacksmith->duration = 10;
-        createBlacksmith->reqWorkers.push_back(expertisesID::Smeltery);
-        createBlacksmith->reqWorkers.push_back(expertisesID::Smeltery);
+        CraftRecipe* fast_wood = makeGrindRecipe({expertisesID::Lumbering, expertisesID::Lumbering},
+                                                  {Resource::Wood, Resource::Wood}, 3.0);
+        park.available.push_back(fast_wood);
 
-        database.push_back(createBlacksmith);
+        WorkerRecipe* train = new WorkerRecipe();
+        train->reqWorkers.push_back(expertisesID::Nitwit);
+        train->trainExpertises.push_back(expertisesID::Lumbering);
+        park.available.push_back(train);
+
+        BuildRecipe* createPark = new BuildRecipe({0, 0}, park);
+        for (int i = 0; i < 5; ++i) createPark->inResources.push_back(Resource::Wood);
+        createPark->duration = 5.0;
+        createPark->reqWorkers.push_back(expertisesID::Nitwit);
+
+        database.push_back(createPark);
     }
 
     {
-        BuildingIdea mine = BuildingIdea(Building::baseBuildingRadius * 0.25, database.size());
+        BuildingIdea stone_mine = BuildingIdea(Building::baseBuildingRadius * 0.9, database.size());
 
-        CraftRecipe* ore = new CraftRecipe();
-        ore->duration = 2;
-        ore->reqWorkers.push_back(expertisesID::Nitwit);
-        ore->outResources.push_back(Resource::Ore);
-        mine.available.push_back(ore);
+        CraftRecipe* stone = makeGrindRecipe({expertisesID::Mining}, {Resource::Stone}, 5.0);
+        stone_mine.available.push_back(stone);
 
-        CraftRecipe* fastOre = new CraftRecipe();
-        fastOre->duration = 1;
-        fastOre->reqWorkers.push_back(expertisesID::Nitwit);
-        fastOre->reqWorkers.push_back(expertisesID::Nitwit);
-        fastOre->outResources.push_back(Resource::Ore);
-        mine.available.push_back(fastOre);
+        CraftRecipe* fast_stone = makeGrindRecipe({expertisesID::Mining, expertisesID::Mining},
+                                                  {Resource::Stone, Resource::Stone}, 4.0);
+        stone_mine.available.push_back(fast_stone);
 
-        BuildRecipe* createMine = new BuildRecipe({0, 0}, mine);
-        createMine->inResources.push_back(Resource::Ore);
-        createMine->duration = 5;
-        createMine->reqWorkers.push_back(expertisesID::Smeltery);
+        WorkerRecipe* train = new WorkerRecipe();
+        train->reqWorkers.push_back(expertisesID::Nitwit);
+        train->trainExpertises.push_back(expertisesID::Mining);
+        stone_mine.available.push_back(train);
+
+        BuildRecipe* createMine = new BuildRecipe({0, 0}, stone_mine);
+        for (int i = 0; i < 5; ++i) createMine->inResources.push_back(Resource::Stone);
+        createMine->duration = 5.0;
+        createMine->reqWorkers.push_back(expertisesID::Nitwit);
 
         database.push_back(createMine);
     }
 
     {
-        BuildingIdea barracks = BuildingIdea(Building::baseBuildingRadius * 1.25, database.size());
+        BuildingIdea iron_mine = BuildingIdea(Building::baseBuildingRadius * 0.8, database.size());
 
-        CraftRecipe* trainSwordsman = new CraftRecipe();
-        trainSwordsman->inResources.push_back(Resource::Weapon);
-        trainSwordsman->reqWorkers.push_back(expertisesID::Smeltery);
-        trainSwordsman->inWorkers.push_back(expertisesID::Nitwit);
-        trainSwordsman->outFighters.push_back(FighterPawnType::Swordsman);
-        trainSwordsman->duration = 2;
-        barracks.available.push_back(trainSwordsman);
+        CraftRecipe* ore = makeGrindRecipe({expertisesID::Mining}, {Resource::Ore}, 5.0);
+        iron_mine.available.push_back(ore);
 
-        BuildRecipe* createBarracks = new BuildRecipe({0, 0}, barracks);
-        createBarracks->inResources.push_back(Resource::Weapon);
-        createBarracks->inResources.push_back(Resource::Weapon);
-        createBarracks->inResources.push_back(Resource::Weapon);
-        createBarracks->duration = 7;
-        createBarracks->reqWorkers.push_back(expertisesID::Metalworking);
-        database.push_back(createBarracks);
+        CraftRecipe* fast_ore = makeGrindRecipe({expertisesID::Mining, expertisesID::Mining},
+                                                  {Resource::Ore, Resource::Ore}, 4.0);
+        iron_mine.available.push_back(fast_ore);
+
+        WorkerRecipe* train = new WorkerRecipe();
+        train->reqWorkers.push_back(expertisesID::Nitwit);
+        train->trainExpertises.push_back(expertisesID::Mining);
+        iron_mine.available.push_back(train);
+
+        BuildRecipe* createMine = new BuildRecipe({0, 0}, iron_mine);
+        for (int i = 0; i < 2; ++i) createMine->inResources.push_back(Resource::Wood);
+        for (int i = 0; i < 3; ++i) createMine->inResources.push_back(Resource::Stone);
+        createMine->duration = 5.0;
+        createMine->reqWorkers.push_back(expertisesID::Nitwit);
+
+        database.push_back(createMine);
     }
 
     {
-        BuildingIdea temple = BuildingIdea(Building::baseBuildingRadius * 2.7, database.size());
+        BuildingIdea blacksmith = BuildingIdea(Building::baseBuildingRadius * 2, database.size());
+        CraftRecipe* steel = new CraftRecipe();
+        steel->inResources.push_back(Resource::Ore);
+        steel->outResources.push_back(Resource::Steel);
+        steel->reqWorkers.push_back(expertisesID::Smithing);
+        steel->duration = 3.0;
+        blacksmith.available.push_back(steel);
 
-        CraftRecipe* prayForPower = new CraftRecipe();
-        prayForPower->reqWorkers.push_back(expertisesID::Nitwit);
-        prayForPower->inWorkers.push_back(expertisesID::Nitwit);
-        prayForPower->outFighters.push_back(FighterPawnType::Monk);
-        prayForPower->duration = 1.5;
-        temple.available.push_back(prayForPower);
+        CraftRecipe* efficient_steel = new CraftRecipe();
+        for (int i = 0; i < 2; ++i) efficient_steel->inResources.push_back(Resource::Ore);
+        for (int i = 0; i < 3; ++i) efficient_steel->outResources.push_back(Resource::Steel);
+        for (int i = 0; i < 2; ++i) efficient_steel->reqWorkers.push_back(expertisesID::Smithing);
+        efficient_steel->duration = 6.0;
+        blacksmith.available.push_back(efficient_steel);
 
-        CraftRecipe* prayForResources = new CraftRecipe();
-        prayForResources->reqWorkers.push_back(expertisesID::Nitwit);
-        prayForResources->reqWorkers.push_back(expertisesID::Nitwit);
-        prayForResources->reqWorkers.push_back(expertisesID::Nitwit);
-        prayForResources->outResources.push_back(Resource::Ore);
-        prayForResources->outResources.push_back(Resource::Ingot);
-        prayForResources->outResources.push_back(Resource::Weapon);
-        prayForResources->duration = 1.5;
-        temple.available.push_back(prayForResources);
+        CraftRecipe* weapon = new CraftRecipe();
+        for (int i = 0; i < 2; ++i) weapon->inResources.push_back(Resource::Steel);
+        weapon->outResources.push_back(Resource::Sword);
+        weapon->reqWorkers.push_back(expertisesID::Smithing);
+        weapon->duration = 2;
+        blacksmith.available.push_back(weapon);
 
-        BuildRecipe* createTemple = new BuildRecipe({0, 0}, temple);
-        createTemple->inResources.push_back(Resource::Ingot);
-        createTemple->inResources.push_back(Resource::Ingot);
-        createTemple->inResources.push_back(Resource::Ingot);
-        createTemple->duration = 3;
-        //createTemple->reqWorkers.push_back(expertisesID::Metalworking);
-        createTemple->reqWorkers.push_back(expertisesID::Smeltery);
-        createTemple->reqWorkers.push_back(expertisesID::Nitwit);
-        database.push_back(createTemple);
+        WorkerRecipe* train = new WorkerRecipe();
+        train->reqWorkers.push_back(expertisesID::Nitwit);
+        train->trainExpertises.push_back(expertisesID::Smithing);
+        blacksmith.available.push_back(train);
+
+        BuildRecipe* createBlacksmith = new BuildRecipe({0, 0}, blacksmith);
+        for (int i = 0; i < 2; ++i) createBlacksmith->inResources.push_back(Resource::Wood);
+        for (int i = 0; i < 2; ++i) createBlacksmith->inResources.push_back(Resource::Stone);
+        for (int i = 0; i < 2; ++i) createBlacksmith->inResources.push_back(Resource::Ore);
+        createBlacksmith->duration = 7.0;
+        createBlacksmith->reqWorkers.push_back(expertisesID::Mining);
+        createBlacksmith->reqWorkers.push_back(expertisesID::Lumbering);
+
+        database.push_back(createBlacksmith);
     }
+
+    {
+        BuildingIdea barracks = BuildingIdea(Building::baseBuildingRadius * 1.1, database.size());
+
+        CraftRecipe* train_monk = new CraftRecipe();
+        train_monk->inWorkers.push_back(expertisesID::Nitwit);
+        train_monk->outFighters.push_back(FighterPawnType::Monk);
+        train_monk->duration = 5.0;
+        barracks.available.push_back(train_monk);
+
+        CraftRecipe* train_swordsman = new CraftRecipe();
+        train_swordsman->inResources.push_back(Resource::Sword);
+        train_swordsman->inFighters.push_back(FighterPawnType::Monk);
+        train_swordsman->outFighters.push_back(FighterPawnType::Swordsman);
+        train_swordsman->duration = 5.0;
+        barracks.available.push_back(train_swordsman);
+
+        BuildRecipe* createBarracks = new BuildRecipe({0, 0}, barracks);
+        for (int i = 0; i < 4; ++i) createBarracks->inResources.push_back(Resource::Wood);
+        for (int i = 0; i < 2; ++i) createBarracks->inResources.push_back(Resource::Stone);
+        createBarracks->duration = 7.0;
+        createBarracks->reqWorkers.push_back(expertisesID::Nitwit);
+        database.push_back(createBarracks);
+    }
+
 }

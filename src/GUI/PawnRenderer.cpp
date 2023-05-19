@@ -37,14 +37,17 @@ void PawnRenderer::drawWorkerPawn(const std::set<expertisesID>& expertises, sf::
         } else {
             int expertiseIndex = (i * static_cast<int>(expertisesVec.size())) / cnt;
             switch (expertisesVec[expertiseIndex]) {
-                case expertisesID::Smeltery:
-                    col = sf::Color::Red;
-                    break;
-                case expertisesID::Trainership:
+                case expertisesID::Lumbering:
                     col = sf::Color::Green;
                     break;
-                case expertisesID::Metalworking:
-                    col = sf::Color::White;
+                case expertisesID::Mining:
+                    col = sf::Color(27, 27, 27);
+                    break;
+                case expertisesID::Smithing:
+                    col = sf::Color(179, 20, 57);
+                    break;
+                case expertisesID::Nitwit:
+                    col = sf::Color(127, 127, 127);
                     break;
             }
         }
@@ -85,7 +88,7 @@ void PawnRenderer::drawFighterPawn(FighterPawnType type, sf::Vector2f pos) {
             col = sf::Color(100, 100, 100);
             break;
         case FighterPawnType::Swordsman:
-            col = sf::Color(255, 0, 0);
+            col = sf::Color(255, 143, 14);
             break;
     }
     arr.setPrimitiveType(sf::PrimitiveType::Triangles);

@@ -11,7 +11,7 @@
 
 const uint8_t DummyWorker = 0xFF;
 
-enum class expertisesID : uint8_t { Smeltery, Metalworking, Trainership, Nitwit };
+enum class expertisesID : uint8_t { Nitwit, Lumbering, Mining, Smithing };
 class WorkerPawn : public Pawn {
 public:
     size_t currentInWay;

@@ -18,7 +18,7 @@ Recipe - Command (из задач для Pawn/Building)
 
 BuildingRenderer, FontManager, GameWindowManager, PawnRenderer, ResourceRenderer - Singleton'ы
 
-#### Дубинин Василий:
+#### Дубинин Василий(Dubvas):
 
 серверная часть(папка net)
 
@@ -26,7 +26,7 @@ Connection - Adapter сетевой библиотеки (для сервера/клиента)
 
 clientInterface/serverInterface - Interface для Connection
 
-события Events - оповещения от сервера клиенту о любых изменениях
+события Events - оповещения от сервера клиенту о любых изменениях(Factory для Packet)
 
 serialization/deserialization - байтовое кодирование всех интересующих нас 
  классов(Pawn, Building, Player, Recipe) 

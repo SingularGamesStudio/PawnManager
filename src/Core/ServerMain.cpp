@@ -26,38 +26,51 @@ int fromString(const string& str) {
     return result;
 }
 
+Position get_pos(int id) {
+    int diag = 0;
+    while(id > diag) {
+        ++diag;
+        id -= diag;
+    }
+    Position result(diag - id, id);
+    result *= 500;
+    return result;
+}
+
+ptr<CraftBuilding> makeHub(ptr<Player> player, int key) {
+    Position hub_pos = get_pos(key);
+    ptr<CraftBuilding> hub = makeptr<CraftBuilding>(hub_pos, player, 100.0);
+    for (size_t i = 0; i < 10; ++i) hub->resources.insert(Resource::Wood);
+    for (size_t i = 0; i < 10; ++i) hub->resources.insert(Resource::Stone);
+    player->hub = static_cast<ptr<Building>>(hub);
+    hub->recipes.push_back(makeGrindRecipe({expertisesID::Nitwit}, {Resource::Wood}, 10.0));
+    hub->recipes.push_back(makeGrindRecipe({expertisesID::Nitwit}, {Resource::Stone}, 10.0));
+
+    auto wrecipe = new WorkerRecipe();
+    wrecipe->outWorkers.emplace_back(std::vector<expertisesID>());
+    for(int i = 0; i < 3; ++i) wrecipe->inResources.push_back(Resource::Wood);
+    for(int i = 0; i < 3; ++i) wrecipe->inResources.push_back(Resource::Stone);
+    wrecipe->duration = 5.0;
+    hub->recipes.push_back(wrecipe);
+
+    return hub;
+}
+
 bool GameServer::onConnection(std::shared_ptr<dlib::Connection> client) {
     ptr<Player> player = makeptr<Player>();
     player->manager.owner = player;
-    ptr<CraftBuilding> hub = makeptr<CraftBuilding>(Position(IDs * 90, IDs * 90), player, 100.0);
-    for (size_t i = 0; i < 10; ++i) hub->resources.insert(Resource::Ore);
-    player->hub = static_cast<ptr<Building>>(hub);
-    auto recipe = new CraftRecipe();
-    recipe->inResources.push_back(Resource::Ore);
-    recipe->reqWorkers.push_back(expertisesID::Smeltery);
-    recipe->outResources.push_back(Resource::Ingot);
-    recipe->duration = 5;
-    hub->recipes.push_back(recipe);
-
-    recipe = new CraftRecipe();
-    recipe->outFighters.push_back(FighterPawnType::Monk);
-    hub->recipes.push_back(recipe);
-
-    auto wrecipe = new WorkerRecipe();
-    wrecipe->outWorkers.push_back(
-            std::vector<expertisesID>({expertisesID ::Nitwit, expertisesID ::Metalworking, expertisesID ::Smeltery, expertisesID ::Trainership}));
-    hub->recipes.push_back(wrecipe);
-
-    wrecipe = new WorkerRecipe();
-    wrecipe->reqWorkers.push_back(expertisesID::Nitwit);
-    wrecipe->trainExpertises.push_back(expertisesID ::Metalworking);
-    hub->recipes.push_back(wrecipe);
-
-    for (size_t i = 0; i < 5; ++i) {
+    ptr<CraftBuilding> hub = makeHub(player, IDs);
+    {
         ptr<WorkerPawn> pawn = makeptr<WorkerPawn>();
         pawn->create(player->hub);
         pawn->expertises.insert(expertisesID::Nitwit);
-        pawn->expertises.insert(expertisesID::Smeltery);
+        pawn->expertises.insert(expertisesID::Lumbering);
+        pawn->expertises.insert(expertisesID::Mining);
+        pawn->expertises.insert(expertisesID::Smithing);
+        player->pawns.insert(pawn.dyn_cast<Pawn>());
+    }
+    {
+        ptr<FighterPawn> pawn = FighterPawn::createFighterPawn(FighterPawnType::Monk, player->hub);
         player->pawns.insert(pawn.dyn_cast<Pawn>());
     }
     Event plA(Event::Type::PLAYER_APPEAR, player->id);

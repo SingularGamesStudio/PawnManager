@@ -226,5 +226,7 @@ void PawnManagerClient::shutdown() {
 void PawnManagerClient::connect(std::string address, int port) {
     godObject::local_server = new LocalController();
     godObject::local_server->init(address, port);
+    playerPos.x = godObject::local_server->mainPlayer->hub->position.x;
+    playerPos.y = godObject::local_server->mainPlayer->hub->position.y;
 }
 sf::Vector2f PawnManagerClient::getRenderOrigin() { return ((sf::Vector2f) window->getSize()) * 0.5f - playerPos * renderScale; }
